@@ -93,6 +93,7 @@ export function staffTabs(view: ShowView): Tab[] {
     { id: "breakdown", label: "Breakdown", icon: "lines", path: `/shows/${id}/breakdown` },
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
+  tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
   if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
   return tabs;
 }

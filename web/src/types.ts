@@ -65,3 +65,12 @@ export type AttendancePerson = Schemas["AttendancePerson"];
 export type CheckIn = Schemas["CheckIn"];
 export type CheckInStatus = NonNullable<CheckIn["status"]>;
 export type CheckInResult = Schemas["CheckInResult"];
+
+export type Callboard = Schemas["Callboard"];
+export type NoticeView = Schemas["NoticeView"];
+export type Notice = Schemas["Notice"];
+export type NoticeAudience = Notice["audience"];
+export type PostNoticeBody = Schemas["PostNoticeBody"];
+export type UpdateNoticeBody = Schemas["UpdateNoticeBody"];
+export type CalendarLinks = Schemas["CalendarLinks"];
+export type NotifyPrefs = Schemas["NotifyPrefs"];

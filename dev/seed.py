@@ -11,6 +11,8 @@ from worklight.models import (
     CheckIn,
     DateConflict,
     Membership,
+    Notice,
+    NoticeRead,
     RehearsalSlot,
     Scene,
     Show,
@@ -315,6 +317,7 @@ def seed(ctx: Ctx) -> None:
     )
 
     seed_schedule(ctx, jordan, users)
+    seed_callboard(ctx, jordan, users)
 
 
 def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
@@ -384,5 +387,66 @@ def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
                     status="on_time",
                     arrived_at=stamp,
                     updated_at=stamp,
+                )
+            )
+
+
+NOTICES = [
+    (
+        "welcome",
+        "Jordan Reyes",
+        "Welcome to the woods",
+        "Thrilled to have you all. Please add your conflicts by Friday so I can build the November schedule.",
+        "everyone",
+        False,
+        "2026-10-26T15:00:00Z",
+    ),
+    (
+        "offbook",
+        "Priya Nair",
+        "Off-book dates",
+        "Act 1 off book by Monday, November 16. The whole show by Monday, November 23. "
+        "Line notes start on the 16th.",
+        "cast",
+        True,
+        "2026-10-27T18:00:00Z",
+    ),
+    (
+        "build",
+        "Sam Whitfield",
+        "Set build this Saturday",
+        "Saturday, November 7 from 9 AM to 3 PM on the main stage. Closed-toe shoes, and bring work gloves "
+        "if you have them. Pizza at noon.",
+        "crew",
+        False,
+        "2026-10-27T22:00:00Z",
+    ),
+]
+
+
+def seed_callboard(ctx: Ctx, director: User, users: dict[str, User]) -> None:
+    """Three notices like the Callboard board. Maya and Tom have read none of them."""
+    everyone = {**users, director.name or "": director}
+    for notice_id, author, title, body, audience, pinned, at in NOTICES:
+        ctx.store.put_notice(
+            Notice(
+                notice_id=notice_id,
+                show_id="midsummer",
+                theater_id="maplewood",
+                title=title,
+                body=body,
+                audience=audience,  # type: ignore[arg-type]
+                pinned=pinned,
+                author_id=everyone[author].user_id,
+                created_at=at,
+                updated_at=at,
+            )
+        )
+    readers = [n for n, *_ in PEOPLE if n not in ("Maya Chen", "Tom Byrne")]
+    for name in readers[: len(readers) * 3 // 4]:
+        for notice_id in ("welcome", "offbook", "build"):
+            ctx.store.put_notice_read(
+                NoticeRead(
+                    show_id="midsummer", notice_id=notice_id, user_id=users[name].user_id, at=now_iso()
                 )
             )
