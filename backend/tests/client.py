@@ -27,12 +27,13 @@ class Client:
         verified: bool = True,
         raw_body: str | None = None,
     ) -> tuple[int, Any]:
+        path, _, query = path.partition("?")
         claims = {"email": email, "email_verified": "true" if verified else "false"} if email else {}
         event = {
             "version": "2.0",
             "routeKey": "$default",
             "rawPath": path,
-            "rawQueryString": "",
+            "rawQueryString": query,
             "headers": {"content-type": "application/json", "host": "worklight.test"},
             "requestContext": {
                 "http": {

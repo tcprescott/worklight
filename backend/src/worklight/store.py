@@ -11,7 +11,9 @@ from worklight import keys
 from worklight.models import (
     Act,
     Appearance,
+    Call,
     Character,
+    CheckIn,
     DateConflict,
     Invite,
     MagicLinkRecord,
@@ -28,7 +30,7 @@ if TYPE_CHECKING:
     from mypy_boto3_dynamodb.client import DynamoDBClient
 
 
-_KEY_ATTRS = ("PK", "SK", "GSI1PK", "GSI1SK", "type")
+_KEY_ATTRS = ("PK", "SK", "GSI1PK", "GSI1SK", "entity")
 _serializer = TypeSerializer()
 _deserializer = TypeDeserializer()
 
@@ -70,7 +72,7 @@ def _raw_from_ddb(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def _item(key: keys.Key, kind: str, record: Model) -> dict[str, Any]:
-    return {**key, "type": kind, **record.to_item()}
+    return {**key, "entity": kind, **record.to_item()}
 
 
 def _chunks[T](items: list[T], size: int) -> Iterable[list[T]]:
@@ -87,6 +89,8 @@ class ShowPartition:
     scenes: list[Scene] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
     appearances: list[Appearance] = field(default_factory=list)
+    calls: list[Call] = field(default_factory=list)
+    checkins: list[CheckIn] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -183,7 +187,7 @@ class DynamoStore:
             self.db.transact_write_items(
                 TransactItems=[
                     self._tx_put(
-                        {**keys.email(user.email), "type": "email", "userId": user.user_id}, new=True
+                        {**keys.email(user.email), "entity": "email", "userId": user.user_id}, new=True
                     ),
                     self._tx_put(_item(keys.user(user.user_id), "user", user)),
                 ]
@@ -224,7 +228,7 @@ class DynamoStore:
     def _admin_item(self, theater_id: str, user_id: str, title: str | None) -> dict[str, Any]:
         item: dict[str, Any] = {
             **keys.theater_admin(theater_id, user_id),
-            "type": "theaterAdmin",
+            "entity": "theaterAdmin",
             "theaterId": theater_id,
             "userId": user_id,
         }
@@ -267,7 +271,7 @@ class DynamoStore:
     def create_show(self, show: Show, creator: Membership) -> None:
         pointer = {
             **keys.show_pointer(show.show_id),
-            "type": "showPointer",
+            "entity": "showPointer",
             "showId": show.show_id,
             "theaterId": show.theater_id,
         }
@@ -308,6 +312,10 @@ class DynamoStore:
                 part.characters.append(Character.model_validate(data))
             elif sk.startswith(keys.APPEAR_PREFIX):
                 part.appearances.append(Appearance.model_validate(data))
+            elif sk.startswith(keys.CALL_PREFIX):
+                part.calls.append(Call.model_validate(data))
+            elif sk.startswith(keys.CHECKIN_PREFIX):
+                part.checkins.append(CheckIn.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
@@ -377,6 +385,67 @@ class DynamoStore:
 
     def delete_appearance(self, show_id: str, scene_id: str, char_id: str) -> None:
         self._delete(keys.appearance(show_id, scene_id, char_id))
+
+    # ---- calls --------------------------------------------------------------------------------
+
+    def list_calls(self, show_id: str, start: str | None = None, end: str | None = None) -> list[Call]:
+        """Calls in date order, optionally only those from start through end (YYYY-MM-DD)."""
+        pk = keys.show_pointer(show_id)["PK"]
+        if start is None and end is None:
+            items = self._query_all(pk, keys.CALL_PREFIX)
+        else:
+            items = self._query_between(pk, f"CALL#{start or ''}", f"CALL#{end or '9999'}#~")
+        return [Call.model_validate(i) for i in items]
+
+    def _query_between(self, pk: str, low: str, high: str) -> list[dict[str, Any]]:
+        params: dict[str, Any] = {
+            "TableName": self.table,
+            "KeyConditionExpression": "PK = :pk AND SK BETWEEN :lo AND :hi",
+            "ExpressionAttributeValues": {":pk": {"S": pk}, ":lo": {"S": low}, ":hi": {"S": high}},
+        }
+        items: list[dict[str, Any]] = []
+        while True:
+            res = self.db.query(**params)
+            items.extend(_from_ddb(item) for item in res.get("Items", []))
+            if "LastEvaluatedKey" not in res:
+                return items
+            params["ExclusiveStartKey"] = res["LastEvaluatedKey"]
+
+    def get_call(self, show_id: str, date: str, call_id: str) -> Call | None:
+        item = self._get(keys.call(show_id, date, call_id))
+        return Call.model_validate(item) if item else None
+
+    def put_call(self, call: Call, previous_date: str | None = None) -> None:
+        """Saves a call; moving it to another date moves its item, since the date is in the key."""
+        if previous_date and previous_date != call.date:
+            self.db.transact_write_items(
+                TransactItems=[
+                    {
+                        "Delete": {
+                            "TableName": self.table,
+                            "Key": _to_ddb(keys.call(call.show_id, previous_date, call.call_id)),
+                        }
+                    },
+                    self._tx_put(_item(keys.call(call.show_id, call.date, call.call_id), "call", call)),
+                ]
+            )
+        else:
+            self._put_item(keys.call(call.show_id, call.date, call.call_id), "call", call)
+
+    def delete_call(self, show_id: str, date: str, call_id: str) -> None:
+        self._delete(keys.call(show_id, date, call_id))
+
+    # ---- check-ins ----------------------------------------------------------------------------
+
+    def list_checkins(self, show_id: str, date: str | None = None) -> list[CheckIn]:
+        prefix = f"CHECKIN#{date}#" if date else keys.CHECKIN_PREFIX
+        return [CheckIn.model_validate(i) for i in self._query_all(keys.show_pointer(show_id)["PK"], prefix)]
+
+    def put_checkin(self, checkin: CheckIn) -> None:
+        self._put_item(keys.checkin(checkin.show_id, checkin.date, checkin.user_id), "checkin", checkin)
+
+    def delete_checkin(self, show_id: str, date: str, user_id: str) -> None:
+        self._delete(keys.checkin(show_id, date, user_id))
 
     # ---- conflicts ----------------------------------------------------------------------------
 

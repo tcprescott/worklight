@@ -13,7 +13,7 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from worklight.models import User
-from worklight.rest import breakdown, conflicts, people, shows, theaters
+from worklight.rest import breakdown, conflicts, people, schedule, shows, theaters
 from worklight.services.accounts import user_from_claims
 from worklight.services.base import Ctx, ServiceError
 
@@ -95,6 +95,6 @@ def create_app(ctx: Ctx) -> FastAPI:
     def current_user(claims: Annotated[dict[str, Any], Depends(get_claims)]) -> User:
         return user_from_claims(ctx, claims)
 
-    for module in (theaters, shows, people, breakdown, conflicts):
+    for module in (theaters, shows, people, breakdown, conflicts, schedule):
         app.include_router(module.router(ctx, current_user))
     return app

@@ -61,6 +61,8 @@ class Show(Model):
     # Minutes of rehearsal per script page; scene times come from this unless a scene overrides it.
     minutes_per_page: float = 8
     conflict_deadline: str | None = None
+    # Printed on the stage door sign; scanning it checks a person in for tonight.
+    door_code: str | None = None
     status: ShowStatus = "active"
     archived_at: str | None = None
     created_at: str
@@ -189,6 +191,80 @@ class DateConflict(Model):
 class MyConflicts(Model):
     weekly: list[WeeklyConflict]
     dates: list[DateConflict]
+
+
+# ---- Scheduling ----------------------------------------------------------------------------------
+
+CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance"]
+CallStatus = Literal["draft", "published"]
+# Who a call covers besides the people in its scenes.
+CallGroup = Literal["everyone", "cast", "crew"]
+CheckInStatus = Literal["on_time", "late", "absent"]
+
+
+class Block(Model):
+    """A timed slice of a call: these scenes (or a label like "Warm-up"), from start for minutes."""
+
+    block_id: str
+    # Leave out to start when the block before it ends (the first starts with the call).
+    start: str | None = None
+    minutes: int
+    scene_ids: list[str] = []
+    label: str | None = None
+    # People called for this block on top of the scenes' cast.
+    user_ids: list[str] = []
+
+
+class CallContent(Model):
+    """What a call is. Staff edit a working copy; cast and crew see the copy as of the last publish."""
+
+    date: str
+    start: str
+    end: str
+    type: CallType = "rehearsal"
+    title: str | None = None
+    location: str | None = None
+    bring: str | None = None
+    note: str | None = None
+    blocks: list[Block] = []
+    # Everyone, all cast or all crew, for tech, dress and performances.
+    groups: list[CallGroup] = []
+    # Departments called (e.g. "Costumes"), for tech calls by department.
+    departments: list[str] = []
+    # Extra people called for the whole call.
+    user_ids: list[str] = []
+    # Tech, dress and performances call crew at a different time from cast.
+    crew_start: str | None = None
+    cancelled: bool = False
+
+
+class Call(CallContent):
+    call_id: str
+    show_id: str
+    theater_id: str
+    status: CallStatus = "draft"
+    # Bumped on every publish that changes the call, for calendar updates (ICS SEQUENCE).
+    sequence: int = 0
+    published: CallContent | None = None
+    published_at: str | None = None
+    updated_at: str
+    created_at: str
+
+
+class CheckIn(Model):
+    """One person on one tech or performance night (or a rehearsal they said they'd be late to)."""
+
+    show_id: str
+    date: str
+    user_id: str
+    # Unset until they arrive or staff mark them.
+    status: CheckInStatus | None = None
+    arrived_at: str | None = None
+    by_self: bool = False
+    # "Running late" from the person, before they arrive.
+    running_late_minutes: int | None = None
+    note: str | None = None
+    updated_at: str
 
 
 # ---- API shapes --------------------------------------------------------------------------------
