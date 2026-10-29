@@ -1,0 +1,19 @@
+{
+  "name": "@call-time/api",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc -p ."
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.1159.0",
+    "@aws-sdk/client-sesv2": "^3.1159.0",
+    "@aws-sdk/client-ssm": "^3.1159.0",
+    "@aws-sdk/lib-dynamodb": "^3.1159.0",
+    "@call-time/shared": "*"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.164"
+  }
+}

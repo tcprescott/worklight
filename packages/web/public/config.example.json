@@ -1,0 +1,7 @@
+{
+  "region": "us-east-1",
+  "userPoolId": "us-east-1_XXXXXXXXX",
+  "userPoolClientId": "xxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "hostedUiUrl": null,
+  "googleEnabled": false
+}
