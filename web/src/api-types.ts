@@ -39,6 +39,23 @@ export interface paths {
         patch: operations["update_me_api_me_patch"];
         trace?: never;
     };
+    "/api/me/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Calls */
+        get: operations["my_calls_api_me_calls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/conflicts": {
         parameters: {
             query?: never;
@@ -197,6 +214,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Attendance */
+        get: operations["attendance_api_shows__show_id__attendance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/attendance/{day}/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Mark */
+        put: operations["mark_api_shows__show_id__attendance__day___user_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/breakdown": {
         parameters: {
             query?: never;
@@ -212,6 +263,41 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Call */
+        post: operations["create_call_api_shows__show_id__calls_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/calls/{call_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Call */
+        delete: operations["delete_call_api_shows__show_id__calls__call_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Call */
+        patch: operations["update_call_api_shows__show_id__calls__call_id__patch"];
         trace?: never;
     };
     "/api/shows/{show_id}/characters": {
@@ -249,6 +335,23 @@ export interface paths {
         patch: operations["update_character_api_shows__show_id__characters__char_id__patch"];
         trace?: never;
     };
+    "/api/shows/{show_id}/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check In */
+        post: operations["check_in_api_shows__show_id__check_in_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/conflicts": {
         parameters: {
             query?: never;
@@ -260,6 +363,23 @@ export interface paths {
         get: operations["show_conflicts_api_shows__show_id__conflicts_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/door-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate */
+        post: operations["rotate_api_shows__show_id__door_code_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -386,6 +506,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/running-late": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Running Late */
+        post: operations["running_late_api_shows__show_id__running_late_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/scenes": {
         parameters: {
             query?: never;
@@ -434,6 +571,91 @@ export interface paths {
         post?: never;
         /** Remove From Scene */
         delete: operations["remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Schedule */
+        get: operations["get_schedule_api_shows__show_id__schedule_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish */
+        post: operations["publish_api_shows__show_id__schedule_publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Suggest */
+        get: operations["suggest_api_shows__show_id__schedule_suggestions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/{day}/scenes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Scene */
+        post: operations["add_scene_api_shows__show_id__schedule__day__scenes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/tech-calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Tech Calls */
+        post: operations["tech_calls_api_shows__show_id__tech_calls_post"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -553,6 +775,13 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /** AddSceneBody */
+        AddSceneBody: {
+            /** Callid */
+            callId?: string | null;
+            /** Sceneid */
+            sceneId: string;
+        };
         /** Admin */
         Admin: {
             /** Email */
@@ -573,6 +802,91 @@ export interface components {
             /** Showid */
             showId: string;
         };
+        /** Attendance */
+        Attendance: {
+            /** Checkins */
+            checkins: components["schemas"]["CheckIn"][];
+            /** Doorcode */
+            doorCode: string;
+            /** Nights */
+            nights: components["schemas"]["AttendanceNight"][];
+            /** People */
+            people: components["schemas"]["AttendancePerson"][];
+            /** Tonight */
+            tonight?: string | null;
+        };
+        /** AttendanceNight */
+        AttendanceNight: {
+            /** Callid */
+            callId: string;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /** Start */
+            start: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** AttendancePerson */
+        AttendancePerson: {
+            /** Label */
+            label?: string | null;
+            /** Name */
+            name?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Userid */
+            userId: string;
+        };
+        /**
+         * Block
+         * @description A timed slice of a call: these scenes (or a label like "Warm-up"), from start for minutes.
+         */
+        Block: {
+            /** Blockid */
+            blockId: string;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes: number;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start?: string | null;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /** BlockBody */
+        BlockBody: {
+            /** Blockid */
+            blockId?: string | null;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes?: number | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start?: string | null;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
         /** Breakdown */
         Breakdown: {
             /** Acts */
@@ -583,6 +897,211 @@ export interface components {
             characters: components["schemas"]["Character"][];
             /** Scenes */
             scenes: components["schemas"]["Scene"][];
+        };
+        /** Call */
+        Call: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["Block"][];
+            /** Bring */
+            bring?: string | null;
+            /** Callid */
+            callId: string;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Createdat */
+            createdAt: string;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            published?: components["schemas"]["CallContent"] | null;
+            /** Publishedat */
+            publishedAt?: string | null;
+            /**
+             * Sequence
+             * @default 0
+             */
+            sequence: number;
+            /** Showid */
+            showId: string;
+            /** Start */
+            start: string;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "published";
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @default rehearsal
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /** Updatedat */
+            updatedAt: string;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /**
+         * CallContent
+         * @description What a call is. Staff edit a working copy; cast and crew see the copy as of the last publish.
+         */
+        CallContent: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["Block"][];
+            /** Bring */
+            bring?: string | null;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @default rehearsal
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /** CallView */
+        CallView: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["TimedBlock"][];
+            /** Bring */
+            bring?: string | null;
+            /** Callid */
+            callId: string;
+            /**
+             * Calledcount
+             * @default 0
+             */
+            calledCount: number;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Freeminutes
+             * @default 0
+             */
+            freeMinutes: number;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Publishedat */
+            publishedAt?: string | null;
+            /** Start */
+            start: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "published";
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /**
+             * Unpublishedchanges
+             * @default false
+             */
+            unpublishedChanges: boolean;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
         };
         /** Character */
         Character: {
@@ -604,6 +1123,78 @@ export interface components {
             order: number;
             /** Showid */
             showId: string;
+        };
+        /**
+         * CheckIn
+         * @description One person on one tech or performance night (or a rehearsal they said they'd be late to).
+         */
+        CheckIn: {
+            /** Arrivedat */
+            arrivedAt?: string | null;
+            /**
+             * Byself
+             * @default false
+             */
+            bySelf: boolean;
+            /** Date */
+            date: string;
+            /** Note */
+            note?: string | null;
+            /** Runninglateminutes */
+            runningLateMinutes?: number | null;
+            /** Showid */
+            showId: string;
+            /** Status */
+            status?: ("on_time" | "late" | "absent") | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+        };
+        /** CheckInBody */
+        CheckInBody: {
+            /** Code */
+            code: string;
+        };
+        /** CheckInResult */
+        CheckInResult: {
+            /** Callstart */
+            callStart?: string | null;
+            checkin: components["schemas"]["CheckIn"];
+            /**
+             * Minuteslate
+             * @default 0
+             */
+            minutesLate: number;
+        };
+        /** CreateCallBody */
+        CreateCallBody: {
+            /** Blocks */
+            blocks?: components["schemas"]["BlockBody"][] | null;
+            /** Bring */
+            bring?: string | null;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /** Departments */
+            departments?: string[] | null;
+            /** End */
+            end?: string | null;
+            /** Groups */
+            groups?: ("everyone" | "cast" | "crew")[] | null;
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Type */
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            /** Userids */
+            userIds?: string[] | null;
         };
         /** CreateCharacterBody */
         CreateCharacterBody: {
@@ -754,6 +1345,11 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** DoorCode */
+        DoorCode: {
+            /** Doorcode */
+            doorCode: string;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -806,6 +1402,11 @@ export interface components {
             /** Userid */
             userId: string;
         };
+        /** MarkBody */
+        MarkBody: {
+            /** Status */
+            status: ("on_time" | "late" | "absent") | null;
+        };
         /**
          * Me
          * @description What the signed-in user sees on their home page.
@@ -851,6 +1452,62 @@ export interface components {
             /** Weekly */
             weekly: components["schemas"]["WeeklyConflict"][];
         };
+        /** MyCall */
+        MyCall: {
+            /** Address */
+            address?: string | null;
+            /** Bring */
+            bring?: string | null;
+            /** Callend */
+            callEnd: string;
+            /** Callid */
+            callId: string;
+            /** Callstart */
+            callStart: string;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Date */
+            date: string;
+            /** End */
+            end: string;
+            /**
+             * Labels
+             * @default []
+             */
+            labels: string[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /**
+             * Sequence
+             * @default 0
+             */
+            sequence: number;
+            /** Showid */
+            showId: string;
+            /** Showname */
+            showName: string;
+            /** Start */
+            start: string;
+            /** Timezone */
+            timezone: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+        };
         /** MyConflicts */
         MyConflicts: {
             /** Dates */
@@ -888,6 +1545,22 @@ export interface components {
             role: "admin";
             theater: components["schemas"]["Theater"];
         };
+        /** PublishBody */
+        PublishBody: {
+            /** From */
+            from: string;
+            /** To */
+            to: string;
+        };
+        /** PublishResult */
+        PublishResult: {
+            /** Callids */
+            callIds: string[];
+            /** Cancelled */
+            cancelled: number;
+            /** Published */
+            published: number;
+        };
         /**
          * RehearsalSlot
          * @description A usual rehearsal night: weekday 0 = Monday ... 6 = Sunday, times as HH:MM in the show's timezone.
@@ -916,6 +1589,15 @@ export interface components {
         ReorderBody: {
             /** Ids */
             ids: string[];
+        };
+        /** RunningLateBody */
+        RunningLateBody: {
+            /** Date */
+            date?: string | null;
+            /** Minutes */
+            minutes: number;
+            /** Note */
+            note?: string | null;
         };
         /**
          * SaveConflictsBody
@@ -970,6 +1652,64 @@ export interface components {
             /** Showid */
             showId: string;
         };
+        /** SceneSuggestion */
+        SceneSuggestion: {
+            /**
+             * Fits
+             * @default true
+             */
+            fits: boolean;
+            /** Lastrehearsed */
+            lastRehearsed?: string | null;
+            /** Minutes */
+            minutes: number;
+            /** Nightsinrange */
+            nightsInRange: number;
+            /** Sceneid */
+            sceneId: string;
+            /** Score */
+            score: number;
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
+        };
+        /** ScheduleDay */
+        ScheduleDay: {
+            /**
+             * Calls
+             * @default []
+             */
+            calls: components["schemas"]["CallView"][];
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "rehearsal" | "tech" | "performance" | "extra";
+            /**
+             * Noconflicts
+             * @default false
+             */
+            noConflicts: boolean;
+            /** Start */
+            start?: string | null;
+        };
+        /** ScheduleView */
+        ScheduleView: {
+            /** Days */
+            days: components["schemas"]["ScheduleDay"][];
+            /** Editing */
+            editing: boolean;
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+        };
         /** Show */
         Show: {
             /** Address */
@@ -980,6 +1720,8 @@ export interface components {
             conflictDeadline?: string | null;
             /** Createdat */
             createdAt: string;
+            /** Doorcode */
+            doorCode?: string | null;
             /** Enddate */
             endDate: string;
             /**
@@ -1024,6 +1766,13 @@ export interface components {
         };
         /** ShowDayView */
         ShowDayView: {
+            /**
+             * Called
+             * @default false
+             */
+            called: boolean;
+            /** Calledby */
+            calledBy?: string | null;
             /** Date */
             date: string;
             /** End */
@@ -1082,6 +1831,33 @@ export interface components {
             /** Weekday */
             weekday: number;
         };
+        /** Suggestions */
+        Suggestions: {
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /** Freeminutes */
+            freeMinutes?: number | null;
+            /** Scenes */
+            scenes: components["schemas"]["SceneSuggestion"][];
+            /** Start */
+            start?: string | null;
+        };
+        /**
+         * TechCallsBody
+         * @description Makes an everyone-called call for each tech and performance night that doesn't have one.
+         */
+        TechCallsBody: {
+            /** Crewstart */
+            crewStart?: string | null;
+            /** End */
+            end: string;
+            /** Location */
+            location?: string | null;
+            /** Start */
+            start: string;
+        };
         /** Theater */
         Theater: {
             /** Createdat */
@@ -1103,6 +1879,70 @@ export interface components {
             /** Shows */
             shows: components["schemas"]["ShowSummary"][];
             theater: components["schemas"]["Theater"];
+        };
+        /** TimedBlock */
+        TimedBlock: {
+            /** Blockid */
+            blockId: string;
+            /** End */
+            end: string;
+            /**
+             * Fixedstart
+             * @default false
+             */
+            fixedStart: boolean;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes: number;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start: string;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
+        };
+        /** UpdateCallBody */
+        UpdateCallBody: {
+            /** Blocks */
+            blocks?: components["schemas"]["BlockBody"][] | null;
+            /** Bring */
+            bring?: string | null;
+            /** Cancelled */
+            cancelled?: boolean | null;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date?: string | null;
+            /** Departments */
+            departments?: string[] | null;
+            /** End */
+            end?: string | null;
+            /** Groups */
+            groups?: ("everyone" | "cast" | "crew")[] | null;
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Type */
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            /** Userids */
+            userIds?: string[] | null;
         };
         /** UpdateCharacterBody */
         UpdateCharacterBody: {
@@ -1192,6 +2032,29 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /**
+         * Warning
+         * @description Someone a block or call needs who can't make all of it.
+         */
+        Warning: {
+            /** Arrive */
+            arrive?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "hard" | "soft" | "partial" | "elsewhere";
+            /** Leave */
+            leave?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Part */
+            part?: string | null;
+            /** Userid */
+            userId: string;
         };
         /** WeeklyBody */
         WeeklyBody: {
@@ -1326,6 +2189,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["User"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_calls_api_me_calls_get: {
+        parameters: {
+            query?: {
+                showId?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyCall"][];
                 };
             };
             /** @description Validation Error */
@@ -1769,6 +2663,74 @@ export interface operations {
             };
         };
     };
+    attendance_api_shows__show_id__attendance_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Attendance"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mark_api_shows__show_id__attendance__day___user_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarkBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"] | null;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_breakdown_api_shows__show_id__breakdown_get: {
         parameters: {
             query?: never;
@@ -1787,6 +2749,107 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Breakdown"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_call_api_shows__show_id__calls_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCallBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_call_api_shows__show_id__calls__call_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_call_api_shows__show_id__calls__call_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCallBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
                 };
             };
             /** @description Validation Error */
@@ -1901,6 +2964,41 @@ export interface operations {
             };
         };
     };
+    check_in_api_shows__show_id__check_in_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckInBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     show_conflicts_api_shows__show_id__conflicts_get: {
         parameters: {
             query?: never;
@@ -1919,6 +3017,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["MemberConflicts"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rotate_api_shows__show_id__door_code_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoorCode"];
                 };
             };
             /** @description Validation Error */
@@ -2197,6 +3326,41 @@ export interface operations {
             };
         };
     };
+    running_late_api_shows__show_id__running_late_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunningLateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_scene_api_shows__show_id__scenes_post: {
         parameters: {
             query?: never;
@@ -2348,6 +3512,181 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_schedule_api_shows__show_id__schedule_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_api_shows__show_id__schedule_publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suggest_api_shows__show_id__schedule_suggestions_get: {
+        parameters: {
+            query: {
+                date: string;
+                from?: string | null;
+                to?: string | null;
+            };
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Suggestions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_scene_api_shows__show_id__schedule__day__scenes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    tech_calls_api_shows__show_id__tech_calls_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TechCallsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"][];
+                };
             };
             /** @description Validation Error */
             422: {

@@ -4,10 +4,10 @@ import { daysBetween, longDate, longWeekday, monthName, dayOfMonth, time12, toda
 import { Link } from "../../router";
 import { useSession } from "../../session";
 import { AccountMenu, ActorShell } from "../../shell";
-import type { MyConflicts, ShowDay } from "../../types";
+import type { MyCall, MyConflicts, ShowDay } from "../../types";
 import { DateMark, Icon } from "../../ui";
 import { useAsync } from "../../useAsync";
-import { KIND_LABEL, useDirector } from "./actorLib";
+import { callWhat, KIND_LABEL, useDirector } from "./actorLib";
 import "./actor.css";
 
 function opensLine(opening: string | null | undefined, start: string, end: string): string {
@@ -30,11 +30,17 @@ export function ShowHome(props: ShowPageProps) {
   const { data } = useAsync(
     () =>
       archived
-        ? Promise.resolve<[ShowDay[], MyConflicts | undefined]>([[], undefined])
-        : Promise.all([api.myDays().catch(() => [] as ShowDay[]), api.myConflicts().catch(() => undefined)]),
+        ? Promise.resolve<[ShowDay[], MyConflicts | undefined, MyCall[]]>([[], undefined, []])
+        : Promise.all([
+            api.myDays().catch(() => [] as ShowDay[]),
+            api.myConflicts().catch(() => undefined),
+            api.myCalls(show.showId).catch(() => [] as MyCall[]),
+          ]),
     [show.showId, archived],
   );
   const next = data?.[0].find((d) => d.showId === show.showId);
+  const today = todayIso();
+  const call = data?.[2].find((c) => !c.cancelled && c.date >= today);
   const mine = me.shows.find((s) => s.show.showId === show.showId);
   const needsConflicts = !archived && mine && !mine.conflictsSubmittedAt;
   const hasAny = !!data?.[1] && (data[1].weekly.length > 0 || data[1].dates.length > 0);
@@ -50,7 +56,18 @@ export function ShowHome(props: ShowPageProps) {
         <div className="sub">{archived ? dateRange(show.startDate, show.endDate) : opensLine(show.openingDate, show.startDate, show.endDate)}</div>
         {!archived && data && (
           <div className="actor-next">
-            {next ? (
+            {call ? (
+              <>
+                <DateMark date={call.date} />
+                <div className="actor-next-text">
+                  <span className="caps">{call.date === today ? "You're called tonight" : "You're called"}</span>
+                  <strong>
+                    {time12(call.start)} · {callWhat(call)}
+                  </strong>
+                  <span>{call.location ?? show.venue ?? ""}</span>
+                </div>
+              </>
+            ) : next ? (
               <>
                 <DateMark date={next.date} />
                 <div className="actor-next-text">

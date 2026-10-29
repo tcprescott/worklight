@@ -129,6 +129,26 @@ def admin_added_email(to: str, theater_name: str, sender_name: str, url: str) ->
     )
 
 
+def running_late_email(
+    to: str, show_name: str, person_name: str, minutes: int, call_time: str | None, note: str | None, url: str
+) -> Email:
+    when = f" for the {_pretty_time(call_time)} call" if call_time else ""
+    extra = f' They said: "{note}"' if note else ""
+    line = f"{person_name} is running about {minutes} minutes late{when} tonight.{extra}"
+    return Email(
+        to=to,
+        subject=f"{show_name}: {person_name} is running {minutes} min late",
+        text=f"{line}\n\n{url}",
+        html=_layout("Running late", escape(line), "Open tonight's sign-in", url),
+    )
+
+
+def _pretty_time(hhmm: str) -> str:
+    hour, minute = (int(x) for x in hhmm.split(":"))
+    suffix = "AM" if hour < 12 else "PM"
+    return f"{(hour % 12) or 12}:{minute:02d} {suffix}"
+
+
 def _pretty_date(iso: str) -> str:
     from datetime import date
 

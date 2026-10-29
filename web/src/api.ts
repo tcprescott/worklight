@@ -1,7 +1,19 @@
 import type {
   Act,
   Admin,
+  Attendance,
   Breakdown,
+  Call,
+  CheckIn,
+  CheckInResult,
+  CheckInStatus,
+  CreateCallBody,
+  MyCall,
+  PublishResult,
+  ScheduleView,
+  Suggestions,
+  TechCallsBody,
+  UpdateCallBody,
   Character,
   CreateCharacterBody,
   CreateInviteBody,
@@ -126,4 +138,33 @@ export const api = {
   deleteDate: (date: string) => request<void>("DELETE", `/me/conflicts/dates/${e(date)}`),
   myDays: () => request<ShowDay[]>("GET", "/me/days"),
   showConflicts: (showId: string) => request<MemberConflicts[]>("GET", `${show(showId)}/conflicts`),
+
+  // Schedule. Staff get working copies with warnings; everyone else gets the published schedule.
+  /** Leave out from and to for the week holding today (the server's today). */
+  schedule: (showId: string, from?: string, to?: string) =>
+    request<ScheduleView>("GET", `${show(showId)}/schedule${from && to ? `?from=${e(from)}&to=${e(to)}` : ""}`),
+  suggestions: (showId: string, date: string, from?: string, to?: string) =>
+    request<Suggestions>(
+      "GET",
+      `${show(showId)}/schedule/suggestions?date=${e(date)}${from && to ? `&from=${e(from)}&to=${e(to)}` : ""}`,
+    ),
+  addSceneToNight: (showId: string, date: string, sceneId: string, callId?: string) =>
+    request<Call>("POST", `${show(showId)}/schedule/${e(date)}/scenes`, { sceneId, callId }),
+  publish: (showId: string, from: string, to: string) =>
+    request<PublishResult>("POST", `${show(showId)}/schedule/publish`, { from, to }),
+  createCall: (showId: string, input: CreateCallBody) => request<Call>("POST", `${show(showId)}/calls`, input),
+  updateCall: (showId: string, callId: string, input: UpdateCallBody) =>
+    request<Call>("PATCH", `${show(showId)}/calls/${e(callId)}`, input),
+  deleteCall: (showId: string, callId: string) => request<void>("DELETE", `${show(showId)}/calls/${e(callId)}`),
+  createTechCalls: (showId: string, input: TechCallsBody) => request<Call[]>("POST", `${show(showId)}/tech-calls`, input),
+  myCalls: (showId?: string) => request<MyCall[]>("GET", `/me/calls${showId ? `?showId=${e(showId)}` : ""}`),
+
+  // Tech week
+  attendance: (showId: string) => request<Attendance>("GET", `${show(showId)}/attendance`),
+  mark: (showId: string, date: string, userId: string, status: CheckInStatus | null) =>
+    request<CheckIn | null>("PUT", `${show(showId)}/attendance/${e(date)}/${e(userId)}`, { status }),
+  rotateDoorCode: (showId: string) => request<{ doorCode: string }>("POST", `${show(showId)}/door-code`),
+  checkIn: (showId: string, code: string) => request<CheckInResult>("POST", `${show(showId)}/check-in`, { code }),
+  runningLate: (showId: string, minutes: number, note?: string) =>
+    request<CheckIn>("POST", `${show(showId)}/running-late`, { minutes, note }),
 };

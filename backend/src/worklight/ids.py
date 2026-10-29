@@ -2,7 +2,9 @@ import base64
 import hashlib
 import secrets
 import time
-from datetime import UTC, datetime
+from datetime import UTC
+
+from worklight import clock
 
 
 def _b64url(raw: bytes) -> str:
@@ -24,7 +26,7 @@ def sha256(value: str) -> str:
 
 
 def now_iso() -> str:
-    return datetime.now(UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
+    return clock.now().astimezone(UTC).isoformat(timespec="milliseconds").replace("+00:00", "Z")
 
 
 def now_epoch() -> int:

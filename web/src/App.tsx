@@ -11,6 +11,9 @@ import { AuthCallback } from "./pages/AuthCallback";
 import { Breakdown } from "./pages/director/Breakdown";
 import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
+import { Schedule } from "./pages/director/Schedule";
+import { TechWeek } from "./pages/director/TechWeek";
+import { StageDoor } from "./pages/actor/StageDoor";
 import { SetupWizard } from "./pages/director/SetupWizard";
 import { ShowSettings } from "./pages/director/ShowSettings";
 import { Staff } from "./pages/director/Staff";
@@ -25,14 +28,14 @@ import { ErrorView, Loading } from "./ui";
 import { useAsync } from "./useAsync";
 
 export function App() {
-  const { path } = useLocation();
+  const { path, search } = useLocation();
 
   // Public routes: finishing a sign-in, and invite links (which sign you in themselves).
   if (path === "/auth/magic") return <MagicLink />;
   if (path === "/auth/callback") return <AuthCallback />;
   const join = match("/join/{token}", path);
   if (join) return <Join token={join.token!} />;
-  if (!isSignedIn()) return <SignIn next={path === "/sign-in" ? "/" : path} />;
+  if (!isSignedIn()) return <SignIn next={path === "/sign-in" ? "/" : path + search} />;
 
   return (
     <SessionProvider>
@@ -93,7 +96,7 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
     case "":
       // Staff land on their working page; cast and crew land on the show page.
       if (staff) {
-        navigate(`/shows/${props.showId}/breakdown`, true);
+        navigate(`/shows/${props.showId}/schedule`, true);
         return <Loading />;
       }
       return <ShowHome {...pageProps} />;
@@ -103,6 +106,13 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return <MyConflicts {...pageProps} />;
     case "calls":
       return <MyCalls {...pageProps} />;
+    case "schedule":
+      return staff ? <Schedule {...pageProps} /> : <NotForYou />;
+    case "tech":
+      return staff ? <TechWeek {...pageProps} /> : <NotForYou />;
+    case "door":
+      // Scanned from the stage door sign: /shows/:id/door?code=...
+      return <StageDoor {...pageProps} />;
     case "breakdown":
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
     case "people":

@@ -114,6 +114,7 @@ def test_my_days_lists_what_each_active_show_needs(call: Client, mailer: FakeMai
         "start": "19:00",
         "end": "21:30",
         "noConflicts": False,
+        "called": False,
     }
     assert "2026-11-26" not in {d["date"] for d in days}
     assert all(d["noConflicts"] for d in days if d["date"] >= "2026-11-29")

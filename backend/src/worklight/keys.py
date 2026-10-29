@@ -9,6 +9,8 @@ SHOW#<showId>  ACT#<actId>       act
 SHOW#<showId>  SCENE#<sceneId>   scene (ordered by its order field)
 SHOW#<showId>  CHAR#<charId>     character and who plays it
 SHOW#<showId>  APPEAR#<sceneId>#<charId>   one tick in the scenes x characters grid
+SHOW#<showId>  CALL#<date>#<callId>       a rehearsal call (working copy + published copy)
+SHOW#<showId>  CHECKIN#<date>#<userId>    tech week and performance attendance
 USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
@@ -30,6 +32,8 @@ SCENE_PREFIX = "SCENE#"
 CHAR_PREFIX = "CHAR#"
 APPEAR_PREFIX = "APPEAR#"
 CONFLICT_PREFIX = "CONFLICT#"
+CALL_PREFIX = "CALL#"
+CHECKIN_PREFIX = "CHECKIN#"
 
 
 def normalize_email(email: str) -> str:
@@ -91,6 +95,14 @@ def character(show_id: str, char_id: str) -> Key:
 
 def appearance(show_id: str, scene_id: str, char_id: str) -> Key:
     return {"PK": f"SHOW#{show_id}", "SK": f"APPEAR#{scene_id}#{char_id}"}
+
+
+def call(show_id: str, date: str, call_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"CALL#{date}#{call_id}"}
+
+
+def checkin(show_id: str, date: str, user_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"CHECKIN#{date}#{user_id}"}
 
 
 def weekly_conflict(user_id: str, weekday: int) -> Key:

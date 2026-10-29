@@ -116,12 +116,23 @@ def main() -> None:
     parser.add_argument("--empty", action="store_true", help="start with no sample data")
     parser.add_argument("--today", help="pretend it's this date (YYYY-MM-DD), e.g. to see a rehearsal week")
     parser.add_argument(
+        "--now", help="pretend it's this time on that date in the show's zone (HH:MM, Chicago)"
+    )
+    parser.add_argument(
         "--app-url", default="http://localhost:5173", help="the web app's URL, for emailed links"
     )
     args = parser.parse_args()
     if args.today:
         pinned = date.fromisoformat(args.today)
         clock.today = lambda: pinned  # type: ignore[assignment]
+        if args.now:
+            from datetime import datetime
+            from zoneinfo import ZoneInfo
+
+            moment = datetime.fromisoformat(f"{args.today}T{args.now}").replace(
+                tzinfo=ZoneInfo("America/Chicago")
+            )
+            clock.now = lambda: moment  # type: ignore[assignment]
     for key, value in {
         "AWS_DEFAULT_REGION": "us-east-1",
         "AWS_ACCESS_KEY_ID": "dev",

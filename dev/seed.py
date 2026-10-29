@@ -8,14 +8,17 @@ from worklight.models import (
     Act,
     Appearance,
     Character,
+    CheckIn,
     DateConflict,
     Membership,
     RehearsalSlot,
     Scene,
     Show,
     Theater,
+    User,
     WeeklyConflict,
 )
+from worklight.services import schedule
 from worklight.services.base import Ctx, user_for_email
 
 # (name, part or title, role, department, status) where status is invited, joined or ready.
@@ -244,7 +247,7 @@ def seed(ctx: Ctx) -> None:
         theater_id=theater.theater_id,
         name="A Christmas Carol (staged reading)",
         timezone="America/Chicago",
-        start_date="2026-12-08",
+        start_date="2026-11-09",
         end_date="2026-12-20",
         opening_date="2026-12-18",
         created_at=now,
@@ -284,3 +287,102 @@ def seed(ctx: Ctx) -> None:
             joined_at=now,
         ),
     )
+
+    # Elena is also reading for Carol, which has called her on Tuesday Nov 10: Midsummer sees her as
+    # "called elsewhere" that night without seeing which show.
+    elena = users["Elena Rossi"]
+    store.put_membership(
+        Membership(
+            show_id="carol",
+            theater_id=theater.theater_id,
+            user_id=elena.user_id,
+            role="cast",
+            title=None,
+            joined_at=now,
+            conflicts_submitted_at=now,
+        )
+    )
+    schedule.create_call(
+        ctx,
+        dana,
+        "carol",
+        schedule.CreateCallBody(
+            date="2026-11-10", start="19:00", end="21:00", groups=["cast"], title="Read-through"
+        ),
+    )
+    schedule.publish(
+        ctx, dana, "carol", schedule.PublishBody.model_validate({"from": "2026-11-09", "to": "2026-11-15"})
+    )
+
+    seed_schedule(ctx, jordan, users)
+
+
+def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
+    """The first week published, the week of Nov 9 drafted as on the Schedule board, and tech week called."""
+    show_id = "midsummer"
+
+    def night(day: str, *scenes: str, **fields: object) -> None:
+        blocks = [schedule.BlockBody(scene_ids=[f"s{s.replace('.', '-')}"]) for s in scenes]
+        if "label" in fields:
+            blocks.insert(
+                0, schedule.BlockBody(label=str(fields.pop("label")), minutes=int(str(fields.pop("minutes"))))
+            )
+        schedule.create_call(
+            ctx,
+            director,
+            show_id,
+            schedule.CreateCallBody.model_validate({"date": day, "blocks": blocks, **fields}),
+        )
+
+    week1 = {"location": "Fellowship Hall", "bring": "Script and a pencil"}
+    night(
+        "2026-11-02", label="Read-through, Act 1", minutes=150, groups=["cast"], title="Read-through", **week1
+    )
+    night("2026-11-03", "1.1", **week1)
+    night("2026-11-04", "1.2", "2.2", **week1)
+    night("2026-11-05", "1.1", "2.1", **week1)
+    night("2026-11-07", "3.1", **week1)
+    schedule.publish(
+        ctx,
+        director,
+        show_id,
+        schedule.PublishBody.model_validate({"from": "2026-11-02", "to": "2026-11-08"}),
+    )
+
+    night("2026-11-09", "1.1")
+    night("2026-11-10", "1.2", "3.1")
+    night("2026-11-11", "2.1", "2.2")
+    night("2026-11-14", "5.1")
+
+    schedule.create_tech_calls(
+        ctx, director, show_id, schedule.TechCallsBody(start="18:00", end="22:00", crew_start="17:30")
+    )
+    schedule.publish(
+        ctx,
+        director,
+        show_id,
+        schedule.PublishBody.model_validate({"from": "2026-11-29", "to": "2026-12-06"}),
+    )
+    stamp = now_iso()
+    for name, status in (("Tom Byrne", "absent"), ("Nao Sato", "late")):
+        ctx.store.put_checkin(
+            CheckIn(
+                show_id=show_id,
+                date="2026-11-29",
+                user_id=users[name].user_id,
+                status=status,
+                updated_at=stamp,
+            )  # type: ignore[arg-type]
+        )
+    for name, _, _, _, _ in PEOPLE:
+        if name not in ("Tom Byrne", "Nao Sato"):
+            ctx.store.put_checkin(
+                CheckIn(
+                    show_id=show_id,
+                    date="2026-11-29",
+                    user_id=users[name].user_id,
+                    status="on_time",
+                    arrived_at=stamp,
+                    updated_at=stamp,
+                )
+            )

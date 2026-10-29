@@ -180,12 +180,19 @@ class ShowDayView(Model):
     end: str | None = None
     # Tech week and performances: everyone is expected.
     no_conflicts: bool = False
+    # This show has published a call that needs me that day.
+    called: bool = False
+    # Another of my shows has called me at the same time, so I can't be free for this one.
+    called_by: str | None = None
 
 
 def my_days(ctx: Ctx, user: User) -> list[ShowDayView]:
     """Every date any of my active shows needs me, in date order, for the conflicts page."""
     memberships = ctx.store.list_memberships(user.user_id)
     shows = ctx.store.get_shows((m.theater_id, m.show_id) for m in memberships)
+    from worklight.services.schedule import my_calls
+
+    calls = [c for c in my_calls(ctx, user) if not c.cancelled]
     out: list[ShowDayView] = []
     today = clock.today().isoformat()
     for show in shows:
@@ -195,6 +202,16 @@ def my_days(ctx: Ctx, user: User) -> list[ShowDayView]:
         for day in show_days(show):
             if day.date < today:
                 continue
+            same_day = [c for c in calls if c.date == day.date]
+            elsewhere = next(
+                (
+                    c.show_name
+                    for c in same_day
+                    if c.show_id != show.show_id
+                    and (not day.start or not day.end or (c.start < day.end and day.start < c.end))
+                ),
+                None,
+            )
             out.append(
                 ShowDayView(
                     show_id=show.show_id,
@@ -203,6 +220,8 @@ def my_days(ctx: Ctx, user: User) -> list[ShowDayView]:
                     start=day.start,
                     end=day.end,
                     no_conflicts=bool(lock and day.date >= lock),
+                    called=any(c.show_id == show.show_id for c in same_day),
+                    called_by=elsewhere,
                 )
             )
     out.sort(key=lambda d: (d.date, d.start or ""))
