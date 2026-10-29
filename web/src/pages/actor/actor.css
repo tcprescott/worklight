@@ -899,3 +899,289 @@ button.actor-level {
   gap: 10px;
   align-items: center;
 }
+
+/* ---- My calls: tonight card and call rows (phase 3) ------------------------------------------- */
+
+.actor-tonight {
+  background: var(--stage);
+  color: #fff;
+  padding: 32px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.actor-tonight .caps {
+  color: var(--plum-soft);
+}
+.actor-tonight .avatar {
+  background: #3a322d;
+  color: #fff;
+}
+.actor-tonight-time {
+  font-family: var(--cond);
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+.actor-tonight-what {
+  font-size: 16px;
+  color: var(--stage-text);
+}
+.actor-tonight-place {
+  font-size: 14px;
+  color: var(--plum-soft);
+}
+.actor-tonight-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.actor-tonight-actions.one {
+  grid-template-columns: minmax(0, 1fr);
+}
+.btn.actor-tonight-dir {
+  min-height: 48px;
+  border: none;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--stage);
+  font-size: 15px;
+  font-weight: 700;
+}
+.btn.actor-tonight-dir:hover {
+  color: var(--stage);
+  background: var(--sand-2);
+}
+.btn.actor-tonight-late {
+  min-height: 48px;
+  border-radius: 6px;
+  border: 1px solid #9b74b5;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+.btn.actor-tonight-late:hover {
+  color: #fff;
+  border-color: var(--plum-soft);
+}
+.actor-tonight-told {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #4a2e5e;
+  font-size: 14px;
+}
+.actor-late-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.actor-late-opt {
+  min-height: 52px;
+  border-radius: 6px;
+  border: 1px solid var(--rule-input);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+.actor-late-opt[aria-pressed="true"] {
+  border-color: var(--plum);
+  background: var(--plum-tint);
+  color: var(--plum-dark);
+  box-shadow: inset 0 0 0 1px var(--plum);
+}
+.actor-calls-head {
+  padding-bottom: 4px;
+}
+.actor-cal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.actor-cal .btn {
+  min-height: 40px;
+}
+.actor-cal span {
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.actor-call {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--rule);
+  border-left: 3px solid var(--plum);
+}
+.actor-call .datemark {
+  width: auto;
+}
+.actor-call-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.actor-call-time {
+  font-family: var(--cond);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.actor-call-what {
+  font-size: 14px;
+}
+.actor-call-place {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-call.cancelled {
+  border-left-color: var(--disabled);
+}
+.actor-call.cancelled .datemark .wd {
+  color: var(--muted-2);
+}
+.actor-call.cancelled .datemark .n,
+.actor-call.cancelled .actor-call-time,
+.actor-call.cancelled .actor-call-what {
+  text-decoration: line-through;
+  color: var(--muted-2);
+}
+.actor-call-cancel {
+  align-self: flex-start;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hard-text);
+}
+
+/* ---- My conflicts: nights already decided by a call (phase 3) --------------------------------- */
+
+.actor-date.locked {
+  background: var(--surface);
+}
+.actor-locked {
+  background: var(--sand-2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.actor-locked strong {
+  color: var(--ink);
+}
+.actor-date.called {
+  box-shadow: inset 3px 0 0 var(--plum);
+}
+.actor-called-tag {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--plum);
+}
+
+/* ---- Stage door check-in (phase 3) ------------------------------------------------------------ */
+
+.door {
+  min-height: 100dvh;
+  background: var(--stage);
+  color: #fff;
+  padding: 48px 24px calc(40px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+}
+.door .caps {
+  color: var(--plum-soft);
+}
+.door-mark {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--plum);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+.door-mark svg {
+  width: 48px;
+  height: 48px;
+}
+.door-late .door-mark {
+  background: var(--part-bg);
+  color: var(--part-text);
+}
+.door h1 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 340px;
+}
+.door-time {
+  font-family: var(--cond);
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 0.95;
+}
+.door p {
+  max-width: 320px;
+  font-size: 15px;
+  color: var(--stage-text);
+  line-height: 1.5;
+}
+.btn.door-btn {
+  margin-top: 12px;
+  min-width: 220px;
+  border: none;
+  background: #fff;
+  color: var(--stage);
+  font-weight: 700;
+}
+.btn.door-btn:hover {
+  color: var(--stage);
+  background: var(--sand-2);
+}
+.door-wait {
+  flex: 1;
+  padding: 64px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+.door-wait h1 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.door-wait .form-error {
+  max-width: 340px;
+}
+.door-wait-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+/* The running-late sheet opens from inside the dark card. */
+.actor-tonight .sheet {
+  color: var(--ink);
+}

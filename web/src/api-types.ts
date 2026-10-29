@@ -1886,6 +1886,11 @@ export interface components {
             blockId: string;
             /** End */
             end: string;
+            /**
+             * Fixedstart
+             * @default false
+             */
+            fixedStart: boolean;
             /** Label */
             label?: string | null;
             /** Minutes */

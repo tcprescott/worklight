@@ -295,6 +295,8 @@ def _checker(ctx: Ctx, cast: ShowCast, start: str, end: str) -> _Checker:
 class TimedBlock(Block):
     start: str
     end: str
+    # The block has its own start time rather than following the one before.
+    fixed_start: bool = False
     warnings: list[Warning] = []
 
 
@@ -357,7 +359,13 @@ def _call_view(call: Call, content: CallContent, cast: ShowCast, check: _Checker
                     warnings.append(w)
         blocks.append(
             TimedBlock.model_validate(
-                {**piece.block.model_dump(), "start": piece.start, "end": piece.end, "warnings": warnings}
+                {
+                    **piece.block.model_dump(),
+                    "start": piece.start,
+                    "end": piece.end,
+                    "fixed_start": piece.block.start is not None,
+                    "warnings": warnings,
+                }
             )
         )
     called = cast.called(content)

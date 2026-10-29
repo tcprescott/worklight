@@ -140,8 +140,9 @@ export const api = {
   showConflicts: (showId: string) => request<MemberConflicts[]>("GET", `${show(showId)}/conflicts`),
 
   // Schedule. Staff get working copies with warnings; everyone else gets the published schedule.
-  schedule: (showId: string, from: string, to: string) =>
-    request<ScheduleView>("GET", `${show(showId)}/schedule?from=${e(from)}&to=${e(to)}`),
+  /** Leave out from and to for the week holding today (the server's today). */
+  schedule: (showId: string, from?: string, to?: string) =>
+    request<ScheduleView>("GET", `${show(showId)}/schedule${from && to ? `?from=${e(from)}&to=${e(to)}` : ""}`),
   suggestions: (showId: string, date: string, from?: string, to?: string) =>
     request<Suggestions>(
       "GET",

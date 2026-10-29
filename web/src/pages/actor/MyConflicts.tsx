@@ -23,6 +23,11 @@ const CHOICES: { id: Choice; label: string; level: DateAnswer }[] = [
   { id: "hard", label: "Can't", level: "hard" },
 ];
 const choiceOf = (level: DateAnswer): Choice => (level === "free" || level === "partial" ? "in" : level);
+/** "A Midsummer Night's Dream" -> "Midsummer", the way people say it. */
+function shortShowName(name: string): string {
+  const words = name.replace(/^(a|an|the)\s+/i, "").split(/\s+/);
+  return words.length > 2 ? words[0]! : name.replace(/^(a|an|the)\s+/i, "") || "This show";
+}
 const USUAL_TEXT: Record<WeeklyConflict["level"], string> = { hard: "can't", soft: "rather not", partial: "part of it" };
 
 export function MyConflicts(props: ShowPageProps) {
@@ -75,7 +80,8 @@ function ConflictList(props: ShowPageProps & { days: ShowDay[]; conflicts: Confl
     // Once conflicts are sent, a night left alone means "I'm in".
     return submitted.has(day.showId) ? { level: "free", usual: true, assumed: true } : undefined;
   };
-  const answered = days.filter((d) => effective(d)).length;
+  // A night another show has called you for is decided: it counts as answered and can't be changed here.
+  const answered = days.filter((d) => d.calledBy || effective(d)).length;
   const blank = days.length - answered;
 
   /** Optimistic save: shows the new answer now, puts the old one back if the API says no. */
@@ -177,7 +183,7 @@ function ConflictList(props: ShowPageProps & { days: ShowDay[]; conflicts: Confl
           {days.length ? `You've answered ${answered} of ${days.length}.` : ""}
         </p>
         <p className="small" style={{ color: "var(--muted-2)", lineHeight: 1.4 }}>
-          Your answers go to every show you're in.
+          Your answers go to every show you're in.{days.some((d) => d.calledBy) ? " Nights another show has called you are filled in for you." : ""}
         </p>
         {days.length > 0 && <Progress parts={[{ value: answered }]} total={days.length} label="Answered" />}
       </header>
@@ -200,16 +206,39 @@ function ConflictList(props: ShowPageProps & { days: ShowDay[]; conflicts: Confl
           const isPartial = eff?.level === "partial";
           const showTimes = (isPartial && !eff.usual) || (partOpen.has(day.date) && answers[day.date]?.level === "partial");
           const kind = KIND_LABEL[day.kind];
+          const thisShow = showNames.get(day.showId) ?? "";
+          if (day.calledBy) {
+            return (
+              <div key={`${day.showId}-${day.date}`} className="stack-sm" style={{ gap: 8 }}>
+                {weekLabel && <div className="caps actor-week">{weekLabel}</div>}
+                <div className="actor-date locked">
+                  <div className="actor-date-top">
+                    <DateMark date={day.date} />
+                    <div className="actor-date-info">
+                      <strong>{day.start && day.end ? timeRange(day.start, day.end) : "Times to come"}</strong>
+                      <span className="what">{day.kind === "rehearsal" ? "Rehearsal" : kind}</span>
+                      <span className="actor-show-caps">{thisShow}</span>
+                    </div>
+                  </div>
+                  <div className="actor-locked">
+                    <strong>Called for {day.calledBy}.</strong> {shortShowName(thisShow)} sees this night as taken.
+                  </div>
+                </div>
+              </div>
+            );
+          }
           return (
             <div key={`${day.showId}-${day.date}`} className="stack-sm" style={{ gap: 8 }}>
               {weekLabel && <div className="caps actor-week">{weekLabel}</div>}
-              <div className={eff ? "actor-date" : "actor-date blank"}>
+              <div className={`actor-date${eff ? "" : " blank"}${day.called ? " called" : ""}`}>
                 <div className="actor-date-top">
                   <DateMark date={day.date} />
                   <div className="actor-date-info">
                     <strong>{day.start && day.end ? timeRange(day.start, day.end) : "Times to come"}</strong>
-                    <span className="what">{day.kind === "rehearsal" ? "Schedule coming soon" : kind}</span>
-                    <span className="actor-show-caps">{showNames.get(day.showId) ?? ""}</span>
+                    <span className="what">
+                      {day.called ? "You're called" : day.kind === "rehearsal" ? "Schedule coming soon" : kind}
+                    </span>
+                    <span className="actor-show-caps">{thisShow}</span>
                   </div>
                 </div>
                 {day.noConflicts && (

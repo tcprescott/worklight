@@ -3343,6 +3343,11 @@
             "title": "End",
             "type": "string"
           },
+          "fixedStart": {
+            "default": false,
+            "title": "Fixedstart",
+            "type": "boolean"
+          },
           "label": {
             "anyOf": [
               {

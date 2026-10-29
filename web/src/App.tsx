@@ -28,14 +28,14 @@ import { ErrorView, Loading } from "./ui";
 import { useAsync } from "./useAsync";
 
 export function App() {
-  const { path } = useLocation();
+  const { path, search } = useLocation();
 
   // Public routes: finishing a sign-in, and invite links (which sign you in themselves).
   if (path === "/auth/magic") return <MagicLink />;
   if (path === "/auth/callback") return <AuthCallback />;
   const join = match("/join/{token}", path);
   if (join) return <Join token={join.token!} />;
-  if (!isSignedIn()) return <SignIn next={path === "/sign-in" ? "/" : path} />;
+  if (!isSignedIn()) return <SignIn next={path === "/sign-in" ? "/" : path + search} />;
 
   return (
     <SessionProvider>
