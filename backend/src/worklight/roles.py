@@ -5,6 +5,8 @@ from worklight.models import ShowRole, TheaterRole
 ShowAction = Literal[
     "show:read",
     "show:edit",
+    "show:archive",
+    "breakdown:edit",
     "members:read",
     "members:invite",
     "schedule:edit",

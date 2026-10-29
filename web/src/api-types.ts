@@ -39,6 +39,94 @@ export interface paths {
         patch: operations["update_me_api_me_patch"];
         trace?: never;
     };
+    "/api/me/conflicts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Conflicts */
+        get: operations["get_my_conflicts_api_me_conflicts_get"];
+        put?: never;
+        /** Save Conflicts */
+        post: operations["save_conflicts_api_me_conflicts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/conflicts/dates/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Put Date */
+        put: operations["put_date_api_me_conflicts_dates__day__put"];
+        post?: never;
+        /** Delete Date */
+        delete: operations["delete_date_api_me_conflicts_dates__day__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/conflicts/weekly/{weekday}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Put Weekly */
+        put: operations["put_weekly_api_me_conflicts_weekly__weekday__put"];
+        post?: never;
+        /** Delete Weekly */
+        delete: operations["delete_weekly_api_me_conflicts_weekly__weekday__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/days": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Days */
+        get: operations["my_days_api_me_days_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public/invites/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview Invite */
+        get: operations["preview_invite_api_public_invites__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}": {
         parameters: {
             query?: never;
@@ -48,6 +136,128 @@ export interface paths {
         };
         /** Get Show */
         get: operations["get_show_api_shows__show_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Show */
+        patch: operations["update_show_api_shows__show_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/acts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Act */
+        post: operations["create_act_api_shows__show_id__acts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/acts/{act_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Act */
+        delete: operations["delete_act_api_shows__show_id__acts__act_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Act */
+        patch: operations["update_act_api_shows__show_id__acts__act_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive Show */
+        post: operations["archive_show_api_shows__show_id__archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/breakdown": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Breakdown */
+        get: operations["get_breakdown_api_shows__show_id__breakdown_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/characters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Character */
+        post: operations["create_character_api_shows__show_id__characters_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/characters/{char_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Character */
+        delete: operations["delete_character_api_shows__show_id__characters__char_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Character */
+        patch: operations["update_character_api_shows__show_id__characters__char_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/conflicts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show Conflicts */
+        get: operations["show_conflicts_api_shows__show_id__conflicts_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -73,6 +283,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Join Show */
+        post: operations["join_show_api_shows__show_id__join_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/members": {
         parameters: {
             query?: never;
@@ -90,6 +317,128 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/members/{member_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Member */
+        delete: operations["remove_member_api_shows__show_id__members__member_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Member */
+        patch: operations["update_member_api_shows__show_id__members__member_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/remind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remind */
+        post: operations["remind_api_shows__show_id__remind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/reorder/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder */
+        post: operations["reorder_api_shows__show_id__reorder__kind__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore Show */
+        post: operations["restore_show_api_shows__show_id__restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Scene */
+        post: operations["create_scene_api_shows__show_id__scenes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes/{scene_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Scene */
+        delete: operations["delete_scene_api_shows__show_id__scenes__scene_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Scene */
+        patch: operations["update_scene_api_shows__show_id__scenes__scene_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes/{scene_id}/characters/{char_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Add To Scene */
+        put: operations["add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put"];
+        post?: never;
+        /** Remove From Scene */
+        delete: operations["remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/theaters": {
         parameters: {
             query?: never;
@@ -102,6 +451,57 @@ export interface paths {
         /** Create Theater */
         post: operations["create_theater_api_theaters_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Theater */
+        get: operations["get_theater_api_theaters__theater_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/admins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Admin */
+        post: operations["add_admin_api_theaters__theater_id__admins_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/admins/{admin_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Admin */
+        delete: operations["remove_admin_api_theaters__theater_id__admins__admin_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -128,10 +528,111 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** CreateInviteBody */
-        CreateInviteBody: {
+        /** Act */
+        Act: {
+            /** Actid */
+            actId: string;
+            /** Name */
+            name: string;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+        };
+        /** ActBody */
+        ActBody: {
+            /** Name */
+            name: string;
+        };
+        /** AddAdminBody */
+        AddAdminBody: {
             /** Email */
             email: string;
+            /** Name */
+            name?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** Admin */
+        Admin: {
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /** Appearance */
+        Appearance: {
+            /** Charid */
+            charId: string;
+            /** Sceneid */
+            sceneId: string;
+            /** Showid */
+            showId: string;
+        };
+        /** Breakdown */
+        Breakdown: {
+            /** Acts */
+            acts: components["schemas"]["Act"][];
+            /** Appearances */
+            appearances: components["schemas"]["Appearance"][];
+            /** Characters */
+            characters: components["schemas"]["Character"][];
+            /** Scenes */
+            scenes: components["schemas"]["Scene"][];
+        };
+        /** Character */
+        Character: {
+            /**
+             * Castuserids
+             * @default []
+             */
+            castUserIds: string[];
+            /** Charid */
+            charId: string;
+            /**
+             * Ensemble
+             * @default false
+             */
+            ensemble: boolean;
+            /** Name */
+            name: string;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+        };
+        /** CreateCharacterBody */
+        CreateCharacterBody: {
+            /**
+             * Castuserids
+             * @default []
+             */
+            castUserIds: string[];
+            /**
+             * Ensemble
+             * @default false
+             */
+            ensemble: boolean;
+            /** Name */
+            name: string;
+        };
+        /** CreateInviteBody */
+        CreateInviteBody: {
+            /**
+             * Characterids
+             * @default []
+             */
+            characterIds: string[];
+            /** Department */
+            department?: string | null;
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
             /**
              * Role
              * @default cast
@@ -141,16 +642,53 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /** CreateSceneBody */
+        CreateSceneBody: {
+            /** Actid */
+            actId: string;
+            /**
+             * Characterids
+             * @default []
+             */
+            characterIds: string[];
+            /**
+             * Eighths
+             * @default 0
+             */
+            eighths: number;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name: string;
+            /** Number */
+            number?: string | null;
+        };
         /** CreateShowBody */
         CreateShowBody: {
+            /** Address */
+            address?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
             /** Creatortitle */
             creatorTitle?: string | null;
             /** Enddate */
             endDate: string;
+            /** Minutesperpage */
+            minutesPerPage?: number | null;
             /** Name */
             name: string;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
+            /** Skippeddates */
+            skippedDates?: string[] | null;
+            /** Slots */
+            slots?: components["schemas"]["SlotBody"][] | null;
             /** Startdate */
             startDate: string;
+            /** Techstart */
+            techStart?: string | null;
             /** Timezone */
             timezone: string;
             /** Venue */
@@ -160,6 +698,61 @@ export interface components {
         CreateTheaterBody: {
             /** Name */
             name: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** DateBody */
+        DateBody: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * DateConflict
+         * @description An answer for one date. It wins over a weekly rule for that date.
+         */
+        DateConflict: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Date */
+            date: string;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+        };
+        /** DateItem */
+        DateItem: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Date */
+            date: string;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -176,6 +769,27 @@ export interface components {
             /** Showid */
             showId: string;
         };
+        /**
+         * InvitePreview
+         * @description What the sign-in page shows for an invite link, before anyone signs in.
+         */
+        InvitePreview: {
+            /** Email */
+            email: string;
+            /** Invitername */
+            inviterName: string;
+            /** Part */
+            part?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Showname */
+            showName: string;
+            /** Theatername */
+            theaterName: string;
+        };
         /** InviteSent */
         InviteSent: {
             /** Email */
@@ -189,6 +803,8 @@ export interface components {
             role: "staff" | "cast" | "crew";
             /** Title */
             title?: string | null;
+            /** Userid */
+            userId: string;
         };
         /**
          * Me
@@ -203,6 +819,10 @@ export interface components {
         };
         /** Member */
         Member: {
+            /** Conflictssubmittedat */
+            conflictsSubmittedAt?: string | null;
+            /** Department */
+            department?: string | null;
             /** Email */
             email?: string | null;
             /** Name */
@@ -212,19 +832,50 @@ export interface components {
              * @enum {string}
              */
             role: "staff" | "cast" | "crew";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "invited" | "joined";
             /** Title */
             title?: string | null;
             /** Userid */
             userId: string;
         };
+        /** MemberConflicts */
+        MemberConflicts: {
+            /** Dates */
+            dates: components["schemas"]["DateConflict"][];
+            /** Userid */
+            userId: string;
+            /** Weekly */
+            weekly: components["schemas"]["WeeklyConflict"][];
+        };
+        /** MyConflicts */
+        MyConflicts: {
+            /** Dates */
+            dates: components["schemas"]["DateConflict"][];
+            /** Weekly */
+            weekly: components["schemas"]["WeeklyConflict"][];
+        };
         /** MyShow */
         MyShow: {
+            /** Conflictssubmittedat */
+            conflictsSubmittedAt?: string | null;
             /**
              * Role
              * @enum {string}
              */
             role: "staff" | "cast" | "crew";
             show: components["schemas"]["Show"];
+            /**
+             * Status
+             * @default joined
+             * @enum {string}
+             */
+            status: "invited" | "joined";
+            /** Theatername */
+            theaterName: string;
             /** Title */
             title?: string | null;
         };
@@ -237,24 +888,172 @@ export interface components {
             role: "admin";
             theater: components["schemas"]["Theater"];
         };
+        /**
+         * RehearsalSlot
+         * @description A usual rehearsal night: weekday 0 = Monday ... 6 = Sunday, times as HH:MM in the show's timezone.
+         */
+        RehearsalSlot: {
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Weekday */
+            weekday: number;
+        };
+        /** RemindBody */
+        RemindBody: {
+            /** Userids */
+            userIds?: string[] | null;
+        };
+        /** Reminded */
+        Reminded: {
+            /** Conflictreminders */
+            conflictReminders: number;
+            /** Invitesresent */
+            invitesResent: number;
+        };
+        /** ReorderBody */
+        ReorderBody: {
+            /** Ids */
+            ids: string[];
+        };
+        /**
+         * SaveConflictsBody
+         * @description Saves several answers at once, as the guided setup does at the end.
+         */
+        SaveConflictsBody: {
+            /**
+             * Cleardates
+             * @default []
+             */
+            clearDates: string[];
+            /**
+             * Dates
+             * @default []
+             */
+            dates: components["schemas"]["DateItem"][];
+            /**
+             * Replaceweekly
+             * @default false
+             */
+            replaceWeekly: boolean;
+            /**
+             * Submitto
+             * @default []
+             */
+            submitTo: string[] | "all";
+            /**
+             * Weekly
+             * @default []
+             */
+            weekly: components["schemas"]["WeeklyItem"][];
+        };
+        /** Scene */
+        Scene: {
+            /** Actid */
+            actId: string;
+            /**
+             * Eighths
+             * @default 0
+             */
+            eighths: number;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /** Order */
+            order: number;
+            /** Sceneid */
+            sceneId: string;
+            /** Showid */
+            showId: string;
+        };
         /** Show */
         Show: {
+            /** Address */
+            address?: string | null;
+            /** Archivedat */
+            archivedAt?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
             /** Createdat */
             createdAt: string;
             /** Enddate */
             endDate: string;
+            /**
+             * Minutesperpage
+             * @default 8
+             */
+            minutesPerPage: number;
             /** Name */
             name: string;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
             /** Showid */
             showId: string;
+            /**
+             * Skippeddates
+             * @default []
+             */
+            skippedDates: string[];
+            /**
+             * Slots
+             * @default []
+             */
+            slots: components["schemas"]["RehearsalSlot"][];
             /** Startdate */
             startDate: string;
+            /**
+             * Status
+             * @default active
+             * @enum {string}
+             */
+            status: "active" | "archived";
+            /** Techstart */
+            techStart?: string | null;
             /** Theaterid */
             theaterId: string;
             /** Timezone */
             timezone: string;
             /** Venue */
             venue?: string | null;
+        };
+        /** ShowDayView */
+        ShowDayView: {
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "rehearsal" | "tech" | "performance";
+            /**
+             * Noconflicts
+             * @default false
+             */
+            noConflicts: boolean;
+            /** Showid */
+            showId: string;
+            /** Start */
+            start?: string | null;
+        };
+        /** ShowSummary */
+        ShowSummary: {
+            /** Castcount */
+            castCount: number;
+            /** Crewcount */
+            crewCount: number;
+            show: components["schemas"]["Show"];
+            /** Staff */
+            staff: components["schemas"]["Member"][];
+            /** Waitingcount */
+            waitingCount: number;
         };
         /** ShowView */
         ShowView: {
@@ -264,8 +1063,24 @@ export interface components {
              */
             role: "staff" | "cast" | "crew";
             show: components["schemas"]["Show"];
+            /** Theatername */
+            theaterName: string;
             /** Title */
             title?: string | null;
+            /**
+             * Viaadmin
+             * @default false
+             */
+            viaAdmin: boolean;
+        };
+        /** SlotBody */
+        SlotBody: {
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Weekday */
+            weekday: number;
         };
         /** Theater */
         Theater: {
@@ -281,10 +1096,78 @@ export interface components {
             /** Theaterid */
             theaterId: string;
         };
+        /** TheaterView */
+        TheaterView: {
+            /** Admins */
+            admins: components["schemas"]["Admin"][];
+            /** Shows */
+            shows: components["schemas"]["ShowSummary"][];
+            theater: components["schemas"]["Theater"];
+        };
+        /** UpdateCharacterBody */
+        UpdateCharacterBody: {
+            /** Castuserids */
+            castUserIds?: string[] | null;
+            /** Ensemble */
+            ensemble?: boolean | null;
+            /** Name */
+            name?: string | null;
+        };
         /** UpdateMeBody */
         UpdateMeBody: {
             /** Name */
             name: string;
+        };
+        /** UpdateMemberBody */
+        UpdateMemberBody: {
+            /** Department */
+            department?: string | null;
+            /** Role */
+            role?: ("staff" | "cast" | "crew") | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** UpdateSceneBody */
+        UpdateSceneBody: {
+            /** Actid */
+            actId?: string | null;
+            /** Eighths */
+            eighths?: number | null;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name?: string | null;
+            /** Number */
+            number?: string | null;
+        };
+        /** UpdateShowBody */
+        UpdateShowBody: {
+            /** Address */
+            address?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Minutesperpage */
+            minutesPerPage?: number | null;
+            /** Name */
+            name?: string | null;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
+            /** Skippeddates */
+            skippedDates?: string[] | null;
+            /** Slots */
+            slots?: components["schemas"]["SlotBody"][] | null;
+            /** Startdate */
+            startDate?: string | null;
+            /** Techstart */
+            techStart?: string | null;
+            /** Timezone */
+            timezone?: string | null;
+            /** Venue */
+            venue?: string | null;
         };
         /** User */
         User: {
@@ -309,6 +1192,59 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** WeeklyBody */
+        WeeklyBody: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * WeeklyConflict
+         * @description A usual-week rule, e.g. "never Tuesdays" or "late on Wednesdays". One per weekday.
+         */
+        WeeklyConflict: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+            /** Weekday */
+            weekday: number;
+        };
+        /** WeeklyItem */
+        WeeklyItem: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Weekday */
+            weekday: number;
         };
     };
     responses: never;
@@ -403,6 +1339,238 @@ export interface operations {
             };
         };
     };
+    get_my_conflicts_api_me_conflicts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyConflicts"];
+                };
+            };
+        };
+    };
+    save_conflicts_api_me_conflicts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveConflictsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyConflicts"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_date_api_me_conflicts_dates__day__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DateConflict"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_date_api_me_conflicts_dates__day__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_weekly_api_me_conflicts_weekly__weekday__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                weekday: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WeeklyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WeeklyConflict"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_weekly_api_me_conflicts_weekly__weekday__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                weekday: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_days_api_me_days_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShowDayView"][];
+                };
+            };
+        };
+    };
+    preview_invite_api_public_invites__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitePreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_show_api_shows__show_id__get: {
         parameters: {
             query?: never;
@@ -421,6 +1589,336 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShowView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_show_api_shows__show_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateShowBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_act_api_shows__show_id__acts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Act"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_act_api_shows__show_id__acts__act_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                act_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_act_api_shows__show_id__acts__act_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                act_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Act"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_show_api_shows__show_id__archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_breakdown_api_shows__show_id__breakdown_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Breakdown"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_character_api_shows__show_id__characters_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCharacterBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Character"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_character_api_shows__show_id__characters__char_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_character_api_shows__show_id__characters__char_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCharacterBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Character"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    show_conflicts_api_shows__show_id__conflicts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberConflicts"][];
                 };
             };
             /** @description Validation Error */
@@ -469,6 +1967,37 @@ export interface operations {
             };
         };
     };
+    join_show_api_shows__show_id__join_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteAccepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_members_api_shows__show_id__members_get: {
         parameters: {
             query?: never;
@@ -488,6 +2017,337 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Member"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_member_api_shows__show_id__members__member_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_member_api_shows__show_id__members__member_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMemberBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Member"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remind_api_shows__show_id__remind_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemindBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Reminded"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_api_shows__show_id__reorder__kind__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                kind: "acts" | "scenes" | "characters";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Breakdown"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_show_api_shows__show_id__restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_scene_api_shows__show_id__scenes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scene"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_scene_api_shows__show_id__scenes__scene_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_scene_api_shows__show_id__scenes__scene_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scene"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -520,6 +2380,104 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Theater"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_theater_api_theaters__theater_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TheaterView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_admin_api_theaters__theater_id__admins_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddAdminBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Admin"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_admin_api_theaters__theater_id__admins__admin_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                admin_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Admin"][];
                 };
             };
             /** @description Validation Error */

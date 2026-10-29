@@ -93,8 +93,26 @@ async function startCustomAuth(email: string): Promise<ChallengeResponse> {
   });
 }
 
+// The local dev server stands in for Cognito: a "token" is just the email, which it trusts.
+const devToken = (email: string) => `dev.${btoa(email).replace(/=+$/, "")}`;
+
+async function devPost<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`/api/dev/${path}`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify(body),
+  });
+  const data = (await res.json()) as T & { error?: string };
+  if (!res.ok) throw new Error(data.error ?? "Sign-in failed");
+  return data;
+}
+
 /** Emails a sign-in link. Resolves to "throttled" if one was sent in the last minute. */
 export async function requestMagicLink(email: string, next = "/"): Promise<"sent" | "throttled"> {
+  if (getConfig().devAuth) {
+    await devPost("magic-link", { email, next });
+    return "sent";
+  }
   await ensureUser(email);
   const first = await startCustomAuth(email);
   const res = await cognito<ChallengeResponse>("RespondToAuthChallenge", {
@@ -109,6 +127,10 @@ export async function requestMagicLink(email: string, next = "/"): Promise<"sent
 
 /** Exchanges the code from an emailed link for a session. Works on any device. */
 export async function redeemMagicLink(email: string, code: string): Promise<void> {
+  if (getConfig().devAuth) {
+    saveSession(devToken(email), "dev", 30 * 24 * 3600);
+    return;
+  }
   const first = await startCustomAuth(email);
   try {
     const res = await cognito<ChallengeResponse>("RespondToAuthChallenge", {
@@ -123,6 +145,47 @@ export async function redeemMagicLink(email: string, code: string): Promise<void
     saveSession(result.IdToken, result.RefreshToken, result.ExpiresIn);
   } catch {
     throw new Error("This sign-in link has expired or was already used. Request a new one.");
+  }
+}
+
+/**
+ * Signs in with an invite link: the invite token proves the invited address, so the person lands in the
+ * show without a second email. Throws if the invite has expired or was already used.
+ */
+export async function signInWithInvite(email: string, token: string): Promise<void> {
+  if (getConfig().devAuth) {
+    const { email: invited } = await devPost<{ email: string }>("invite-sign-in", { token });
+    saveSession(devToken(invited), "dev", 30 * 24 * 3600);
+    return;
+  }
+  await ensureUser(email);
+  const first = await startCustomAuth(email);
+  try {
+    const res = await cognito<ChallengeResponse>("RespondToAuthChallenge", {
+      ClientId: getConfig().userPoolClientId,
+      ChallengeName: "CUSTOM_CHALLENGE",
+      Session: first.Session,
+      ChallengeResponses: { USERNAME: email, ANSWER: token },
+      ClientMetadata: { mode: "invite" },
+    });
+    const result = res.AuthenticationResult;
+    if (!result?.RefreshToken) throw new Error("expired");
+    saveSession(result.IdToken, result.RefreshToken, result.ExpiresIn);
+  } catch {
+    throw new Error("This invite link has expired or was already used.");
+  }
+}
+
+/** The signed-in email, read from the ID token (or the dev token). */
+export function signedInEmail(): string | undefined {
+  const token = readSession()?.idToken;
+  if (!token) return undefined;
+  try {
+    if (token.startsWith("dev.")) return atob(token.slice(4));
+    const payload = JSON.parse(atob(token.split(".")[1]!.replace(/-/g, "+").replace(/_/g, "/"))) as { email?: string };
+    return payload.email;
+  } catch {
+    return undefined;
   }
 }
 
@@ -184,6 +247,7 @@ let refreshing: Promise<string | undefined> | undefined;
 export async function getIdToken(forceRefresh = false): Promise<string | undefined> {
   const session = readSession();
   if (!session) return undefined;
+  if (session.idToken.startsWith("dev.")) return session.idToken;
   if (!forceRefresh && session.expiresAt - Date.now() > 60_000) return session.idToken;
   refreshing ??= (async () => {
     try {

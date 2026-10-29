@@ -5,7 +5,13 @@ THEATER#<id>   SHOW#<showId>     show
 THEATER#<id>   ADMIN#<userId>    theater admin       (GSI1: USER#<userId> / THEATER#<id>)
 SHOW#<showId>  META              pointer to the show's theater
 SHOW#<showId>  MEMBER#<userId>   show membership     (GSI1: USER#<userId> / SHOW#<showId>)
+SHOW#<showId>  ACT#<actId>       act
+SHOW#<showId>  SCENE#<sceneId>   scene (ordered by its order field)
+SHOW#<showId>  CHAR#<charId>     character and who plays it
+SHOW#<showId>  APPEAR#<sceneId>#<charId>   one tick in the scenes x characters grid
 USER#<id>      PROFILE           user
+USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
+USER#<id>      CONFLICT#DATE#<date>        answer for one date
 EMAIL#<email>  USER              email -> userId lookup
 INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
@@ -19,6 +25,11 @@ SHOW_PREFIX = "SHOW#"
 THEATER_PREFIX = "THEATER#"
 MEMBER_PREFIX = "MEMBER#"
 ADMIN_PREFIX = "ADMIN#"
+ACT_PREFIX = "ACT#"
+SCENE_PREFIX = "SCENE#"
+CHAR_PREFIX = "CHAR#"
+APPEAR_PREFIX = "APPEAR#"
+CONFLICT_PREFIX = "CONFLICT#"
 
 
 def normalize_email(email: str) -> str:
@@ -64,6 +75,30 @@ def member(show_id: str, user_id: str) -> Key:
         "GSI1PK": user_gsi(user_id),
         "GSI1SK": f"SHOW#{show_id}",
     }
+
+
+def act(show_id: str, act_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"ACT#{act_id}"}
+
+
+def scene(show_id: str, scene_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"SCENE#{scene_id}"}
+
+
+def character(show_id: str, char_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"CHAR#{char_id}"}
+
+
+def appearance(show_id: str, scene_id: str, char_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"APPEAR#{scene_id}#{char_id}"}
+
+
+def weekly_conflict(user_id: str, weekday: int) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": f"CONFLICT#WEEKLY#{weekday}"}
+
+
+def date_conflict(user_id: str, date: str) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": f"CONFLICT#DATE#{date}"}
 
 
 def user(user_id: str) -> Key:

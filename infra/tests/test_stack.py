@@ -56,6 +56,9 @@ def test_protects_the_api_with_a_cognito_jwt_authorizer(template: Template) -> N
     template.has_resource_properties(
         "AWS::ApiGatewayV2::Route", {"RouteKey": "GET /api/{proxy+}", "AuthorizationType": "JWT"}
     )
+    template.has_resource_properties(
+        "AWS::ApiGatewayV2::Route", {"RouteKey": "GET /api/public/{proxy+}", "AuthorizationType": "NONE"}
+    )
 
 
 def test_runs_python_arm64_functions_with_short_log_retention(template: Template) -> None:
@@ -106,3 +109,12 @@ def test_only_adds_google_ses_and_the_budget_when_configured(template: Template)
 def test_requires_a_hosted_sign_in_domain_for_google() -> None:
     with pytest.raises(ValueError, match="cognito_domain_prefix"):
         synth(google=GoogleSignIn("x", "y"))
+
+
+def test_app_routes_load_the_shell_without_hiding_api_errors(template: Template) -> None:
+    config = next(iter(template.find_resources("AWS::CloudFront::Distribution").values()))["Properties"][
+        "DistributionConfig"
+    ]
+    assert "CustomErrorResponses" not in config
+    associations = config["DefaultCacheBehavior"]["FunctionAssociations"]
+    assert associations[0]["EventType"] == "viewer-request"
