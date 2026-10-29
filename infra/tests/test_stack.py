@@ -109,3 +109,12 @@ def test_only_adds_google_ses_and_the_budget_when_configured(template: Template)
 def test_requires_a_hosted_sign_in_domain_for_google() -> None:
     with pytest.raises(ValueError, match="cognito_domain_prefix"):
         synth(google=GoogleSignIn("x", "y"))
+
+
+def test_app_routes_load_the_shell_without_hiding_api_errors(template: Template) -> None:
+    config = next(iter(template.find_resources("AWS::CloudFront::Distribution").values()))["Properties"][
+        "DistributionConfig"
+    ]
+    assert "CustomErrorResponses" not in config
+    associations = config["DefaultCacheBehavior"]["FunctionAssociations"]
+    assert associations[0]["EventType"] == "viewer-request"

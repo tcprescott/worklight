@@ -93,6 +93,20 @@ class WorklightStack(Stack):
 
         http_api = apigw.HttpApi(self, "Api", create_default_stage=True)
 
+        # Client-side routes such as /join/abc load the app shell. Done per request on the site's behavior
+        # rather than with distribution-wide error pages, which would turn API 403s and 404s into the app.
+        spa_routes = cloudfront.Function(
+            self,
+            "SpaRoutes",
+            runtime=cloudfront.FunctionRuntime.JS_2_0,
+            code=cloudfront.FunctionCode.from_inline(
+                "function handler(event) {\n"
+                "  var request = event.request;\n"
+                "  if (request.uri.indexOf('.') === -1) request.uri = '/index.html';\n"
+                "  return request;\n"
+                "}\n"
+            ),
+        )
         distribution = cloudfront.Distribution(
             self,
             "Site",
@@ -100,6 +114,11 @@ class WorklightStack(Stack):
             price_class=cloudfront.PriceClass.PRICE_CLASS_100,
             default_behavior=cloudfront.BehaviorOptions(
                 origin=origins.S3BucketOrigin.with_origin_access_control(site_bucket),
+                function_associations=[
+                    cloudfront.FunctionAssociation(
+                        function=spa_routes, event_type=cloudfront.FunctionEventType.VIEWER_REQUEST
+                    )
+                ],
                 viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 cache_policy=cloudfront.CachePolicy.CACHING_OPTIMIZED,
             ),
@@ -115,16 +134,6 @@ class WorklightStack(Stack):
                     origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
                 ),
             },
-            # Client-side routes such as /invite/abc load the app shell.
-            error_responses=[
-                cloudfront.ErrorResponse(
-                    http_status=status,
-                    response_http_status=200,
-                    response_page_path="/index.html",
-                    ttl=Duration.minutes(5),
-                )
-                for status in (403, 404)
-            ],
         )
 
         app_url = s.app_url or f"https://{distribution.distribution_domain_name}"
