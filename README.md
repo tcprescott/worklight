@@ -74,4 +74,4 @@ authorized redirect URI in the Google Cloud console.
 ## Roadmap
 
 Phase 1 (this) covers accounts, theaters, shows, roles and invites. Next: script breakdown and conflicts, then the
-scheduler, then calendar feeds and reminders, then the paid tier with AI script parsing.
+scheduler, then calendar feeds and reminders, then optional billing.
