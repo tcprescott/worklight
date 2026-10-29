@@ -1,0 +1,31 @@
+# uv workspace: the FastAPI backend and the CDK app. The React app lives in web/ and uses npm.
+[tool.uv.workspace]
+members = ["backend", "infra"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3",
+    "httpx>=0.28",
+    "moto[dynamodb,ses,ssm]>=5.1",
+    "ruff>=0.14",
+    "mypy>=1.18",
+    "boto3-stubs[dynamodb,sesv2,ssm]>=1.40",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["backend/tests", "infra/tests"]
+# Mangum 0.22 calls asyncio.get_event_loop(), which warns on Python 3.13 but works.
+filterwarnings = ["ignore:There is no current event loop:DeprecationWarning:mangum"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+packages = ["call_time", "call_time_infra"]
+mypy_path = ["backend/src", "infra"]

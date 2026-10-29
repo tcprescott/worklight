@@ -6,17 +6,54 @@ on:
     branches: [main]
 
 jobs:
-  check:
+  backend:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - run: uv sync --all-packages --frozen
+      - run: uv run ruff check backend infra
+      - run: uv run ruff format --check backend infra
+      - run: uv run mypy
+      - run: uv run pytest
+      - name: OpenAPI schema is up to date
+        run: |
+          uv run python -m call_time.openapi > backend/openapi.json
+          git diff --exit-code backend/openapi.json
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: web/package-lock.json
       - run: npm ci
+      - name: API types match the OpenAPI schema
+        run: |
+          npm run gen:api
+          git diff --exit-code src/api-types.ts
       - run: npm run typecheck
-      - run: npm test
       - run: npm run build
-      - name: Synthesize CDK stack
-        run: npm run synth -- -c fromEmail=ci@example.org -q
+
+  synth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - run: uv sync --all-packages --frozen
+      - name: Synthesize CDK stack (bundles the backend Lambda)
+        working-directory: infra
+        run: npx -y aws-cdk@2.1146.1 synth -c fromEmail=ci@example.org -q

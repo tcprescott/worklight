@@ -1,0 +1,14 @@
+{
+  "app": "uv run --frozen python app.py",
+  "watch": { "include": ["app.py", "call_time_infra/**", "../backend/src/**"] },
+  "context": {
+    "fromEmail": "",
+    "sesDomain": "",
+    "appUrl": "",
+    "cognitoDomainPrefix": "",
+    "googleClientId": "",
+    "googleClientSecretName": "",
+    "alertEmail": "",
+    "monthlyBudgetUsd": 5
+  }
+}
