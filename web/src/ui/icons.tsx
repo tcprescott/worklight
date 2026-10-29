@@ -40,6 +40,7 @@ const PATHS = {
   plus: <path d="M12 5v14M5 12h14" />,
   edit: <path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" />,
   trash: <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" />,
+  mail: <path d="M4 6h16v12H4zM4 7l8 6 8-6" />,
 };
 
 export type IconName = keyof typeof PATHS;

@@ -300,6 +300,19 @@ p {
 .topbar-spacer {
   flex: 1;
 }
+@media (max-width: 767px) {
+  .topbar-inner {
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+  .topbar-context {
+    flex: 1 1 auto;
+  }
+  .topbar-spacer {
+    flex: 0 1 0;
+  }
+}
 
 .avatar {
   width: 36px;

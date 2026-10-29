@@ -119,7 +119,7 @@ export const api = {
 
   // Conflicts
   myConflicts: () => request<MyConflicts>("GET", "/me/conflicts"),
-  saveConflicts: (input: SaveConflictsBody) => request<MyConflicts>("POST", "/me/conflicts", input),
+  saveConflicts: (input: Partial<SaveConflictsBody>) => request<MyConflicts>("POST", "/me/conflicts", input),
   putWeekly: (weekday: number, input: WeeklyBody) => request<WeeklyConflict>("PUT", `/me/conflicts/weekly/${weekday}`, input),
   deleteWeekly: (weekday: number) => request<void>("DELETE", `/me/conflicts/weekly/${weekday}`),
   putDate: (date: string, input: DateBody) => request<DateConflict>("PUT", `/me/conflicts/dates/${e(date)}`, input),
