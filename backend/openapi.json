@@ -147,6 +147,65 @@
         "title": "Admin",
         "type": "object"
       },
+      "ApiKey": {
+        "description": "A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.",
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "keyId": {
+            "title": "Keyid",
+            "type": "string"
+          },
+          "lastUsedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastusedat"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "prefix": {
+            "title": "Prefix",
+            "type": "string"
+          },
+          "scope": {
+            "default": "read",
+            "enum": [
+              "read",
+              "write"
+            ],
+            "title": "Scope",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyId",
+          "theaterId",
+          "name",
+          "prefix",
+          "createdBy",
+          "createdAt"
+        ],
+        "title": "ApiKey",
+        "type": "object"
+      },
       "Appearance": {
         "properties": {
           "charId": {
@@ -1208,6 +1267,30 @@
           "checkin"
         ],
         "title": "CheckInResult",
+        "type": "object"
+      },
+      "CreateApiKeyBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "scope": {
+            "default": "read",
+            "enum": [
+              "read",
+              "write"
+            ],
+            "title": "Scope",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateApiKeyBody",
         "type": "object"
       },
       "CreateCallBody": {
@@ -2495,6 +2578,23 @@
           "role"
         ],
         "title": "MyTheater",
+        "type": "object"
+      },
+      "NewApiKey": {
+        "properties": {
+          "key": {
+            "$ref": "#/components/schemas/ApiKey"
+          },
+          "secret": {
+            "title": "Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "secret"
+        ],
+        "title": "NewApiKey",
         "type": "object"
       },
       "Notice": {
@@ -7436,6 +7536,137 @@
           }
         },
         "summary": "Remove Admin"
+      }
+    },
+    "/api/theaters/{theater_id}/api-keys": {
+      "get": {
+        "operationId": "list_keys_api_theaters__theater_id__api_keys_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiKey"
+                  },
+                  "title": "Response List Keys Api Theaters  Theater Id  Api Keys Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Keys"
+      },
+      "post": {
+        "operationId": "create_key_api_theaters__theater_id__api_keys_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApiKeyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewApiKey"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Key"
+      }
+    },
+    "/api/theaters/{theater_id}/api-keys/{key_id}": {
+      "delete": {
+        "operationId": "revoke_key_api_theaters__theater_id__api_keys__key_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "key_id",
+            "required": true,
+            "schema": {
+              "title": "Key Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revoke Key"
       }
     },
     "/api/theaters/{theater_id}/shows": {

@@ -850,6 +850,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/theaters/{theater_id}/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Keys */
+        get: operations["list_keys_api_theaters__theater_id__api_keys_get"];
+        put?: never;
+        /** Create Key */
+        post: operations["create_key_api_theaters__theater_id__api_keys_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/api-keys/{key_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Key */
+        delete: operations["revoke_key_api_theaters__theater_id__api_keys__key_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/theaters/{theater_id}/shows": {
         parameters: {
             query?: never;
@@ -913,6 +948,32 @@ export interface components {
             title?: string | null;
             /** Userid */
             userId: string;
+        };
+        /**
+         * ApiKey
+         * @description A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.
+         */
+        ApiKey: {
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /** Keyid */
+            keyId: string;
+            /** Lastusedat */
+            lastUsedAt?: string | null;
+            /** Name */
+            name: string;
+            /** Prefix */
+            prefix: string;
+            /**
+             * Scope
+             * @default read
+             * @enum {string}
+             */
+            scope: "read" | "write";
+            /** Theaterid */
+            theaterId: string;
         };
         /** Appearance */
         Appearance: {
@@ -1306,6 +1367,17 @@ export interface components {
              */
             minutesLate: number;
         };
+        /** CreateApiKeyBody */
+        CreateApiKeyBody: {
+            /** Name */
+            name: string;
+            /**
+             * Scope
+             * @default read
+             * @enum {string}
+             */
+            scope: "read" | "write";
+        };
         /** CreateCallBody */
         CreateCallBody: {
             /** Blocks */
@@ -1688,6 +1760,12 @@ export interface components {
              */
             role: "admin";
             theater: components["schemas"]["Theater"];
+        };
+        /** NewApiKey */
+        NewApiKey: {
+            key: components["schemas"]["ApiKey"];
+            /** Secret */
+            secret: string;
         };
         /** Notice */
         Notice: {
@@ -4367,6 +4445,102 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Admin"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_keys_api_theaters__theater_id__api_keys_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiKey"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_key_api_theaters__theater_id__api_keys_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateApiKeyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewApiKey"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_key_api_theaters__theater_id__api_keys__key_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                key_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

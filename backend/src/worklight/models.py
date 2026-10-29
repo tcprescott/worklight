@@ -308,6 +308,30 @@ class NoticeRead(Model):
     at: str
 
 
+# ---- API keys --------------------------------------------------------------------------------------
+
+ApiKeyScope = Literal["read", "write"]
+
+
+class ApiKey(Model):
+    """A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it."""
+
+    key_id: str
+    theater_id: str
+    name: str
+    scope: ApiKeyScope = "read"
+    # The first characters of the secret, so people can tell keys apart. The secret itself is never stored.
+    prefix: str
+    created_by: str
+    created_at: str
+    last_used_at: str | None = None
+
+
+class ApiKeyRecord(ApiKey):
+    # SHA-256 of the secret, to find the key from a request and to delete its lookup item.
+    secret_hash: str
+
+
 # ---- API shapes --------------------------------------------------------------------------------
 
 

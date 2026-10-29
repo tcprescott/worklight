@@ -13,9 +13,10 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from worklight.models import User
-from worklight.rest import breakdown, conflicts, notify, people, schedule, shows, theaters
+from worklight.rest import apikeys, breakdown, conflicts, notify, people, schedule, shows, theaters
 from worklight.services.accounts import user_from_claims
-from worklight.services.base import Ctx, ServiceError
+from worklight.services.apikeys import principal_for
+from worklight.services.base import Ctx, Forbidden, ServiceError
 
 log = logging.getLogger(__name__)
 
@@ -95,6 +96,38 @@ def create_app(ctx: Ctx) -> FastAPI:
     def current_user(claims: Annotated[dict[str, Any], Depends(get_claims)]) -> User:
         return user_from_claims(ctx, claims)
 
-    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify):
+    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify, apikeys):
         app.include_router(module.router(ctx, current_user))
+
+    # The public REST API: the same routes under /api/v1, signed in with an API key instead of Cognito.
+    # API Gateway sends /api/v1/* here without its JWT authorizer, so these never see Cognito claims.
+    def key_user(request: Request) -> User:
+        principal = principal_for(ctx, request.headers.get("authorization"))
+        params = request.path_params
+        if _PERSONAL_ROUTES & set(request.url.path.split("/")):
+            raise Forbidden("That route is only for people signed in to the app")
+        if "show_id" in params:
+            principal.show(ctx, params["show_id"])
+        elif "theater_id" in params:
+            principal.theater(params["theater_id"])
+        else:
+            raise Forbidden("That route is only for people signed in to the app")
+        if request.method not in ("GET", "HEAD"):
+            principal.require_write()
+        return principal.user
+
+    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify):
+        app.include_router(module.router(ctx, key_user, base="/api/v1"), include_in_schema=False)
+
+    from starlette.routing import Route
+
+    from worklight.graphql_api import graphql_router
+    from worklight.mcp_api import McpEndpoint
+
+    app.include_router(graphql_router(ctx), prefix="/api/graphql", include_in_schema=False)
+    app.router.routes.append(Route("/mcp", McpEndpoint(ctx), methods=["GET", "POST", "DELETE"]))
     return app
+
+
+# Routes about the signed-in person, or that change who runs the company, are not open to API keys.
+_PERSONAL_ROUTES = {"admins", "join", "check-in", "running-late", "door-code"}

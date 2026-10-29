@@ -20,6 +20,9 @@ EMAIL#<email>  USER              email -> userId lookup
 INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
+THEATER#<id>   APIKEY#<keyId>    API key (no secret)
+APIKEY#<hash>  META              secret hash -> theaterId, keyId
+RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
 
 import re
@@ -38,6 +41,7 @@ CONFLICT_PREFIX = "CONFLICT#"
 CALL_PREFIX = "CALL#"
 CHECKIN_PREFIX = "CHECKIN#"
 NOTICE_PREFIX = "NOTICE#"
+APIKEY_PREFIX = "APIKEY#"
 READ_PREFIX = "READ#"
 
 
@@ -112,6 +116,18 @@ def notice(show_id: str, notice_id: str) -> Key:
 
 def notice_read(show_id: str, notice_id: str, user_id: str) -> Key:
     return {"PK": f"SHOW#{show_id}", "SK": f"READ#{notice_id}#{user_id}"}
+
+
+def api_key(theater_id: str, key_id: str) -> Key:
+    return {"PK": f"THEATER#{theater_id}", "SK": f"APIKEY#{key_id}"}
+
+
+def api_key_secret(secret_hash: str) -> Key:
+    return {"PK": f"APIKEY#{secret_hash}", "SK": "META"}
+
+
+def rate(key_id: str, minute: int) -> Key:
+    return {"PK": f"RATE#{key_id}#{minute}", "SK": "META"}
 
 
 def feed(token: str) -> Key:

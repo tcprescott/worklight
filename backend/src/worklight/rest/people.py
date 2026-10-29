@@ -8,8 +8,8 @@ from worklight.services import shows as service
 from worklight.services.base import Ctx
 
 
-def router(ctx: Ctx, current_user: UserDep) -> APIRouter:
-    r = APIRouter(prefix="/api")
+def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    r = APIRouter(prefix=base)
     CurrentUser = Annotated[User, Depends(current_user)]
 
     @r.get("/shows/{show_id}/members", response_model=list[Member], response_model_exclude_none=True)

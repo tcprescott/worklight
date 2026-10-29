@@ -83,7 +83,12 @@ def test_serves_the_site_and_api_from_one_cloudfront_distribution(template: Temp
         "AWS::CloudFront::Distribution",
         {
             "DistributionConfig": Match.object_like(
-                {"CacheBehaviors": [Match.object_like({"PathPattern": "/api/*"})]}
+                {
+                    "CacheBehaviors": [
+                        Match.object_like({"PathPattern": "/api/*"}),
+                        Match.object_like({"PathPattern": "/mcp"}),
+                    ]
+                }
             )
         },
     )
@@ -126,3 +131,14 @@ def test_runs_call_reminders_hourly(template: Template) -> None:
         "AWS::Lambda::Function", {"Handler": "worklight.handlers.jobs.reminders", "Timeout": 120}
     )
     template.has_resource_properties("AWS::Events::Rule", {"ScheduleExpression": "rate(1 hour)"})
+
+
+def test_public_apis_skip_the_cognito_authorizer(template: Template) -> None:
+    for route in ("ANY /api/v1/{proxy+}", "POST /api/graphql", "POST /mcp"):
+        template.has_resource_properties(
+            "AWS::ApiGatewayV2::Route", {"RouteKey": route, "AuthorizationType": "NONE"}
+        )
+    template.has_resource_properties(
+        "AWS::ApiGatewayV2::Stage",
+        {"DefaultRouteSettings": {"ThrottlingBurstLimit": 100, "ThrottlingRateLimit": 50}},
+    )

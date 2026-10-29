@@ -10,6 +10,8 @@ from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 from worklight import keys
 from worklight.models import (
     Act,
+    ApiKey,
+    ApiKeyRecord,
     Appearance,
     Call,
     Character,
@@ -217,6 +219,60 @@ class DynamoStore:
     def put_user(self, user: User) -> None:
         """Saves the profile (name, preferences, feed token). The email never changes."""
         self._put_item(keys.user(user.user_id), "user", user)
+
+    # ---- API keys -----------------------------------------------------------------------------
+
+    def put_api_key(self, key: ApiKeyRecord) -> None:
+        secret_hash = key.secret_hash
+        self.db.transact_write_items(
+            TransactItems=[
+                self._tx_put(_item(keys.api_key(key.theater_id, key.key_id), "apiKey", key), new=True),
+                self._tx_put(
+                    {
+                        **keys.api_key_secret(secret_hash),
+                        "entity": "apiKeySecret",
+                        "theaterId": key.theater_id,
+                        "keyId": key.key_id,
+                    },
+                    new=True,
+                ),
+            ]
+        )
+
+    def list_api_keys(self, theater_id: str) -> list[ApiKeyRecord]:
+        items = self._query_all(f"THEATER#{theater_id}", keys.APIKEY_PREFIX)
+        return [ApiKeyRecord.model_validate(i) for i in items]
+
+    def get_api_key_by_secret(self, secret_hash: str) -> ApiKeyRecord | None:
+        pointer = self._get(keys.api_key_secret(secret_hash))
+        if not pointer:
+            return None
+        item = self._get(keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"])))
+        return ApiKeyRecord.model_validate(item) if item else None
+
+    def delete_api_key(self, key: ApiKeyRecord) -> None:
+        self._batch_delete([keys.api_key(key.theater_id, key.key_id), keys.api_key_secret(key.secret_hash)])
+
+    def touch_api_key(self, key: ApiKey, at: str) -> None:
+        self.db.update_item(
+            TableName=self.table,
+            Key=_to_ddb(keys.api_key(key.theater_id, key.key_id)),
+            UpdateExpression="SET lastUsedAt = :at",
+            ConditionExpression="attribute_exists(PK)",
+            ExpressionAttributeValues={":at": {"S": at}},
+        )
+
+    def count_request(self, key_id: str, minute: int, expires_at: int) -> int:
+        """Adds one to this key's count for the minute and returns the new count."""
+        res = self.db.update_item(
+            TableName=self.table,
+            Key=_to_ddb(keys.rate(key_id, minute)),
+            UpdateExpression="ADD #n :one SET expiresAt = :exp",
+            ExpressionAttributeNames={"#n": "count"},
+            ExpressionAttributeValues={":one": {"N": "1"}, ":exp": {"N": str(expires_at)}},
+            ReturnValues="UPDATED_NEW",
+        )
+        return int(res["Attributes"]["count"]["N"])
 
     # ---- calendar feeds -----------------------------------------------------------------------
 

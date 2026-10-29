@@ -109,6 +109,13 @@ class WorklightStack(Stack):
                 "}\n"
             ),
         )
+        api_behavior = cloudfront.BehaviorOptions(
+            origin=origins.HttpOrigin(f"{http_api.api_id}.execute-api.{self.region}.{self.url_suffix}"),
+            viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+            allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
+            cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
+            origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+        )
         distribution = cloudfront.Distribution(
             self,
             "Site",
@@ -126,15 +133,9 @@ class WorklightStack(Stack):
             ),
             additional_behaviors={
                 # Same origin as the site, so the browser needs no CORS.
-                "/api/*": cloudfront.BehaviorOptions(
-                    origin=origins.HttpOrigin(
-                        f"{http_api.api_id}.execute-api.{self.region}.{self.url_suffix}"
-                    ),
-                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-                    allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                    cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
-                    origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
-                ),
+                "/api/*": api_behavior,
+                # The MCP endpoint lives at the root so assistants can be given https://<site>/mcp.
+                "/mcp": api_behavior,
             },
         )
 
@@ -313,6 +314,23 @@ class WorklightStack(Stack):
             path="/api/public/{proxy+}",
             methods=[apigw.HttpMethod.GET],
             integration=integrations.HttpLambdaIntegration("PublicApiIntegration", api_fn),
+        )
+        # The public APIs sign in with an API key, which the app checks itself (by its hash, with a
+        # per-key rate limit), so API Gateway's Cognito authorizer stays off these routes.
+        key_integration = integrations.HttpLambdaIntegration("KeyApiIntegration", api_fn)
+        for key_path, key_methods in (
+            ("/api/v1/{proxy+}", [apigw.HttpMethod.ANY]),
+            ("/api/graphql", [apigw.HttpMethod.POST]),
+            ("/mcp", [apigw.HttpMethod.POST, apigw.HttpMethod.GET, apigw.HttpMethod.DELETE]),
+        ):
+            http_api.add_routes(path=key_path, methods=key_methods, integration=key_integration)
+        # Throttle every route so a runaway client can't run up the bill.
+        stage = http_api.default_stage
+        assert stage is not None
+        cfn_stage = stage.node.default_child
+        assert isinstance(cfn_stage, apigw.CfnStage)
+        cfn_stage.default_route_settings = apigw.CfnStage.RouteSettingsProperty(
+            throttling_burst_limit=100, throttling_rate_limit=50
         )
 
         # ---- Email (SES) ------------------------------------------------------------------------
