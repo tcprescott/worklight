@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { signOut } from "./auth";
-import { daysBetween, todayIso } from "./lib/dates";
 import { useIsPhone } from "./lib/useMedia";
 import { Link, navigate } from "./router";
 import { useSession } from "./session";
@@ -90,14 +89,11 @@ interface Tab {
 export function staffTabs(view: ShowView): Tab[] {
   const id = view.show.showId;
   const tabs: Tab[] = [
+    { id: "schedule", label: "Schedule", icon: "calendar", path: `/shows/${id}/schedule` },
     { id: "breakdown", label: "Breakdown", icon: "lines", path: `/shows/${id}/breakdown` },
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
-  const tech = view.show.techStart;
-  const today = todayIso();
-  if (tech && daysBetween(today, tech) <= 7 && today <= view.show.endDate) {
-    // Tech week arrives with scheduling (phase 3).
-  }
+  if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
   return tabs;
 }
 

@@ -11,6 +11,9 @@ import { AuthCallback } from "./pages/AuthCallback";
 import { Breakdown } from "./pages/director/Breakdown";
 import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
+import { Schedule } from "./pages/director/Schedule";
+import { TechWeek } from "./pages/director/TechWeek";
+import { StageDoor } from "./pages/actor/StageDoor";
 import { SetupWizard } from "./pages/director/SetupWizard";
 import { ShowSettings } from "./pages/director/ShowSettings";
 import { Staff } from "./pages/director/Staff";
@@ -93,7 +96,7 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
     case "":
       // Staff land on their working page; cast and crew land on the show page.
       if (staff) {
-        navigate(`/shows/${props.showId}/breakdown`, true);
+        navigate(`/shows/${props.showId}/schedule`, true);
         return <Loading />;
       }
       return <ShowHome {...pageProps} />;
@@ -103,6 +106,13 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return <MyConflicts {...pageProps} />;
     case "calls":
       return <MyCalls {...pageProps} />;
+    case "schedule":
+      return staff ? <Schedule {...pageProps} /> : <NotForYou />;
+    case "tech":
+      return staff ? <TechWeek {...pageProps} /> : <NotForYou />;
+    case "door":
+      // Scanned from the stage door sign: /shows/:id/door?code=...
+      return <StageDoor {...pageProps} />;
     case "breakdown":
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
     case "people":
