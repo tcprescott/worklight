@@ -12,8 +12,8 @@
     "build": "npm run build -w @call-time/web",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "vitest run",
-    "synth": "npm run synth -w @call-time/infra",
-    "deploy": "npm run build && npm run deploy -w @call-time/infra"
+    "synth": "npm run synth -w @call-time/infra --",
+    "deploy": "npm run build && npm run deploy -w @call-time/infra --"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",
