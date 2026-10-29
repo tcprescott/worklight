@@ -8,6 +8,7 @@ import { Wordmark } from "../../shell";
 import type { InvitePreview, Me, ShowDay, ShowView } from "../../types";
 import { FormError } from "../../ui";
 import { SignIn } from "../SignIn";
+import { CalendarLinks } from "./CalendarLinks";
 import "./actor.css";
 
 type Phase =
@@ -184,7 +185,7 @@ export function Join(props: { token: string }) {
     case "confirm":
       return <Confirm data={phase.data} onNext={(data) => setPhase({ kind: "prefs", data })} />;
     case "prefs":
-      return <Prefs showId={phase.data.view.show.showId} />;
+      return <Prefs showId={phase.data.view.show.showId} me={phase.data.me} />;
   }
 }
 
@@ -278,40 +279,92 @@ function Confirm(props: { data: Joined; onNext: (data: Joined) => void }) {
   );
 }
 
-const PREFS = [
-  { id: "email", label: "Email", hint: "Your call times and any changes" },
+type PrefId = "email" | "cal" | "push" | "sms";
+const PREFS: { id: PrefId; label: string; hint: string; paid?: boolean; later?: string }[] = [
+  { id: "email", label: "Email", hint: "A reminder the day before you're called" },
   { id: "cal", label: "Add to my calendar", hint: "Rehearsals show up in your phone calendar" },
-  { id: "push", label: "Phone notifications", hint: "A nudge the day before you are called" },
+  { id: "push", label: "Phone notifications", hint: "A nudge the day before you're called", later: "Coming with the app" },
   { id: "sms", label: "Text messages", hint: "Only for urgent changes", paid: true },
-] as const;
+];
 
-function Prefs(props: { showId: string }) {
-  // Reminder settings have no backend yet: these stay on this screen only.
-  const [on, setOn] = useState<Record<string, boolean>>({ email: true, cal: true, push: true, sms: false });
+function Prefs(props: { showId: string; me: Me }) {
+  const [on, setOn] = useState<Record<PrefId, boolean>>({
+    email: props.me.user.prefs.emailReminders,
+    cal: true,
+    push: false,
+    sms: false,
+  });
+  const [step, setStep] = useState<"pick" | "calendar">("pick");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string>();
+  const toConflicts = () => navigate(`/shows/${props.showId}/setup`, true);
+
+  async function next() {
+    setSaving(true);
+    setError(undefined);
+    try {
+      if (on.email !== props.me.user.prefs.emailReminders) {
+        await api.updatePrefs({ ...props.me.user.prefs, emailReminders: on.email });
+      }
+    } catch (err) {
+      setError((err as Error).message);
+      setSaving(false);
+      return;
+    }
+    setSaving(false);
+    if (on.cal) setStep("calendar");
+    else toConflicts();
+  }
+
+  if (step === "calendar")
+    return (
+      <main className="actor-join">
+        <div className="actor-prefs">
+          <h1 className="title-md" style={{ fontSize: 30 }}>
+            Put your calls in your calendar
+          </h1>
+          <p className="lede">One private link with every call you're in. New calls and changes show up on their own.</p>
+          <CalendarLinks compact />
+          <button type="button" className="btn btn-primary actor-btn-xl actor-push" onClick={toConflicts}>
+            Next: your conflicts
+          </button>
+          <button type="button" className="actor-underline" onClick={toConflicts}>
+            Skip for now
+          </button>
+        </div>
+      </main>
+    );
+
   return (
     <main className="actor-join">
       <div className="actor-prefs">
         <h1 className="title-md" style={{ fontSize: 30 }}>
           How should we remind you?
         </h1>
-        <p className="lede">Pick as many as you like.</p>
-        {PREFS.map((p) => (
-          <label key={p.id} className={on[p.id] ? "actor-pref on" : "actor-pref"}>
-            <span className="actor-pref-text">
-              <strong>
-                {p.label}
-                {"paid" in p && <span className="tag tag-paid">PAID PLAN</span>}
-              </strong>
-              <span>{p.hint}</span>
-            </span>
-            <input type="checkbox" checked={!!on[p.id]} onChange={() => setOn({ ...on, [p.id]: !on[p.id] })} />
-          </label>
-        ))}
-        <button
-          className="btn btn-primary actor-btn-xl actor-push"
-          onClick={() => navigate(`/shows/${props.showId}/setup`, true)}
-        >
-          Next: your conflicts
+        <p className="lede">Pick as many as you like. You can change these later in your account.</p>
+        {PREFS.map((p) => {
+          const off = !!p.paid || !!p.later;
+          return (
+            <label key={p.id} className={off ? "actor-pref off" : on[p.id] ? "actor-pref on" : "actor-pref"}>
+              <span className="actor-pref-text">
+                <strong>
+                  {p.label}
+                  {p.paid && <span className="tag tag-paid">PAID PLAN</span>}
+                </strong>
+                <span>{p.later ? `${p.hint}. ${p.later}.` : p.hint}</span>
+              </span>
+              <input
+                type="checkbox"
+                checked={!off && on[p.id]}
+                disabled={off}
+                onChange={() => setOn({ ...on, [p.id]: !on[p.id] })}
+              />
+            </label>
+          );
+        })}
+        <FormError error={error} />
+        <button className="btn btn-primary actor-btn-xl actor-push" disabled={saving} onClick={() => void next()}>
+          {saving ? "Saving..." : on.cal ? "Next: your calendar" : "Next: your conflicts"}
         </button>
       </div>
     </main>

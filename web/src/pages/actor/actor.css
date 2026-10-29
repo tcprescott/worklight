@@ -1185,3 +1185,182 @@ button.actor-level {
 .actor-tonight .sheet {
   color: var(--ink);
 }
+
+/* ---- Announcements (Show page) ---------------------------------------------------------------- */
+
+.actor-unread-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.actor-notice {
+  text-align: left;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink);
+  font: inherit;
+  width: 100%;
+}
+.actor-notice.unread {
+  border-color: var(--plum-line);
+}
+.actor-notice-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.actor-notice-top strong {
+  font-size: 15px;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.actor-notice-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--plum);
+  flex: none;
+}
+.actor-notice-when,
+.actor-notice-who {
+  font-size: 12px;
+  color: var(--muted-2);
+  flex: none;
+}
+.actor-notice-body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Calendar links (My calls sheet, Account, Join) ------------------------------------------- */
+
+.actor-cal-btn {
+  min-height: 40px;
+}
+.actor-call {
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+}
+.actor-call-add {
+  align-self: start;
+  width: 40px;
+  height: 40px;
+  margin: -6px -6px 0 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.actor-call-add:hover {
+  color: var(--plum);
+  background: var(--plum-tint);
+}
+.actor-tonight-add {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--plum-soft);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.cal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cal-copy {
+  display: flex;
+  gap: 8px;
+}
+.cal-copy input {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cal-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cal-reset {
+  padding: 0;
+  min-height: 0;
+}
+.cal-confirm-title {
+  font-size: 16px;
+}
+.cal-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---- Account: notifications ------------------------------------------------------------------- */
+
+.acct-prefs {
+  display: flex;
+  flex-direction: column;
+}
+.acct-pref {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+}
+.acct-pref:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.acct-pref > span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.acct-pref strong {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.acct-pref > span > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.acct-pref input {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--plum);
+  flex: none;
+}
+.acct-pref.off {
+  cursor: default;
+}
+.acct-pref.off strong {
+  color: var(--muted);
+}
+.actor-pref.off {
+  cursor: default;
+  background: var(--sand-2);
+}
+.actor-pref.off strong {
+  color: var(--muted);
+}

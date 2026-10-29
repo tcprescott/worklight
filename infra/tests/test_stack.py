@@ -65,7 +65,7 @@ def test_runs_python_arm64_functions_with_short_log_retention(template: Template
     fns = template.find_resources(
         "AWS::Lambda::Function", {"Properties": {"Architectures": ["arm64"], "Runtime": "python3.13"}}
     )
-    assert len(fns) == 5
+    assert len(fns) == 6
     handlers = sorted(f["Properties"]["Handler"] for f in fns.values())
     assert handlers == [
         "worklight.handlers.api.handler",
@@ -73,6 +73,7 @@ def test_runs_python_arm64_functions_with_short_log_retention(template: Template
         "worklight.handlers.auth.define_auth_challenge",
         "worklight.handlers.auth.pre_sign_up",
         "worklight.handlers.auth.verify_auth_challenge",
+        "worklight.handlers.jobs.reminders",
     ]
     template.all_resources_properties("AWS::Logs::LogGroup", {"RetentionInDays": 7})
 
@@ -118,3 +119,10 @@ def test_app_routes_load_the_shell_without_hiding_api_errors(template: Template)
     assert "CustomErrorResponses" not in config
     associations = config["DefaultCacheBehavior"]["FunctionAssociations"]
     assert associations[0]["EventType"] == "viewer-request"
+
+
+def test_runs_call_reminders_hourly(template: Template) -> None:
+    template.has_resource_properties(
+        "AWS::Lambda::Function", {"Handler": "worklight.handlers.jobs.reminders", "Timeout": 120}
+    )
+    template.has_resource_properties("AWS::Events::Rule", {"ScheduleExpression": "rate(1 hour)"})

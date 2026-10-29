@@ -3,6 +3,12 @@ import type {
   Admin,
   Attendance,
   Breakdown,
+  CalendarLinks,
+  Callboard,
+  Notice,
+  NotifyPrefs,
+  PostNoticeBody,
+  UpdateNoticeBody,
   Call,
   CheckIn,
   CheckInResult,
@@ -69,6 +75,14 @@ async function request<T>(method: string, path: string, body?: unknown, retried 
   return data as T;
 }
 
+async function requestText(method: string, path: string): Promise<string> {
+  const token = await getIdToken();
+  if (!token) throw new ApiError(401, "Sign in required");
+  const res = await fetch(`/api${path}`, { method, headers: { authorization: `Bearer ${token}` } });
+  if (!res.ok) throw new ApiError(res.status, `Request failed (${res.status})`);
+  return res.text();
+}
+
 async function publicGet<T>(path: string): Promise<T> {
   const res = await fetch(`/api/public${path}`);
   const data = (await res.json().catch(() => ({}))) as { error?: string };
@@ -83,6 +97,7 @@ export const api = {
   // Account
   me: () => request<Me>("GET", "/me"),
   updateName: (name: string) => request<User>("PATCH", "/me", { name }),
+  updatePrefs: (prefs: NotifyPrefs) => request<User>("PATCH", "/me", { prefs }),
 
   // Company
   createTheater: (name: string, title?: string) => request<Theater>("POST", "/theaters", { name, title }),
@@ -164,6 +179,20 @@ export const api = {
   mark: (showId: string, date: string, userId: string, status: CheckInStatus | null) =>
     request<CheckIn | null>("PUT", `${show(showId)}/attendance/${e(date)}/${e(userId)}`, { status }),
   rotateDoorCode: (showId: string) => request<{ doorCode: string }>("POST", `${show(showId)}/door-code`),
+  // Calendar: a private feed of every call that needs me, and one call as a file.
+  calendarLinks: () => request<CalendarLinks>("GET", "/me/calendar"),
+  rotateCalendar: () => request<CalendarLinks>("POST", "/me/calendar/rotate"),
+  callIcs: (callId: string) => requestText("GET", `/me/calls/${e(callId)}.ics`),
+
+  // Callboard
+  callboard: (showId: string) => request<Callboard>("GET", `${show(showId)}/notices`),
+  postNotice: (showId: string, input: PostNoticeBody) => request<Notice>("POST", `${show(showId)}/notices`, input),
+  updateNotice: (showId: string, noticeId: string, input: UpdateNoticeBody) =>
+    request<Notice>("PATCH", `${show(showId)}/notices/${e(noticeId)}`, input),
+  deleteNotice: (showId: string, noticeId: string) => request<void>("DELETE", `${show(showId)}/notices/${e(noticeId)}`),
+  markNoticesRead: (showId: string, noticeIds: string[]) =>
+    request<void>("POST", `${show(showId)}/notices/read`, { noticeIds }),
+
   checkIn: (showId: string, code: string) => request<CheckInResult>("POST", `${show(showId)}/check-in`, { code }),
   runningLate: (showId: string, minutes: number, note?: string) =>
     request<CheckIn>("POST", `${show(showId)}/running-late`, { minutes, note }),

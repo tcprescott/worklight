@@ -39,6 +39,40 @@ export interface paths {
         patch: operations["update_me_api_me_patch"];
         trace?: never;
     };
+    "/api/me/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Calendar Links */
+        get: operations["calendar_links_api_me_calendar_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calendar/rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate Calendar */
+        post: operations["rotate_calendar_api_me_calendar_rotate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/calls": {
         parameters: {
             query?: never;
@@ -48,6 +82,23 @@ export interface paths {
         };
         /** My Calls */
         get: operations["my_calls_api_me_calls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calls/{call_id}.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Call Ics */
+        get: operations["call_ics_api_me_calls__call_id__ics_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -119,6 +170,23 @@ export interface paths {
         };
         /** My Days */
         get: operations["my_days_api_me_days_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public/calendar/{token}.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Feed */
+        get: operations["feed_api_public_calendar__token__ics_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -453,6 +521,59 @@ export interface paths {
         head?: never;
         /** Update Member */
         patch: operations["update_member_api_shows__show_id__members__member_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Callboard */
+        get: operations["get_callboard_api_shows__show_id__notices_get"];
+        put?: never;
+        /** Post Notice */
+        post: operations["post_notice_api_shows__show_id__notices_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark Read */
+        post: operations["mark_read_api_shows__show_id__notices_read_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices/{notice_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Notice */
+        delete: operations["delete_notice_api_shows__show_id__notices__notice_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Notice */
+        patch: operations["update_notice_api_shows__show_id__notices__notice_id__patch"];
         trace?: never;
     };
     "/api/shows/{show_id}/remind": {
@@ -898,6 +1019,13 @@ export interface components {
             /** Scenes */
             scenes: components["schemas"]["Scene"][];
         };
+        /** CalendarLinks */
+        CalendarLinks: {
+            /** Url */
+            url: string;
+            /** Webcalurl */
+            webcalUrl: string;
+        };
         /** Call */
         Call: {
             /**
@@ -939,6 +1067,8 @@ export interface components {
             published?: components["schemas"]["CallContent"] | null;
             /** Publishedat */
             publishedAt?: string | null;
+            /** Remindedat */
+            remindedAt?: string | null;
             /**
              * Sequence
              * @default 0
@@ -1102,6 +1232,15 @@ export interface components {
              * @default []
              */
             warnings: components["schemas"]["Warning"][];
+        };
+        /** Callboard */
+        Callboard: {
+            /** Canpost */
+            canPost: boolean;
+            /** Notices */
+            notices: components["schemas"]["NoticeView"][];
+            /** Unread */
+            unread: number;
         };
         /** Character */
         Character: {
@@ -1407,6 +1546,11 @@ export interface components {
             /** Status */
             status: ("on_time" | "late" | "absent") | null;
         };
+        /** MarkReadBody */
+        MarkReadBody: {
+            /** Noticeids */
+            noticeIds: string[];
+        };
         /**
          * Me
          * @description What the signed-in user sees on their home page.
@@ -1545,6 +1689,121 @@ export interface components {
             role: "admin";
             theater: components["schemas"]["Theater"];
         };
+        /** Notice */
+        Notice: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Authorid */
+            authorId: string;
+            /** Body */
+            body: string;
+            /** Createdat */
+            createdAt: string;
+            /** Noticeid */
+            noticeId: string;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
+            /** Showid */
+            showId: string;
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** NoticeView */
+        NoticeView: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Audiencecount */
+            audienceCount?: number | null;
+            /** Authorid */
+            authorId: string;
+            /** Authorname */
+            authorName?: string | null;
+            /** Body */
+            body: string;
+            /** Createdat */
+            createdAt: string;
+            /** Noticeid */
+            noticeId: string;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
+            /**
+             * Read
+             * @default false
+             */
+            read: boolean;
+            /** Readcount */
+            readCount?: number | null;
+            /** Showid */
+            showId: string;
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /**
+         * NotifyPrefs
+         * @description What a person wants emailed to them. Calendar feeds and the app are always on.
+         */
+        NotifyPrefs: {
+            /**
+             * Changeemails
+             * @default true
+             */
+            changeEmails: boolean;
+            /**
+             * Emailreminders
+             * @default true
+             */
+            emailReminders: boolean;
+            /**
+             * Noticeemails
+             * @default true
+             */
+            noticeEmails: boolean;
+        };
+        /** PostNoticeBody */
+        PostNoticeBody: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Body */
+            body: string;
+            /**
+             * Email
+             * @default true
+             */
+            email: boolean;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
+            /** Title */
+            title: string;
+        };
         /** PublishBody */
         PublishBody: {
             /** From */
@@ -1558,6 +1817,11 @@ export interface components {
             callIds: string[];
             /** Cancelled */
             cancelled: number;
+            /**
+             * Notified
+             * @default 0
+             */
+            notified: number;
             /** Published */
             published: number;
         };
@@ -1956,7 +2220,8 @@ export interface components {
         /** UpdateMeBody */
         UpdateMeBody: {
             /** Name */
-            name: string;
+            name?: string | null;
+            prefs?: components["schemas"]["NotifyPrefs"] | null;
         };
         /** UpdateMemberBody */
         UpdateMemberBody: {
@@ -1964,6 +2229,17 @@ export interface components {
             department?: string | null;
             /** Role */
             role?: ("staff" | "cast" | "crew") | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** UpdateNoticeBody */
+        UpdateNoticeBody: {
+            /** Audience */
+            audience?: ("everyone" | "cast" | "crew") | null;
+            /** Body */
+            body?: string | null;
+            /** Pinned */
+            pinned?: boolean | null;
             /** Title */
             title?: string | null;
         };
@@ -2011,12 +2287,22 @@ export interface components {
         };
         /** User */
         User: {
+            /** Calendartoken */
+            calendarToken?: string | null;
             /** Createdat */
             createdAt: string;
             /** Email */
             email: string;
             /** Name */
             name?: string | null;
+            /**
+             * @default {
+             *       "changeEmails": true,
+             *       "emailReminders": true,
+             *       "noticeEmails": true
+             *     }
+             */
+            prefs: components["schemas"]["NotifyPrefs"];
             /** Userid */
             userId: string;
         };
@@ -2202,6 +2488,46 @@ export interface operations {
             };
         };
     };
+    calendar_links_api_me_calendar_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarLinks"];
+                };
+            };
+        };
+    };
+    rotate_calendar_api_me_calendar_rotate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarLinks"];
+                };
+            };
+        };
+    };
     my_calls_api_me_calls_get: {
         parameters: {
             query?: {
@@ -2221,6 +2547,35 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["MyCall"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    call_ics_api_me_calls__call_id__ics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
@@ -2430,6 +2785,35 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShowDayView"][];
+                };
+            };
+        };
+    };
+    feed_api_public_calendar__token__ics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -3211,6 +3595,171 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Member"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_callboard_api_shows__show_id__notices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Callboard"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_notice_api_shows__show_id__notices_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostNoticeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notice"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mark_read_api_shows__show_id__notices_read_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarkReadBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_notice_api_shows__show_id__notices__notice_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                notice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_notice_api_shows__show_id__notices__notice_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                notice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNoticeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notice"];
                 };
             };
             /** @description Validation Error */

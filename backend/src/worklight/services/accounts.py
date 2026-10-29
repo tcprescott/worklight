@@ -1,7 +1,7 @@
 from typing import Annotated, Any
 
 from worklight import keys
-from worklight.models import Me, Model, MyShow, MyTheater, User
+from worklight.models import Me, Model, MyShow, MyTheater, NotifyPrefs, User
 from worklight.services.base import Ctx, Unauthorized, text, user_for_email
 
 
@@ -43,9 +43,17 @@ def get_me(ctx: Ctx, user: User) -> Me:
 
 
 class UpdateMeBody(Model):
-    name: Annotated[str, text(100)]
+    name: Annotated[str, text(100)] | None = None
+    prefs: NotifyPrefs | None = None
 
 
 def update_me(ctx: Ctx, user: User, body: UpdateMeBody) -> User:
-    ctx.store.update_user_name(user.user_id, body.name)
-    return user.model_copy(update={"name": body.name})
+    if body.prefs is None and body.name is not None:
+        ctx.store.update_user_name(user.user_id, body.name)
+        return user.model_copy(update={"name": body.name})
+    current = ctx.store.get_user(user.user_id) or user
+    updated = current.model_copy(
+        update={"name": body.name or current.name, "prefs": body.prefs or current.prefs}
+    )
+    ctx.store.put_user(updated)
+    return updated

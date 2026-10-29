@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { api } from "./api";
 import { signOut } from "./auth";
 import { useIsPhone } from "./lib/useMedia";
 import { Link, navigate } from "./router";
@@ -44,7 +45,7 @@ export function AccountMenu(props: { showId?: string; isStaff?: boolean }) {
           {activeShows.length > 1 && <Link to="/shows">All my shows</Link>}
           {props.showId && props.isStaff && <Link to={`/shows/${props.showId}/settings`}>Show settings</Link>}
           {props.showId && <Link to={`/shows/${props.showId}/conflicts`}>My conflicts</Link>}
-          <Link to="/account">Name and email</Link>
+          <Link to="/account">Account and notifications</Link>
           <button
             onClick={() => {
               signOut();
@@ -93,6 +94,7 @@ export function staffTabs(view: ShowView): Tab[] {
     { id: "breakdown", label: "Breakdown", icon: "lines", path: `/shows/${id}/breakdown` },
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
+  tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
   if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
   return tabs;
 }
@@ -158,6 +160,20 @@ export function ActorShell(props: { showId: string; current: ActorTab; children:
     { id: "conflicts", label: "Conflicts", icon: "calendar", path: `${base}/conflicts` },
     { id: "show", label: "Show", icon: "megaphone", path: base },
   ];
+  // Unread callboard notices, as a count on the Show tab (the Show page itself lists them).
+  const [unread, setUnread] = useState(0);
+  const away = props.current !== "show";
+  useEffect(() => {
+    if (!away) return setUnread(0);
+    let live = true;
+    api
+      .callboard(props.showId)
+      .then((b) => live && setUnread(b.unread))
+      .catch(() => undefined);
+    return () => {
+      live = false;
+    };
+  }, [props.showId, away]);
   return (
     <div className="phone-page has-tabs">
       {props.archived && <div className="archived-bar">This show is archived. You can still look back at it.</div>}
@@ -165,7 +181,14 @@ export function ActorShell(props: { showId: string; current: ActorTab; children:
       <nav className="tabs" aria-label="Main">
         {tabs.map((t) => (
           <Link key={t.id} to={t.path} current={t.id === props.current}>
-            <Icon name={t.icon} />
+            <span className="tab-icon">
+              <Icon name={t.icon} />
+              {t.id === "show" && unread > 0 && (
+                <span className="tab-badge" aria-label={`${unread} new`}>
+                  {unread}
+                </span>
+              )}
+            </span>
             {t.label}
           </Link>
         ))}

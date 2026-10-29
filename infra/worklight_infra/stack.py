@@ -18,6 +18,8 @@ from aws_cdk import aws_cloudfront as cloudfront
 from aws_cdk import aws_cloudfront_origins as origins
 from aws_cdk import aws_cognito as cognito
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_events as events
+from aws_cdk import aws_events_targets as targets
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_lambda as lambda_
 from aws_cdk import aws_logs as logs
@@ -156,7 +158,9 @@ class WorklightStack(Stack):
             "APP_URL_PARAM": app_url_param.parameter_name,
         }
 
-        def fn(construct_id: str, handler: str, *, sends_email: bool, memory: int = 256) -> lambda_.Function:
+        def fn(
+            construct_id: str, handler: str, *, sends_email: bool, memory: int = 256, timeout: int = 10
+        ) -> lambda_.Function:
             f = lambda_.Function(
                 self,
                 construct_id,
@@ -165,7 +169,7 @@ class WorklightStack(Stack):
                 runtime=lambda_.Runtime.PYTHON_3_13,
                 architecture=lambda_.Architecture.ARM_64,
                 memory_size=memory,
-                timeout=Duration.seconds(10),
+                timeout=Duration.seconds(timeout),
                 environment=shared_env,
                 log_group=logs.LogGroup(
                     self,
@@ -204,6 +208,15 @@ class WorklightStack(Stack):
         define_challenge = fn("DefineAuthChallengeFunction", "auth.define_auth_challenge", sends_email=False)
         create_challenge = fn("CreateAuthChallengeFunction", "auth.create_auth_challenge", sends_email=True)
         verify_challenge = fn("VerifyAuthChallengeFunction", "auth.verify_auth_challenge", sends_email=False)
+
+        # Hourly: the day-before call reminders. One Scan of shows plus a Query per show with calls tomorrow.
+        reminders_fn = fn("RemindersFunction", "jobs.reminders", sends_email=True, timeout=120)
+        events.Rule(
+            self,
+            "HourlyReminders",
+            schedule=events.Schedule.rate(Duration.hours(1)),
+            targets=[targets.LambdaFunction(reminders_fn, retry_attempts=0)],
+        )
 
         # ---- Auth (Cognito) ---------------------------------------------------------------------
 

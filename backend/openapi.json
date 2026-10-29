@@ -477,6 +477,24 @@
         "title": "Breakdown",
         "type": "object"
       },
+      "CalendarLinks": {
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "webcalUrl": {
+            "title": "Webcalurl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "webcalUrl"
+        ],
+        "title": "CalendarLinks",
+        "type": "object"
+      },
       "Call": {
         "properties": {
           "blocks": {
@@ -593,6 +611,17 @@
               }
             ],
             "title": "Publishedat"
+          },
+          "remindedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remindedat"
           },
           "sequence": {
             "default": 0,
@@ -986,6 +1015,32 @@
           "status"
         ],
         "title": "CallView",
+        "type": "object"
+      },
+      "Callboard": {
+        "properties": {
+          "canPost": {
+            "title": "Canpost",
+            "type": "boolean"
+          },
+          "notices": {
+            "items": {
+              "$ref": "#/components/schemas/NoticeView"
+            },
+            "title": "Notices",
+            "type": "array"
+          },
+          "unread": {
+            "title": "Unread",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "notices",
+          "unread",
+          "canPost"
+        ],
+        "title": "Callboard",
         "type": "object"
       },
       "Character": {
@@ -2032,6 +2087,23 @@
         "title": "MarkBody",
         "type": "object"
       },
+      "MarkReadBody": {
+        "properties": {
+          "noticeIds": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Noticeids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "noticeIds"
+        ],
+        "title": "MarkReadBody",
+        "type": "object"
+      },
       "Me": {
         "description": "What the signed-in user sees on their home page.",
         "properties": {
@@ -2425,6 +2497,234 @@
         "title": "MyTheater",
         "type": "object"
       },
+      "Notice": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "authorId": {
+            "title": "Authorid",
+            "type": "string"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "noticeId": {
+            "title": "Noticeid",
+            "type": "string"
+          },
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noticeId",
+          "showId",
+          "theaterId",
+          "title",
+          "body",
+          "authorId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "Notice",
+        "type": "object"
+      },
+      "NoticeView": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "audienceCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audiencecount"
+          },
+          "authorId": {
+            "title": "Authorid",
+            "type": "string"
+          },
+          "authorName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Authorname"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "noticeId": {
+            "title": "Noticeid",
+            "type": "string"
+          },
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "read": {
+            "default": false,
+            "title": "Read",
+            "type": "boolean"
+          },
+          "readCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Readcount"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noticeId",
+          "showId",
+          "theaterId",
+          "title",
+          "body",
+          "authorId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "NoticeView",
+        "type": "object"
+      },
+      "NotifyPrefs": {
+        "description": "What a person wants emailed to them. Calendar feeds and the app are always on.",
+        "properties": {
+          "changeEmails": {
+            "default": true,
+            "title": "Changeemails",
+            "type": "boolean"
+          },
+          "emailReminders": {
+            "default": true,
+            "title": "Emailreminders",
+            "type": "boolean"
+          },
+          "noticeEmails": {
+            "default": true,
+            "title": "Noticeemails",
+            "type": "boolean"
+          }
+        },
+        "title": "NotifyPrefs",
+        "type": "object"
+      },
+      "PostNoticeBody": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "body": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Body",
+            "type": "string"
+          },
+          "email": {
+            "default": true,
+            "title": "Email",
+            "type": "boolean"
+          },
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "title": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "title": "PostNoticeBody",
+        "type": "object"
+      },
       "PublishBody": {
         "properties": {
           "from": {
@@ -2454,6 +2754,11 @@
           },
           "cancelled": {
             "title": "Cancelled",
+            "type": "integer"
+          },
+          "notified": {
+            "default": 0,
+            "title": "Notified",
             "type": "integer"
           },
           "published": {
@@ -3646,15 +3951,29 @@
       "UpdateMeBody": {
         "properties": {
           "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "title": "Name",
-            "type": "string"
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "prefs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NotifyPrefs"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
-        "required": [
-          "name"
-        ],
         "title": "UpdateMeBody",
         "type": "object"
       },
@@ -3704,6 +4023,65 @@
           }
         },
         "title": "UpdateMemberBody",
+        "type": "object"
+      },
+      "UpdateNoticeBody": {
+        "properties": {
+          "audience": {
+            "anyOf": [
+              {
+                "enum": [
+                  "everyone",
+                  "cast",
+                  "crew"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audience"
+          },
+          "body": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body"
+          },
+          "pinned": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pinned"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateNoticeBody",
         "type": "object"
       },
       "UpdateSceneBody": {
@@ -3942,6 +4320,17 @@
       },
       "User": {
         "properties": {
+          "calendarToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calendartoken"
+          },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
@@ -3960,6 +4349,14 @@
               }
             ],
             "title": "Name"
+          },
+          "prefs": {
+            "$ref": "#/components/schemas/NotifyPrefs",
+            "default": {
+              "changeEmails": true,
+              "emailReminders": true,
+              "noticeEmails": true
+            }
           },
           "userId": {
             "title": "Userid",
@@ -4377,6 +4774,42 @@
         "summary": "Update Me"
       }
     },
+    "/api/me/calendar": {
+      "get": {
+        "operationId": "calendar_links_api_me_calendar_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarLinks"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Calendar Links"
+      }
+    },
+    "/api/me/calendar/rotate": {
+      "post": {
+        "operationId": "rotate_calendar_api_me_calendar_rotate_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarLinks"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Rotate Calendar"
+      }
+    },
     "/api/me/calls": {
       "get": {
         "operationId": "my_calls_api_me_calls_get",
@@ -4425,6 +4858,38 @@
           }
         },
         "summary": "My Calls"
+      }
+    },
+    "/api/me/calls/{call_id}.ics": {
+      "get": {
+        "operationId": "call_ics_api_me_calls__call_id__ics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Call Ics"
       }
     },
     "/api/me/conflicts": {
@@ -4663,6 +5128,38 @@
           }
         },
         "summary": "My Days"
+      }
+    },
+    "/api/public/calendar/{token}.ics": {
+      "get": {
+        "operationId": "feed_api_public_calendar__token__ics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Feed"
       }
     },
     "/api/public/invites/{token}": {
@@ -5777,6 +6274,231 @@
           }
         },
         "summary": "Update Member"
+      }
+    },
+    "/api/shows/{show_id}/notices": {
+      "get": {
+        "operationId": "get_callboard_api_shows__show_id__notices_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Callboard"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Callboard"
+      },
+      "post": {
+        "operationId": "post_notice_api_shows__show_id__notices_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostNoticeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Post Notice"
+      }
+    },
+    "/api/shows/{show_id}/notices/read": {
+      "post": {
+        "operationId": "mark_read_api_shows__show_id__notices_read_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkReadBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mark Read"
+      }
+    },
+    "/api/shows/{show_id}/notices/{notice_id}": {
+      "delete": {
+        "operationId": "delete_notice_api_shows__show_id__notices__notice_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "notice_id",
+            "required": true,
+            "schema": {
+              "title": "Notice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Notice"
+      },
+      "patch": {
+        "operationId": "update_notice_api_shows__show_id__notices__notice_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "notice_id",
+            "required": true,
+            "schema": {
+              "title": "Notice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNoticeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Notice"
       }
     },
     "/api/shows/{show_id}/remind": {

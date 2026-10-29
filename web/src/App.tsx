@@ -12,6 +12,7 @@ import { Breakdown } from "./pages/director/Breakdown";
 import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
 import { Schedule } from "./pages/director/Schedule";
+import { CallboardPage } from "./pages/director/Callboard";
 import { TechWeek } from "./pages/director/TechWeek";
 import { StageDoor } from "./pages/actor/StageDoor";
 import { SetupWizard } from "./pages/director/SetupWizard";
@@ -108,6 +109,8 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return <MyCalls {...pageProps} />;
     case "schedule":
       return staff ? <Schedule {...pageProps} /> : <NotForYou />;
+    case "callboard":
+      return staff ? <CallboardPage {...pageProps} /> : <NotForYou />;
     case "tech":
       return staff ? <TechWeek {...pageProps} /> : <NotForYou />;
     case "door":

@@ -6,9 +6,10 @@ import { Link } from "../../router";
 import { useSession } from "../../session";
 import { AccountMenu, ActorShell } from "../../shell";
 import type { MyCall, ShowDay } from "../../types";
-import { ErrorView, FormError, Icon, Loading, Sheet } from "../../ui";
+import { ErrorView, FormError, Icon, Loading, Sheet, useToast } from "../../ui";
 import { useAsync } from "../../useAsync";
 import { callWhat, directionsUrl, lowerFirst, useDirector, useStageManager } from "./actorLib";
+import { CalendarLinks, downloadCallIcs } from "./CalendarLinks";
 import "./actor.css";
 
 function weekLabel(monday: string): string {
@@ -47,6 +48,10 @@ export function MyCalls(props: ShowPageProps) {
     [show.showId, archived],
   );
   const archivedShows = me.shows.filter((s) => s.show.status === "archived");
+  const [calOpen, setCalOpen] = useState(false);
+  const [toast, showToast] = useToast();
+  const addOne = (call: MyCall) =>
+    downloadCallIcs(call.callId, `${show.name} ${call.date}`).catch((err: Error) => showToast(err.message));
 
   const calls = data?.[0] ?? [];
   const days = (data?.[1] ?? []).filter((d) => d.showId === show.showId);
@@ -61,7 +66,7 @@ export function MyCalls(props: ShowPageProps) {
   return (
     <ActorShell showId={show.showId} current="calls" archived={archived}>
       {featured ? (
-        <TonightCard call={featured} tonight={featured.date === today} showId={show.showId} isStaff={props.view.role === "staff"} />
+        <TonightCard call={featured} tonight={featured.date === today} showId={show.showId} isStaff={props.view.role === "staff"} onAdd={addOne} />
       ) : (
         <header className="actor-head" style={{ borderBottom: "none" }}>
           <div className="actor-topline">
@@ -95,12 +100,9 @@ export function MyCalls(props: ShowPageProps) {
           )}
           <div className="actor-section-head actor-calls-head">
             <h2>All your calls</h2>
-            <span className="actor-cal">
-              <button type="button" className="btn btn-sm btn-outline" disabled>
-                Add all to calendar
-              </button>
-              <span>Coming soon</span>
-            </span>
+            <button type="button" className="btn btn-sm btn-outline actor-cal-btn" onClick={() => setCalOpen(true)}>
+              Add all to calendar
+            </button>
           </div>
           {rows.length === 0 ? (
             <div className="actor-section">
@@ -123,7 +125,7 @@ export function MyCalls(props: ShowPageProps) {
                         <span>{calledWeeks.has(wk) ? "Not called" : "Schedule not out yet"}</span>
                       </div>
                     ) : (
-                      <CallRow call={r.call} />
+                      <CallRow call={r.call} onAdd={addOne} />
                     )}
                   </div>
                 );
@@ -155,6 +157,18 @@ export function MyCalls(props: ShowPageProps) {
           </div>
         </>
       )}
+      {calOpen && (
+        <Sheet title="Add your calls to a calendar" onClose={() => setCalOpen(false)}>
+          <p className="small muted" style={{ marginTop: -6 }}>
+            One private link with every call you're in, for every show. It keeps itself up to date.
+          </p>
+          <CalendarLinks />
+          <button type="button" className="btn btn-block" onClick={() => setCalOpen(false)}>
+            Done
+          </button>
+        </Sheet>
+      )}
+      {toast}
     </ActorShell>
   );
 }
@@ -163,7 +177,7 @@ function placeLine(call: MyCall): string {
   return [call.location, call.bring ? `Bring ${lowerFirst(call.bring)}` : ""].filter(Boolean).join(" · ");
 }
 
-function CallRow(props: { call: MyCall }) {
+function CallRow(props: { call: MyCall; onAdd: (call: MyCall) => void }) {
   const c = props.call;
   const place = placeLine(c);
   return (
@@ -178,13 +192,18 @@ function CallRow(props: { call: MyCall }) {
         {c.cancelled ? <span className="actor-call-cancel">Cancelled</span> : place && <span className="actor-call-place">{place}</span>}
         {!c.cancelled && c.note && <span className="actor-call-place">{c.note}</span>}
       </div>
+      {!c.cancelled && (
+        <button type="button" className="actor-call-add" aria-label="Add to calendar" title="Add to calendar" onClick={() => props.onAdd(c)}>
+          <Icon name="calendar" />
+        </button>
+      )}
     </div>
   );
 }
 
 const LATE_CHOICES = [10, 15, 20, 30];
 
-function TonightCard(props: { call: MyCall; tonight: boolean; showId: string; isStaff: boolean }) {
+function TonightCard(props: { call: MyCall; tonight: boolean; showId: string; isStaff: boolean; onAdd: (call: MyCall) => void }) {
   const c = props.call;
   const sm = useStageManager(props.showId);
   const [open, setOpen] = useState(false);
@@ -238,6 +257,9 @@ function TonightCard(props: { call: MyCall; tonight: boolean; showId: string; is
           )}
         </div>
       )}
+      <button type="button" className="actor-tonight-add" onClick={() => props.onAdd(c)}>
+        Add to calendar
+      </button>
       {told && (
         <div className="actor-tonight-told" role="status">
           {sm.first ?? "Stage management"} knows you'll be about {told} minutes late.

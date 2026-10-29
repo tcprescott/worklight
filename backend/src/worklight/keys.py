@@ -11,12 +11,15 @@ SHOW#<showId>  CHAR#<charId>     character and who plays it
 SHOW#<showId>  APPEAR#<sceneId>#<charId>   one tick in the scenes x characters grid
 SHOW#<showId>  CALL#<date>#<callId>       a rehearsal call (working copy + published copy)
 SHOW#<showId>  CHECKIN#<date>#<userId>    tech week and performance attendance
+SHOW#<showId>  NOTICE#<noticeId>          callboard notice
+SHOW#<showId>  READ#<noticeId>#<userId>   who has read a notice
 USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
 EMAIL#<email>  USER              email -> userId lookup
 INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
+FEED#<token>   META              calendar feed token -> userId
 """
 
 import re
@@ -34,6 +37,8 @@ APPEAR_PREFIX = "APPEAR#"
 CONFLICT_PREFIX = "CONFLICT#"
 CALL_PREFIX = "CALL#"
 CHECKIN_PREFIX = "CHECKIN#"
+NOTICE_PREFIX = "NOTICE#"
+READ_PREFIX = "READ#"
 
 
 def normalize_email(email: str) -> str:
@@ -99,6 +104,18 @@ def appearance(show_id: str, scene_id: str, char_id: str) -> Key:
 
 def call(show_id: str, date: str, call_id: str) -> Key:
     return {"PK": f"SHOW#{show_id}", "SK": f"CALL#{date}#{call_id}"}
+
+
+def notice(show_id: str, notice_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"NOTICE#{notice_id}"}
+
+
+def notice_read(show_id: str, notice_id: str, user_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"READ#{notice_id}#{user_id}"}
+
+
+def feed(token: str) -> Key:
+    return {"PK": f"FEED#{token}", "SK": "META"}
 
 
 def checkin(show_id: str, date: str, user_id: str) -> Key:
