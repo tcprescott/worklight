@@ -143,6 +143,69 @@ def running_late_email(
     )
 
 
+def call_reminder_email(
+    to: str,
+    show_name: str,
+    day: str,
+    start: str,
+    end: str,
+    what: str,
+    where: str | None,
+    bring: str | None,
+    url: str,
+) -> Email:
+    when = f"{_pretty_date(day)}, {_pretty_time(start)} to {_pretty_time(end)}"
+    extra = "".join(
+        f"\n{x}" for x in (f"Where: {where}" if where else "", f"Bring: {bring}" if bring else "") if x
+    )
+    return Email(
+        to=to,
+        subject=f"Tomorrow: {show_name} at {_pretty_time(start)}",
+        text=f"You're called for {show_name}.\n\n{when}\n{what}{extra}\n\n{url}",
+        html=_layout(
+            "You're called tomorrow",
+            f"<strong>{escape(when)}</strong><br>{escape(what)}"
+            + (f"<br>Where: {escape(where)}" if where else "")
+            + (f"<br>Bring: {escape(bring)}" if bring else ""),
+            "See my calls",
+            url,
+        ),
+    )
+
+
+def schedule_update_email(to: str, show_name: str, lines: list[str], first: bool, url: str) -> Email:
+    heading = "You're called" if first else "Your schedule changed"
+    intro = f"The schedule for {show_name} is out." if first else f"Your calls for {show_name} changed."
+    return Email(
+        to=to,
+        subject=f"{show_name}: {'your calls' if first else 'schedule update'}",
+        text=intro + "\n\n" + "\n".join(f"- {line}" for line in lines) + f"\n\n{url}",
+        html=_layout(
+            heading,
+            escape(intro) + "<ul>" + "".join(f"<li>{escape(line)}</li>" for line in lines) + "</ul>",
+            "See my calls",
+            url,
+        ),
+    )
+
+
+def notice_email(to: str, show_name: str, author: str, title: str, body: str, url: str) -> Email:
+    return Email(
+        to=to,
+        subject=f"{show_name}: {title}",
+        text=f"{author} posted on the callboard:\n\n{title}\n\n{body}\n\n{url}",
+        html=_layout(title, f"{escape(body)}<br><br>From {escape(author)}", "Open the callboard", url),
+    )
+
+
+def pretty_time(hhmm: str) -> str:
+    return _pretty_time(hhmm)
+
+
+def pretty_date(iso: str) -> str:
+    return _pretty_date(iso)
+
+
 def _pretty_time(hhmm: str) -> str:
     hour, minute = (int(x) for x in hhmm.split(":"))
     suffix = "AM" if hour < 12 else "PM"

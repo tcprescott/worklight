@@ -19,6 +19,8 @@ from worklight.models import (
     MagicLinkRecord,
     Membership,
     Model,
+    Notice,
+    NoticeRead,
     Scene,
     Show,
     Theater,
@@ -91,6 +93,8 @@ class ShowPartition:
     appearances: list[Appearance] = field(default_factory=list)
     calls: list[Call] = field(default_factory=list)
     checkins: list[CheckIn] = field(default_factory=list)
+    notices: list[Notice] = field(default_factory=list)
+    reads: list[NoticeRead] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -210,6 +214,22 @@ class DynamoStore:
             ExpressionAttributeValues={":name": {"S": name}},
         )
 
+    def put_user(self, user: User) -> None:
+        """Saves the profile (name, preferences, feed token). The email never changes."""
+        self._put_item(keys.user(user.user_id), "user", user)
+
+    # ---- calendar feeds -----------------------------------------------------------------------
+
+    def put_feed(self, token: str, user_id: str) -> None:
+        self.db.put_item(**self._put({**keys.feed(token), "entity": "feed", "userId": user_id}))
+
+    def get_feed_user_id(self, token: str) -> str | None:
+        item = self._get(keys.feed(token))
+        return str(item["userId"]) if item else None
+
+    def delete_feed(self, token: str) -> None:
+        self._delete(keys.feed(token))
+
     def get_users(self, user_ids: Iterable[str]) -> list[User]:
         return [
             User.model_validate(i) for i in self._batch_get([keys.user(u) for u in dict.fromkeys(user_ids)])
@@ -316,6 +336,10 @@ class DynamoStore:
                 part.calls.append(Call.model_validate(data))
             elif sk.startswith(keys.CHECKIN_PREFIX):
                 part.checkins.append(CheckIn.model_validate(data))
+            elif sk.startswith(keys.NOTICE_PREFIX):
+                part.notices.append(Notice.model_validate(data))
+            elif sk.startswith(keys.READ_PREFIX):
+                part.reads.append(NoticeRead.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
@@ -434,6 +458,38 @@ class DynamoStore:
 
     def delete_call(self, show_id: str, date: str, call_id: str) -> None:
         self._delete(keys.call(show_id, date, call_id))
+
+    def all_shows(self) -> list[Show]:
+        """Every show in every company, for the hourly reminder job. A Scan, fine at this table's size."""
+        params: dict[str, Any] = {
+            "TableName": self.table,
+            "FilterExpression": "#e = :show",
+            "ExpressionAttributeNames": {"#e": "entity"},
+            "ExpressionAttributeValues": {":show": {"S": "show"}},
+        }
+        out: list[Show] = []
+        while True:
+            res = self.db.scan(**params)
+            out.extend(Show.model_validate(_from_ddb(i)) for i in res.get("Items", []))
+            if "LastEvaluatedKey" not in res:
+                return out
+            params["ExclusiveStartKey"] = res["LastEvaluatedKey"]
+
+    # ---- callboard ----------------------------------------------------------------------------
+
+    def put_notice(self, notice: Notice) -> None:
+        self._put_item(keys.notice(notice.show_id, notice.notice_id), "notice", notice)
+
+    def delete_notice(self, show_id: str, notice_id: str, reads: Iterable[NoticeRead]) -> None:
+        self._batch_delete(
+            [
+                keys.notice(show_id, notice_id),
+                *(keys.notice_read(show_id, notice_id, r.user_id) for r in reads),
+            ]
+        )
+
+    def put_notice_read(self, read: NoticeRead) -> None:
+        self._put_item(keys.notice_read(read.show_id, read.notice_id, read.user_id), "noticeRead", read)
 
     # ---- check-ins ----------------------------------------------------------------------------
 

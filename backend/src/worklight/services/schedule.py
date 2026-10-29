@@ -709,14 +709,19 @@ class PublishResult(Model):
     cancelled: int
     # Calls whose published copy changed, for change notices and calendar updates.
     call_ids: list[str]
+    # People emailed about their changed calls.
+    notified: int = 0
 
 
 def publish(ctx: Ctx, user: User, show_id: str, body: PublishBody) -> PublishResult:
-    editable_show(ctx, show_id, user, "schedule:edit")
+    from worklight.services.notify import schedule_published
+
+    show = editable_show(ctx, show_id, user, "schedule:edit").show
     if body.end < body.start:
         raise Invalid("to must be on or after from")
     published = cancelled = 0
     changed = []
+    changes: list[tuple[CallContent | None, CallContent]] = []
     stamp = now_iso()
     for call in ctx.store.list_calls(show_id, body.start, body.end):
         content = content_of(call)
@@ -736,11 +741,13 @@ def publish(ctx: Ctx, user: User, show_id: str, body: PublishBody) -> PublishRes
             )
         )
         changed.append(call.call_id)
+        changes.append((call.published, content))
         if content.cancelled:
             cancelled += 1
         else:
             published += 1
-    return PublishResult(published=published, cancelled=cancelled, call_ids=changed)
+    notified = schedule_published(ctx, show, changes) if changes else 0
+    return PublishResult(published=published, cancelled=cancelled, call_ids=changed, notified=notified)
 
 
 # ---- Tech week ------------------------------------------------------------------------------------

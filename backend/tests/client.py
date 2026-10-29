@@ -51,7 +51,11 @@ class Client:
             "isBase64Encoded": False,
         }
         res = self.handler(event, None)
-        return res["statusCode"], json.loads(res["body"]) if res.get("body") else None
+        if not res.get("body"):
+            return res["statusCode"], None
+        if "json" not in res["headers"].get("content-type", ""):
+            return res["statusCode"], res["body"]
+        return res["statusCode"], json.loads(res["body"])
 
     def ok(self, email: str, method: str, path: str, body: Any = None) -> Any:
         status, data = self(email, method, path, body)

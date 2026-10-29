@@ -86,11 +86,25 @@ class Membership(Model):
     conflicts_submitted_at: str | None = None
 
 
+class NotifyPrefs(Model):
+    """What a person wants emailed to them. Calendar feeds and the app are always on."""
+
+    # The day before each call.
+    email_reminders: bool = True
+    # When a published call of theirs is added, moved, changed or cancelled.
+    change_emails: bool = True
+    # New notices on the callboard.
+    notice_emails: bool = True
+
+
 class User(Model):
     user_id: str
     email: str
     name: str | None = None
     created_at: str
+    prefs: NotifyPrefs = NotifyPrefs()
+    # Secret part of the person's calendar feed URL.
+    calendar_token: str | None = None
 
 
 class Invite(Model):
@@ -247,6 +261,8 @@ class Call(CallContent):
     sequence: int = 0
     published: CallContent | None = None
     published_at: str | None = None
+    # When the day-before reminder went out.
+    reminded_at: str | None = None
     updated_at: str
     created_at: str
 
@@ -265,6 +281,31 @@ class CheckIn(Model):
     running_late_minutes: int | None = None
     note: str | None = None
     updated_at: str
+
+
+# ---- Callboard -----------------------------------------------------------------------------------
+
+NoticeAudience = Literal["everyone", "cast", "crew"]
+
+
+class Notice(Model):
+    notice_id: str
+    show_id: str
+    theater_id: str
+    title: str
+    body: str
+    audience: NoticeAudience = "everyone"
+    pinned: bool = False
+    author_id: str
+    created_at: str
+    updated_at: str
+
+
+class NoticeRead(Model):
+    show_id: str
+    notice_id: str
+    user_id: str
+    at: str
 
 
 # ---- API shapes --------------------------------------------------------------------------------
