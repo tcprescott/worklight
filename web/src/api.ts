@@ -1,6 +1,9 @@
 import type {
   Act,
   Admin,
+  ApiKey,
+  CreateApiKeyBody,
+  NewApiKey,
   Attendance,
   Breakdown,
   CalendarLinks,
@@ -106,6 +109,13 @@ export const api = {
     request<Admin[]>("POST", `/theaters/${e(theaterId)}/admins`, body),
   removeAdmin: (theaterId: string, userId: string) =>
     request<Admin[]>("DELETE", `/theaters/${e(theaterId)}/admins/${e(userId)}`),
+
+  // Company API keys (admins only). The secret comes back once, when the key is made.
+  apiKeys: (theaterId: string) => request<ApiKey[]>("GET", `/theaters/${e(theaterId)}/api-keys`),
+  createApiKey: (theaterId: string, body: CreateApiKeyBody) =>
+    request<NewApiKey>("POST", `/theaters/${e(theaterId)}/api-keys`, body),
+  revokeApiKey: (theaterId: string, keyId: string) =>
+    request<void>("DELETE", `/theaters/${e(theaterId)}/api-keys/${e(keyId)}`),
   createShow: (theaterId: string, input: CreateShowBody) => request<Show>("POST", `/theaters/${e(theaterId)}/shows`, input),
 
   // Show

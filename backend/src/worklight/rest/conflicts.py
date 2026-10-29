@@ -10,8 +10,8 @@ from worklight.services.base import Ctx, IsoDate
 Weekday = Annotated[int, Path(ge=0, le=6)]
 
 
-def router(ctx: Ctx, current_user: UserDep) -> APIRouter:
-    r = APIRouter(prefix="/api")
+def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    r = APIRouter(prefix=base)
     CurrentUser = Annotated[User, Depends(current_user)]
 
     @r.get("/me/conflicts", response_model=MyConflicts, response_model_exclude_none=True)

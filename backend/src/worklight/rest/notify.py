@@ -10,8 +10,8 @@ from worklight.services.base import Ctx
 ICS = "text/calendar; charset=utf-8"
 
 
-def router(ctx: Ctx, current_user: UserDep) -> APIRouter:
-    r = APIRouter(prefix="/api")
+def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    r = APIRouter(prefix=base)
     CurrentUser = Annotated[User, Depends(current_user)]
 
     # ---- calendar ----

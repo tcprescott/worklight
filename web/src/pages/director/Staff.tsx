@@ -7,6 +7,7 @@ import { CompanyShell } from "../../shell";
 import type { Admin, Member, ShowSummary, TheaterView } from "../../types";
 import { Avatar, Dialog, ErrorView, FormError, Loading, useToast } from "../../ui";
 import { useAsync } from "../../useAsync";
+import { ApiKeysCard } from "./ApiKeys";
 import "./company.css";
 import { ADMIN_SENTENCE, departmentFor, isStageManager, roleSentence, STAFF_ROLES, validEmail } from "./setup-parts";
 
@@ -65,6 +66,8 @@ function StaffPage(props: { view: TheaterView; reload: () => Promise<void>; setV
     }
   };
 
+  // API keys are for company admins only.
+  const isAdmin = me.theaters.some((t) => t.theater.theaterId === theaterId && t.role === "admin");
   // A company always keeps one admin.
   const canRemove = view.admins.length > 1;
 
@@ -135,6 +138,8 @@ function StaffPage(props: { view: TheaterView; reload: () => Promise<void>; setV
               </button>
             </section>
           ))}
+
+          {isAdmin && <ApiKeysCard theaterId={theaterId} admins={view.admins} showToast={showToast} />}
         </div>
         {active.length === 0 && (
           <p className="co-hint" style={{ marginTop: 16 }}>

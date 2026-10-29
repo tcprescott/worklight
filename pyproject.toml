@@ -31,5 +31,10 @@ strict = true
 packages = ["worklight", "worklight_infra"]
 mypy_path = ["backend/src", "infra"]
 
+[[tool.mypy.overrides]]
+# Strawberry's field and mutation decorators aren't typed when given arguments.
+module = "worklight.graphql_api"
+disallow_untyped_decorators = false
+
 [tool.ruff.lint.isort]
 known-first-party = ["worklight", "worklight_infra", "tests"]

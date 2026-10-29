@@ -8,8 +8,8 @@ from worklight.services import breakdown as service
 from worklight.services.base import Ctx
 
 
-def router(ctx: Ctx, current_user: UserDep) -> APIRouter:
-    r = APIRouter(prefix="/api/shows/{show_id}")
+def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    r = APIRouter(prefix=base + "/shows/{show_id}")
     CurrentUser = Annotated[User, Depends(current_user)]
 
     def no_content() -> Response:

@@ -10,8 +10,8 @@ from worklight.services import theaters as service
 from worklight.services.base import Ctx
 
 
-def router(ctx: Ctx, current_user: UserDep) -> APIRouter:
-    r = APIRouter(prefix="/api")
+def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    r = APIRouter(prefix=base)
     CurrentUser = Annotated[User, Depends(current_user)]
 
     @r.get("/me", response_model=Me, response_model_exclude_none=True)

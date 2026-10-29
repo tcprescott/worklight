@@ -26,6 +26,7 @@ class Client:
         *,
         verified: bool = True,
         raw_body: str | None = None,
+        headers: dict[str, str] | None = None,
     ) -> tuple[int, Any]:
         path, _, query = path.partition("?")
         claims = {"email": email, "email_verified": "true" if verified else "false"} if email else {}
@@ -34,7 +35,12 @@ class Client:
             "routeKey": "$default",
             "rawPath": path,
             "rawQueryString": query,
-            "headers": {"content-type": "application/json", "host": "worklight.test"},
+            "headers": {
+                "content-type": "application/json",
+                "accept": "application/json, text/event-stream",
+                "host": "worklight.test",
+                **(headers or {}),
+            },
             "requestContext": {
                 "http": {
                     "method": method,

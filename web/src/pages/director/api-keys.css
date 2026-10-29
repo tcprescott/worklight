@@ -1,0 +1,227 @@
+/* API keys card on Staff and admins. Builds on .co-staff-card in company.css. */
+
+.ak-card {
+  grid-column: 1 / -1;
+}
+.ak-head {
+  align-items: center;
+}
+.ak-head .ak-new {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+.ak-card code,
+.ak-secret code,
+.ak-lede code {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+.ak-endpoints {
+  margin: 2px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ak-endpoints > div {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 4px;
+  background: var(--sand-2);
+  min-width: 0;
+}
+.ak-endpoints dt {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.ak-endpoints dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  color: var(--ink);
+}
+.ak-howto {
+  font-size: 13px;
+  color: var(--muted);
+}
+.ak-howto code {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.ak-list {
+  display: flex;
+  flex-direction: column;
+  margin-top: 4px;
+}
+.ak-list .loading {
+  border-top: 1px solid #eee9e0;
+  padding: 14px 0 4px;
+  margin: 0;
+}
+.ak-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) 120px minmax(0, 1.3fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  min-height: 56px;
+  border-top: 1px solid #eee9e0;
+}
+.ak-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 6px 0;
+}
+.ak-name-text {
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.ak-prefix {
+  color: var(--muted);
+}
+.ak-card .ak-prefix {
+  font-size: 12px;
+}
+.ak-scope {
+  justify-self: start;
+}
+.ak-meta,
+.ak-used {
+  font-size: 13px;
+  color: var(--ink-2);
+  min-width: 0;
+}
+.ak-never {
+  color: var(--muted-2);
+}
+.ak-revoke.btn {
+  min-height: 34px;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: var(--hard-text);
+  font-size: 12px;
+  font-weight: 700;
+}
+.ak-state {
+  border-top: 1px solid #eee9e0;
+  padding: 14px 0 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.ak-empty {
+  gap: 2px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.ak-empty-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum-dark);
+}
+
+/* Dialogs */
+.ak-secret {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.ak-secret code {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--rule-input);
+  border-radius: 6px;
+  background: var(--sand-2);
+  color: var(--ink);
+  font-size: 13.5px;
+  overflow-wrap: anywhere;
+  user-select: all;
+}
+.ak-secret .btn {
+  min-width: 84px;
+}
+.ak-warn {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--soft-bg);
+  color: var(--soft-text);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+.ak-lede {
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .ak-head .ak-new {
+    min-height: 44px;
+  }
+  .ak-endpoints {
+    flex-direction: column;
+  }
+  .ak-endpoints > div {
+    flex-direction: column;
+    gap: 1px;
+  }
+  .ak-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name scope"
+      "meta revoke"
+      "used revoke";
+    gap: 2px 12px;
+    padding: 10px 0;
+  }
+  .ak-name {
+    grid-area: name;
+    padding: 0;
+  }
+  .ak-scope {
+    grid-area: scope;
+    justify-self: end;
+    align-self: start;
+    margin-top: 2px;
+  }
+  .ak-meta {
+    grid-area: meta;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .ak-used {
+    grid-area: used;
+    font-size: 12px;
+  }
+  .ak-revoke.btn {
+    grid-area: revoke;
+    align-self: end;
+    justify-self: end;
+    min-width: 76px;
+    min-height: 44px;
+  }
+  .ak-secret {
+    flex-direction: column;
+  }
+  .ak-secret .btn {
+    min-height: 48px;
+  }
+  .ak-card .dialog-actions .btn,
+  .sheet .ak-form .dialog-actions .btn {
+    flex: 1;
+  }
+}

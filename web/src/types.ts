@@ -74,3 +74,8 @@ export type PostNoticeBody = Schemas["PostNoticeBody"];
 export type UpdateNoticeBody = Schemas["UpdateNoticeBody"];
 export type CalendarLinks = Schemas["CalendarLinks"];
 export type NotifyPrefs = Schemas["NotifyPrefs"];
+
+export type ApiKey = Schemas["ApiKey"];
+export type ApiKeyScope = ApiKey["scope"];
+export type CreateApiKeyBody = Schemas["CreateApiKeyBody"];
+export type NewApiKey = Schemas["NewApiKey"];
