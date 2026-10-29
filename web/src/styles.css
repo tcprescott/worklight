@@ -434,6 +434,27 @@ p {
   color: var(--plum);
   font-weight: 700;
 }
+.tab-icon {
+  position: relative;
+  display: inline-flex;
+}
+.tab-badge {
+  position: absolute;
+  top: -5px;
+  left: 14px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 5px;
+  border-radius: 9px;
+  border: 2px solid var(--surface);
+  box-sizing: content-box;
+  background: var(--plum);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 17px;
+  text-align: center;
+}
 .has-tabs {
   padding-bottom: calc(84px + var(--safe-bottom));
 }
