@@ -5,6 +5,7 @@ export function useAsync<T>(load: () => Promise<T>, deps: unknown[]) {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const run = useCallback(load, deps);
 
   const reload = useCallback(() => {
@@ -20,5 +21,5 @@ export function useAsync<T>(load: () => Promise<T>, deps: unknown[]) {
     void reload();
   }, [reload]);
 
-  return { data, error, loading, reload };
+  return { data, error, loading, reload, setData };
 }
