@@ -285,6 +285,13 @@ class WorklightStack(Stack):
             integration=integrations.HttpLambdaIntegration("ApiIntegration", api_fn),
             authorizer=authorizer,
         )
+        # Public reads that work before sign-in, such as what an invite link is for. The more specific
+        # route wins over /api/{proxy+}; the app itself never trusts a caller on these paths.
+        http_api.add_routes(
+            path="/api/public/{proxy+}",
+            methods=[apigw.HttpMethod.GET],
+            integration=integrations.HttpLambdaIntegration("PublicApiIntegration", api_fn),
+        )
 
         # ---- Email (SES) ------------------------------------------------------------------------
 

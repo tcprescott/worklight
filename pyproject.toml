@@ -6,6 +6,7 @@ members = ["backend", "infra"]
 dev = [
     "pytest>=8.3",
     "httpx>=0.28",
+    "uvicorn>=0.38",
     "moto[dynamodb,ses,ssm]>=5.1",
     "ruff>=0.14",
     "mypy>=1.18",

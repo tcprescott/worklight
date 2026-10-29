@@ -1,11 +1,301 @@
 {
   "components": {
     "schemas": {
-      "CreateInviteBody": {
+      "Act": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actId",
+          "showId",
+          "name",
+          "order"
+        ],
+        "title": "Act",
+        "type": "object"
+      },
+      "ActBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ActBody",
+        "type": "object"
+      },
+      "AddAdminBody": {
         "properties": {
           "email": {
             "title": "Email",
             "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "AddAdminBody",
+        "type": "object"
+      },
+      "Admin": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "email"
+        ],
+        "title": "Admin",
+        "type": "object"
+      },
+      "Appearance": {
+        "properties": {
+          "charId": {
+            "title": "Charid",
+            "type": "string"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "showId",
+          "sceneId",
+          "charId"
+        ],
+        "title": "Appearance",
+        "type": "object"
+      },
+      "Breakdown": {
+        "properties": {
+          "acts": {
+            "items": {
+              "$ref": "#/components/schemas/Act"
+            },
+            "title": "Acts",
+            "type": "array"
+          },
+          "appearances": {
+            "items": {
+              "$ref": "#/components/schemas/Appearance"
+            },
+            "title": "Appearances",
+            "type": "array"
+          },
+          "characters": {
+            "items": {
+              "$ref": "#/components/schemas/Character"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "title": "Scenes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "acts",
+          "scenes",
+          "characters",
+          "appearances"
+        ],
+        "title": "Breakdown",
+        "type": "object"
+      },
+      "Character": {
+        "properties": {
+          "castUserIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Castuserids",
+            "type": "array"
+          },
+          "charId": {
+            "title": "Charid",
+            "type": "string"
+          },
+          "ensemble": {
+            "default": false,
+            "title": "Ensemble",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charId",
+          "showId",
+          "name",
+          "order"
+        ],
+        "title": "Character",
+        "type": "object"
+      },
+      "CreateCharacterBody": {
+        "properties": {
+          "castUserIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Castuserids",
+            "type": "array"
+          },
+          "ensemble": {
+            "default": false,
+            "title": "Ensemble",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateCharacterBody",
+        "type": "object"
+      },
+      "CreateInviteBody": {
+        "properties": {
+          "characterIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Characterids",
+            "type": "array"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
           },
           "role": {
             "default": "cast",
@@ -20,14 +310,14 @@
           "title": {
             "anyOf": [
               {
+                "maxLength": 60,
+                "minLength": 1,
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "maxLength": 60,
-            "minLength": 1,
             "title": "Title"
           }
         },
@@ -37,9 +327,84 @@
         "title": "CreateInviteBody",
         "type": "object"
       },
+      "CreateSceneBody": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "characterIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Characterids",
+            "type": "array"
+          },
+          "eighths": {
+            "default": 0,
+            "maximum": 1600.0,
+            "minimum": 0.0,
+            "title": "Eighths",
+            "type": "integer"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "maximum": 600.0,
+                "minimum": 5.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          }
+        },
+        "required": [
+          "actId",
+          "name"
+        ],
+        "title": "CreateSceneBody",
+        "type": "object"
+      },
       "CreateShowBody": {
         "properties": {
-          "creatorTitle": {
+          "address": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "conflictDeadline": {
             "anyOf": [
               {
                 "type": "string"
@@ -48,13 +413,37 @@
                 "type": "null"
               }
             ],
-            "maxLength": 60,
-            "minLength": 1,
+            "title": "Conflictdeadline"
+          },
+          "creatorTitle": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Creatortitle"
           },
           "endDate": {
             "title": "Enddate",
             "type": "string"
+          },
+          "minutesPerPage": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 120.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesperpage"
           },
           "name": {
             "maxLength": 120,
@@ -62,9 +451,72 @@
             "title": "Name",
             "type": "string"
           },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
+          },
+          "skippedDates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 400,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skippeddates"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotBody"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots"
+          },
           "startDate": {
             "title": "Startdate",
             "type": "string"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
           },
           "timezone": {
             "title": "Timezone",
@@ -73,14 +525,14 @@
           "venue": {
             "anyOf": [
               {
+                "maxLength": 200,
+                "minLength": 1,
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "maxLength": 200,
-            "minLength": 1,
             "title": "Venue"
           }
         },
@@ -100,12 +552,206 @@
             "minLength": 1,
             "title": "Name",
             "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
           }
         },
         "required": [
           "name"
         ],
         "title": "CreateTheaterBody",
+        "type": "object"
+      },
+      "DateBody": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "DateBody",
+        "type": "object"
+      },
+      "DateConflict": {
+        "description": "An answer for one date. It wins over a weekly rule for that date.",
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "date",
+          "level",
+          "updatedAt"
+        ],
+        "title": "DateConflict",
+        "type": "object"
+      },
+      "DateItem": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level",
+          "date"
+        ],
+        "title": "DateItem",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -144,6 +790,56 @@
         "title": "InviteAccepted",
         "type": "object"
       },
+      "InvitePreview": {
+        "description": "What the sign-in page shows for an invite link, before anyone signs in.",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "inviterName": {
+            "title": "Invitername",
+            "type": "string"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "showName": {
+            "title": "Showname",
+            "type": "string"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "showName",
+          "theaterName",
+          "inviterName",
+          "role"
+        ],
+        "title": "InvitePreview",
+        "type": "object"
+      },
       "InviteSent": {
         "properties": {
           "email": {
@@ -173,9 +869,14 @@
               }
             ],
             "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
           }
         },
         "required": [
+          "userId",
           "email",
           "role",
           "expiresAt"
@@ -214,6 +915,28 @@
       },
       "Member": {
         "properties": {
+          "conflictsSubmittedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictssubmittedat"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
           "email": {
             "anyOf": [
               {
@@ -245,6 +968,14 @@
             "title": "Role",
             "type": "string"
           },
+          "status": {
+            "enum": [
+              "invited",
+              "joined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
           "title": {
             "anyOf": [
               {
@@ -263,13 +994,78 @@
         },
         "required": [
           "userId",
-          "role"
+          "role",
+          "status"
         ],
         "title": "Member",
         "type": "object"
       },
+      "MemberConflicts": {
+        "properties": {
+          "dates": {
+            "items": {
+              "$ref": "#/components/schemas/DateConflict"
+            },
+            "title": "Dates",
+            "type": "array"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "weekly": {
+            "items": {
+              "$ref": "#/components/schemas/WeeklyConflict"
+            },
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "required": [
+          "userId",
+          "weekly",
+          "dates"
+        ],
+        "title": "MemberConflicts",
+        "type": "object"
+      },
+      "MyConflicts": {
+        "properties": {
+          "dates": {
+            "items": {
+              "$ref": "#/components/schemas/DateConflict"
+            },
+            "title": "Dates",
+            "type": "array"
+          },
+          "weekly": {
+            "items": {
+              "$ref": "#/components/schemas/WeeklyConflict"
+            },
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "required": [
+          "weekly",
+          "dates"
+        ],
+        "title": "MyConflicts",
+        "type": "object"
+      },
       "MyShow": {
         "properties": {
+          "conflictsSubmittedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictssubmittedat"
+          },
           "role": {
             "enum": [
               "staff",
@@ -281,6 +1077,19 @@
           },
           "show": {
             "$ref": "#/components/schemas/Show"
+          },
+          "status": {
+            "default": "joined",
+            "enum": [
+              "invited",
+              "joined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
           },
           "title": {
             "anyOf": [
@@ -296,6 +1105,7 @@
         },
         "required": [
           "show",
+          "theaterName",
           "role"
         ],
         "title": "MyShow",
@@ -319,8 +1129,232 @@
         "title": "MyTheater",
         "type": "object"
       },
+      "RehearsalSlot": {
+        "description": "A usual rehearsal night: weekday 0 = Monday ... 6 = Sunday, times as HH:MM in the show's timezone.",
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weekday",
+          "start",
+          "end"
+        ],
+        "title": "RehearsalSlot",
+        "type": "object"
+      },
+      "RemindBody": {
+        "properties": {
+          "userIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 200,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userids"
+          }
+        },
+        "title": "RemindBody",
+        "type": "object"
+      },
+      "Reminded": {
+        "properties": {
+          "conflictReminders": {
+            "title": "Conflictreminders",
+            "type": "integer"
+          },
+          "invitesResent": {
+            "title": "Invitesresent",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "invitesResent",
+          "conflictReminders"
+        ],
+        "title": "Reminded",
+        "type": "object"
+      },
+      "ReorderBody": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 500,
+            "title": "Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "title": "ReorderBody",
+        "type": "object"
+      },
+      "SaveConflictsBody": {
+        "description": "Saves several answers at once, as the guided setup does at the end.",
+        "properties": {
+          "clearDates": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 400,
+            "title": "Cleardates",
+            "type": "array"
+          },
+          "dates": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DateItem"
+            },
+            "maxItems": 400,
+            "title": "Dates",
+            "type": "array"
+          },
+          "replaceWeekly": {
+            "default": false,
+            "title": "Replaceweekly",
+            "type": "boolean"
+          },
+          "submitTo": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "const": "all",
+                "type": "string"
+              }
+            ],
+            "default": [],
+            "title": "Submitto"
+          },
+          "weekly": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/WeeklyItem"
+            },
+            "maxItems": 7,
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "title": "SaveConflictsBody",
+        "type": "object"
+      },
+      "Scene": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "eighths": {
+            "default": 0,
+            "title": "Eighths",
+            "type": "integer"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sceneId",
+          "showId",
+          "actId",
+          "number",
+          "name",
+          "order"
+        ],
+        "title": "Scene",
+        "type": "object"
+      },
       "Show": {
         "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "archivedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Archivedat"
+          },
+          "conflictDeadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictdeadline"
+          },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
@@ -329,17 +1363,80 @@
             "title": "Enddate",
             "type": "string"
           },
+          "minutesPerPage": {
+            "default": 8,
+            "title": "Minutesperpage",
+            "type": "number"
+          },
           "name": {
             "title": "Name",
             "type": "string"
+          },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
           },
           "showId": {
             "title": "Showid",
             "type": "string"
           },
+          "skippedDates": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Skippeddates",
+            "type": "array"
+          },
+          "slots": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RehearsalSlot"
+            },
+            "title": "Slots",
+            "type": "array"
+          },
           "startDate": {
             "title": "Startdate",
             "type": "string"
+          },
+          "status": {
+            "default": "active",
+            "enum": [
+              "active",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
           },
           "theaterId": {
             "title": "Theaterid",
@@ -373,6 +1470,96 @@
         "title": "Show",
         "type": "object"
       },
+      "ShowDayView": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "kind": {
+            "enum": [
+              "rehearsal",
+              "tech",
+              "performance"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "noConflicts": {
+            "default": false,
+            "title": "Noconflicts",
+            "type": "boolean"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          }
+        },
+        "required": [
+          "showId",
+          "date",
+          "kind"
+        ],
+        "title": "ShowDayView",
+        "type": "object"
+      },
+      "ShowSummary": {
+        "properties": {
+          "castCount": {
+            "title": "Castcount",
+            "type": "integer"
+          },
+          "crewCount": {
+            "title": "Crewcount",
+            "type": "integer"
+          },
+          "show": {
+            "$ref": "#/components/schemas/Show"
+          },
+          "staff": {
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            },
+            "title": "Staff",
+            "type": "array"
+          },
+          "waitingCount": {
+            "title": "Waitingcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "show",
+          "staff",
+          "castCount",
+          "crewCount",
+          "waitingCount"
+        ],
+        "title": "ShowSummary",
+        "type": "object"
+      },
       "ShowView": {
         "properties": {
           "role": {
@@ -387,6 +1574,10 @@
           "show": {
             "$ref": "#/components/schemas/Show"
           },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          },
           "title": {
             "anyOf": [
               {
@@ -397,13 +1588,44 @@
               }
             ],
             "title": "Title"
+          },
+          "viaAdmin": {
+            "default": false,
+            "title": "Viaadmin",
+            "type": "boolean"
           }
         },
         "required": [
           "show",
+          "theaterName",
           "role"
         ],
         "title": "ShowView",
+        "type": "object"
+      },
+      "SlotBody": {
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weekday",
+          "start",
+          "end"
+        ],
+        "title": "SlotBody",
         "type": "object"
       },
       "Theater": {
@@ -438,6 +1660,79 @@
         "title": "Theater",
         "type": "object"
       },
+      "TheaterView": {
+        "properties": {
+          "admins": {
+            "items": {
+              "$ref": "#/components/schemas/Admin"
+            },
+            "title": "Admins",
+            "type": "array"
+          },
+          "shows": {
+            "items": {
+              "$ref": "#/components/schemas/ShowSummary"
+            },
+            "title": "Shows",
+            "type": "array"
+          },
+          "theater": {
+            "$ref": "#/components/schemas/Theater"
+          }
+        },
+        "required": [
+          "theater",
+          "admins",
+          "shows"
+        ],
+        "title": "TheaterView",
+        "type": "object"
+      },
+      "UpdateCharacterBody": {
+        "properties": {
+          "castUserIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Castuserids"
+          },
+          "ensemble": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ensemble"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "title": "UpdateCharacterBody",
+        "type": "object"
+      },
       "UpdateMeBody": {
         "properties": {
           "name": {
@@ -451,6 +1746,288 @@
           "name"
         ],
         "title": "UpdateMeBody",
+        "type": "object"
+      },
+      "UpdateMemberBody": {
+        "properties": {
+          "department": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "staff",
+                  "cast",
+                  "crew"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateMemberBody",
+        "type": "object"
+      },
+      "UpdateSceneBody": {
+        "properties": {
+          "actId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actid"
+          },
+          "eighths": {
+            "anyOf": [
+              {
+                "maximum": 1600.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eighths"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "maximum": 600.0,
+                "minimum": 5.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          }
+        },
+        "title": "UpdateSceneBody",
+        "type": "object"
+      },
+      "UpdateShowBody": {
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "conflictDeadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictdeadline"
+          },
+          "endDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enddate"
+          },
+          "minutesPerPage": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 120.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesperpage"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
+          },
+          "skippedDates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 400,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skippeddates"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotBody"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots"
+          },
+          "startDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startdate"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
+          },
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timezone"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          }
+        },
+        "title": "UpdateShowBody",
         "type": "object"
       },
       "User": {
@@ -525,6 +2102,188 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "WeeklyBody": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "WeeklyBody",
+        "type": "object"
+      },
+      "WeeklyConflict": {
+        "description": "A usual-week rule, e.g. \"never Tuesdays\" or \"late on Wednesdays\". One per weekday.",
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "userId",
+          "weekday",
+          "level",
+          "updatedAt"
+        ],
+        "title": "WeeklyConflict",
+        "type": "object"
+      },
+      "WeeklyItem": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "level",
+          "weekday"
+        ],
+        "title": "WeeklyItem",
         "type": "object"
       }
     }
@@ -628,6 +2387,283 @@
         "summary": "Update Me"
       }
     },
+    "/api/me/conflicts": {
+      "get": {
+        "operationId": "get_my_conflicts_api_me_conflicts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyConflicts"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get My Conflicts"
+      },
+      "post": {
+        "operationId": "save_conflicts_api_me_conflicts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveConflictsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyConflicts"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Conflicts"
+      }
+    },
+    "/api/me/conflicts/dates/{day}": {
+      "delete": {
+        "operationId": "delete_date_api_me_conflicts_dates__day__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Date"
+      },
+      "put": {
+        "operationId": "put_date_api_me_conflicts_dates__day__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateConflict"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Date"
+      }
+    },
+    "/api/me/conflicts/weekly/{weekday}": {
+      "delete": {
+        "operationId": "delete_weekly_api_me_conflicts_weekly__weekday__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weekday",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 0,
+              "title": "Weekday",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Weekly"
+      },
+      "put": {
+        "operationId": "put_weekly_api_me_conflicts_weekly__weekday__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weekday",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 0,
+              "title": "Weekday",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeeklyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklyConflict"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Weekly"
+      }
+    },
+    "/api/me/days": {
+      "get": {
+        "operationId": "my_days_api_me_days_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ShowDayView"
+                  },
+                  "title": "Response My Days Api Me Days Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Days"
+      }
+    },
+    "/api/public/invites/{token}": {
+      "get": {
+        "operationId": "preview_invite_api_public_invites__token__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitePreview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Invite"
+      }
+    },
     "/api/shows/{show_id}": {
       "get": {
         "operationId": "get_show_api_shows__show_id__get",
@@ -665,6 +2701,466 @@
           }
         },
         "summary": "Get Show"
+      },
+      "patch": {
+        "operationId": "update_show_api_shows__show_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShowBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Show"
+      }
+    },
+    "/api/shows/{show_id}/acts": {
+      "post": {
+        "operationId": "create_act_api_shows__show_id__acts_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Act"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Act"
+      }
+    },
+    "/api/shows/{show_id}/acts/{act_id}": {
+      "delete": {
+        "operationId": "delete_act_api_shows__show_id__acts__act_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "act_id",
+            "required": true,
+            "schema": {
+              "title": "Act Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Act"
+      },
+      "patch": {
+        "operationId": "update_act_api_shows__show_id__acts__act_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "act_id",
+            "required": true,
+            "schema": {
+              "title": "Act Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Act"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Act"
+      }
+    },
+    "/api/shows/{show_id}/archive": {
+      "post": {
+        "operationId": "archive_show_api_shows__show_id__archive_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Archive Show"
+      }
+    },
+    "/api/shows/{show_id}/breakdown": {
+      "get": {
+        "operationId": "get_breakdown_api_shows__show_id__breakdown_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breakdown"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Breakdown"
+      }
+    },
+    "/api/shows/{show_id}/characters": {
+      "post": {
+        "operationId": "create_character_api_shows__show_id__characters_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCharacterBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Character"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Character"
+      }
+    },
+    "/api/shows/{show_id}/characters/{char_id}": {
+      "delete": {
+        "operationId": "delete_character_api_shows__show_id__characters__char_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Character"
+      },
+      "patch": {
+        "operationId": "update_character_api_shows__show_id__characters__char_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCharacterBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Character"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Character"
+      }
+    },
+    "/api/shows/{show_id}/conflicts": {
+      "get": {
+        "operationId": "show_conflicts_api_shows__show_id__conflicts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MemberConflicts"
+                  },
+                  "title": "Response Show Conflicts Api Shows  Show Id  Conflicts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Show Conflicts"
       }
     },
     "/api/shows/{show_id}/invites": {
@@ -716,6 +3212,45 @@
         "summary": "Create Invite"
       }
     },
+    "/api/shows/{show_id}/join": {
+      "post": {
+        "operationId": "join_show_api_shows__show_id__join_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Join Show"
+      }
+    },
     "/api/shows/{show_id}/members": {
       "get": {
         "operationId": "list_members_api_shows__show_id__members_get",
@@ -759,6 +3294,498 @@
         "summary": "List Members"
       }
     },
+    "/api/shows/{show_id}/members/{member_id}": {
+      "delete": {
+        "operationId": "remove_member_api_shows__show_id__members__member_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "member_id",
+            "required": true,
+            "schema": {
+              "title": "Member Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Member"
+      },
+      "patch": {
+        "operationId": "update_member_api_shows__show_id__members__member_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "member_id",
+            "required": true,
+            "schema": {
+              "title": "Member Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Member"
+      }
+    },
+    "/api/shows/{show_id}/remind": {
+      "post": {
+        "operationId": "remind_api_shows__show_id__remind_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemindBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reminded"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remind"
+      }
+    },
+    "/api/shows/{show_id}/reorder/{kind}": {
+      "post": {
+        "operationId": "reorder_api_shows__show_id__reorder__kind__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "kind",
+            "required": true,
+            "schema": {
+              "enum": [
+                "acts",
+                "scenes",
+                "characters"
+              ],
+              "title": "Kind",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breakdown"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reorder"
+      }
+    },
+    "/api/shows/{show_id}/restore": {
+      "post": {
+        "operationId": "restore_show_api_shows__show_id__restore_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Restore Show"
+      }
+    },
+    "/api/shows/{show_id}/scenes": {
+      "post": {
+        "operationId": "create_scene_api_shows__show_id__scenes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSceneBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Scene"
+      }
+    },
+    "/api/shows/{show_id}/scenes/{scene_id}": {
+      "delete": {
+        "operationId": "delete_scene_api_shows__show_id__scenes__scene_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Scene"
+      },
+      "patch": {
+        "operationId": "update_scene_api_shows__show_id__scenes__scene_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSceneBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Scene"
+      }
+    },
+    "/api/shows/{show_id}/scenes/{scene_id}/characters/{char_id}": {
+      "delete": {
+        "operationId": "remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove From Scene"
+      },
+      "put": {
+        "operationId": "add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add To Scene"
+      }
+    },
     "/api/theaters": {
       "post": {
         "operationId": "create_theater_api_theaters_post",
@@ -795,6 +3822,150 @@
           }
         },
         "summary": "Create Theater"
+      }
+    },
+    "/api/theaters/{theater_id}": {
+      "get": {
+        "operationId": "get_theater_api_theaters__theater_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TheaterView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Theater"
+      }
+    },
+    "/api/theaters/{theater_id}/admins": {
+      "post": {
+        "operationId": "add_admin_api_theaters__theater_id__admins_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Admin"
+                  },
+                  "title": "Response Add Admin Api Theaters  Theater Id  Admins Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Admin"
+      }
+    },
+    "/api/theaters/{theater_id}/admins/{admin_id}": {
+      "delete": {
+        "operationId": "remove_admin_api_theaters__theater_id__admins__admin_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "title": "Admin Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Admin"
+                  },
+                  "title": "Response Remove Admin Api Theaters  Theater Id  Admins  Admin Id  Delete",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Admin"
       }
     },
     "/api/theaters/{theater_id}/shows": {

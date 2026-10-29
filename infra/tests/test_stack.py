@@ -56,6 +56,9 @@ def test_protects_the_api_with_a_cognito_jwt_authorizer(template: Template) -> N
     template.has_resource_properties(
         "AWS::ApiGatewayV2::Route", {"RouteKey": "GET /api/{proxy+}", "AuthorizationType": "JWT"}
     )
+    template.has_resource_properties(
+        "AWS::ApiGatewayV2::Route", {"RouteKey": "GET /api/public/{proxy+}", "AuthorizationType": "NONE"}
+    )
 
 
 def test_runs_python_arm64_functions_with_short_log_retention(template: Template) -> None:

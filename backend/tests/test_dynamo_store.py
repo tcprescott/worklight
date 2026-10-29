@@ -1,45 +1,28 @@
 """DynamoStore against moto's DynamoDB, with the same table shape the stack creates."""
 
-from collections.abc import Iterator
-
-import boto3
 import pytest
-from moto import mock_aws
 
-from worklight.models import Invite, MagicLinkRecord, Membership, Show, Theater, User
+from worklight.models import (
+    Act,
+    Appearance,
+    Character,
+    DateConflict,
+    Invite,
+    MagicLinkRecord,
+    Membership,
+    RehearsalSlot,
+    Scene,
+    Show,
+    Theater,
+    User,
+    WeeklyConflict,
+)
 from worklight.store import DynamoStore
 
 
 @pytest.fixture
-def dynamo(monkeypatch: pytest.MonkeyPatch) -> Iterator[DynamoStore]:
-    monkeypatch.setenv("AWS_DEFAULT_REGION", "us-east-1")
-    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "testing")
-    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "testing")
-    with mock_aws():
-        client = boto3.client("dynamodb")
-        string = "S"
-        client.create_table(
-            TableName="worklight",
-            BillingMode="PAY_PER_REQUEST",
-            KeySchema=[
-                {"AttributeName": "PK", "KeyType": "HASH"},
-                {"AttributeName": "SK", "KeyType": "RANGE"},
-            ],
-            AttributeDefinitions=[
-                {"AttributeName": n, "AttributeType": string} for n in ("PK", "SK", "GSI1PK", "GSI1SK")
-            ],
-            GlobalSecondaryIndexes=[
-                {
-                    "IndexName": "GSI1",
-                    "KeySchema": [
-                        {"AttributeName": "GSI1PK", "KeyType": "HASH"},
-                        {"AttributeName": "GSI1SK", "KeyType": "RANGE"},
-                    ],
-                    "Projection": {"ProjectionType": "ALL"},
-                }
-            ],
-        )
-        yield DynamoStore("worklight", client)
+def dynamo(store: DynamoStore) -> DynamoStore:
+    return store
 
 
 NOW = "2026-10-29T12:00:00.000Z"
@@ -79,25 +62,67 @@ def test_theaters_shows_and_memberships_round_trip(dynamo: DynamoStore) -> None:
     assert dynamo.list_members("s1") == [director]
 
 
-def test_invites_are_accepted_once(dynamo: DynamoStore) -> None:
+def test_invites_round_trip(dynamo: DynamoStore) -> None:
     invite = Invite(
         token="tok",
         show_id="s1",
         theater_id="t1",
+        user_id="u2",
         email="a@example.org",
-        role="cast",
         invited_by="u1",
         created_at=NOW,
         expires_at=2_000_000_000,
     )
     dynamo.put_invite(invite)
     assert dynamo.get_invite("tok") == invite
-    cast = Membership(show_id="s1", theater_id="t1", user_id="u2", role="cast", joined_at=NOW)
-    dynamo.accept_invite(invite, cast)
+    dynamo.delete_invite("tok")
     assert dynamo.get_invite("tok") is None
-    assert dynamo.get_membership("s1", "u2") == cast
-    with pytest.raises(dynamo.db.exceptions.TransactionCanceledException):
-        dynamo.accept_invite(invite, cast)
+
+
+def test_show_partition_loads_breakdown_in_order(dynamo: DynamoStore) -> None:
+    dynamo.put_act(Act(act_id="a2", show_id="s1", name="Act Two", order=2))
+    dynamo.put_act(Act(act_id="a1", show_id="s1", name="Act One", order=1))
+    dynamo.put_scene(
+        Scene(scene_id="x", show_id="s1", act_id="a1", number="1.1", name="Palace", order=1, eighths=35)
+    )
+    dynamo.put_character(Character(char_id="c1", show_id="s1", name="Hermia", order=1, cast_user_ids=["u2"]))
+    dynamo.put_appearance(Appearance(show_id="s1", scene_id="x", char_id="c1"))
+    part = dynamo.load_show("s1")
+    assert [a.name for a in part.acts] == ["Act One", "Act Two"]
+    assert part.scenes[0].eighths == 35
+    assert part.characters[0].cast_user_ids == ["u2"]
+    assert part.appearances == [Appearance(show_id="s1", scene_id="x", char_id="c1")]
+    dynamo.delete_scene("s1", "x", part.appearances)
+    assert dynamo.load_show("s1").appearances == []
+
+
+def test_conflicts_are_stored_per_person(dynamo: DynamoStore) -> None:
+    dynamo.put_weekly_conflict(
+        WeeklyConflict(user_id="u1", weekday=2, level="partial", arrive="19:45", updated_at=NOW)
+    )
+    dynamo.put_date_conflict(DateConflict(user_id="u1", date="2026-11-06", level="hard", updated_at=NOW))
+    weekly, dates = dynamo.get_conflicts("u1")
+    assert weekly[0].arrive == "19:45"
+    assert dates[0].level == "hard"
+    assert dynamo.get_conflicts("u2") == ([], [])
+    dynamo.delete_date_conflict("u1", "2026-11-06")
+    assert dynamo.get_conflicts("u1")[1] == []
+
+
+def test_show_settings_round_trip_with_numbers(dynamo: DynamoStore) -> None:
+    show = Show(
+        show_id="s9",
+        theater_id="t1",
+        name="S",
+        timezone="UTC",
+        start_date="2026-11-02",
+        end_date="2026-12-01",
+        minutes_per_page=7.5,
+        slots=[RehearsalSlot(weekday=0, start="19:00", end="21:30")],
+        created_at=NOW,
+    )
+    dynamo.create_show(show, Membership(show_id="s9", theater_id="t1", user_id="u1", role="staff"))
+    assert dynamo.get_show("s9") == show
 
 
 def test_magic_link_codes_are_consumed_once(dynamo: DynamoStore) -> None:
