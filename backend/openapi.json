@@ -1,0 +1,850 @@
+{
+  "components": {
+    "schemas": {
+      "CreateInviteBody": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "role": {
+            "default": "cast",
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Title"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "CreateInviteBody",
+        "type": "object"
+      },
+      "CreateShowBody": {
+        "properties": {
+          "creatorTitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Creatortitle"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Venue"
+          }
+        },
+        "required": [
+          "name",
+          "timezone",
+          "startDate",
+          "endDate"
+        ],
+        "title": "CreateShowBody",
+        "type": "object"
+      },
+      "CreateTheaterBody": {
+        "properties": {
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateTheaterBody",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "InviteAccepted": {
+        "properties": {
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "showId",
+          "role"
+        ],
+        "title": "InviteAccepted",
+        "type": "object"
+      },
+      "InviteSent": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "expiresAt": {
+            "title": "Expiresat",
+            "type": "integer"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "email",
+          "role",
+          "expiresAt"
+        ],
+        "title": "InviteSent",
+        "type": "object"
+      },
+      "Me": {
+        "description": "What the signed-in user sees on their home page.",
+        "properties": {
+          "shows": {
+            "items": {
+              "$ref": "#/components/schemas/MyShow"
+            },
+            "title": "Shows",
+            "type": "array"
+          },
+          "theaters": {
+            "items": {
+              "$ref": "#/components/schemas/MyTheater"
+            },
+            "title": "Theaters",
+            "type": "array"
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          }
+        },
+        "required": [
+          "user",
+          "theaters",
+          "shows"
+        ],
+        "title": "Me",
+        "type": "object"
+      },
+      "Member": {
+        "properties": {
+          "email": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Email"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "role"
+        ],
+        "title": "Member",
+        "type": "object"
+      },
+      "MyShow": {
+        "properties": {
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "show": {
+            "$ref": "#/components/schemas/Show"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "show",
+          "role"
+        ],
+        "title": "MyShow",
+        "type": "object"
+      },
+      "MyTheater": {
+        "properties": {
+          "role": {
+            "const": "admin",
+            "title": "Role",
+            "type": "string"
+          },
+          "theater": {
+            "$ref": "#/components/schemas/Theater"
+          }
+        },
+        "required": [
+          "theater",
+          "role"
+        ],
+        "title": "MyTheater",
+        "type": "object"
+      },
+      "Show": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "startDate": {
+            "title": "Startdate",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          }
+        },
+        "required": [
+          "showId",
+          "theaterId",
+          "name",
+          "timezone",
+          "startDate",
+          "endDate",
+          "createdAt"
+        ],
+        "title": "Show",
+        "type": "object"
+      },
+      "ShowView": {
+        "properties": {
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "show": {
+            "$ref": "#/components/schemas/Show"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "show",
+          "role"
+        ],
+        "title": "ShowView",
+        "type": "object"
+      },
+      "Theater": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "plan": {
+            "enum": [
+              "free",
+              "paid"
+            ],
+            "title": "Plan",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "theaterId",
+          "name",
+          "plan",
+          "createdAt"
+        ],
+        "title": "Theater",
+        "type": "object"
+      },
+      "UpdateMeBody": {
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "UpdateMeBody",
+        "type": "object"
+      },
+      "User": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "email",
+          "createdAt"
+        ],
+        "title": "User",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "title": "Worklight API",
+    "version": "1"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/invites/{token}/accept": {
+      "post": {
+        "operationId": "accept_invite_api_invites__token__accept_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Accept Invite"
+      }
+    },
+    "/api/me": {
+      "get": {
+        "operationId": "get_me_api_me_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Me"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Me"
+      },
+      "patch": {
+        "operationId": "update_me_api_me_patch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Me"
+      }
+    },
+    "/api/shows/{show_id}": {
+      "get": {
+        "operationId": "get_show_api_shows__show_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShowView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Show"
+      }
+    },
+    "/api/shows/{show_id}/invites": {
+      "post": {
+        "operationId": "create_invite_api_shows__show_id__invites_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateInviteBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteSent"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Invite"
+      }
+    },
+    "/api/shows/{show_id}/members": {
+      "get": {
+        "operationId": "list_members_api_shows__show_id__members_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Member"
+                  },
+                  "title": "Response List Members Api Shows  Show Id  Members Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Members"
+      }
+    },
+    "/api/theaters": {
+      "post": {
+        "operationId": "create_theater_api_theaters_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTheaterBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Theater"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Theater"
+      }
+    },
+    "/api/theaters/{theater_id}/shows": {
+      "post": {
+        "operationId": "create_show_api_theaters__theater_id__shows_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShowBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Show"
+      }
+    }
+  }
+}
