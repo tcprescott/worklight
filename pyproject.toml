@@ -27,5 +27,8 @@ select = ["E", "F", "I", "B", "UP", "SIM"]
 [tool.mypy]
 python_version = "3.13"
 strict = true
-packages = ["call_time", "call_time_infra"]
+packages = ["worklight", "worklight_infra"]
 mypy_path = ["backend/src", "infra"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["worklight", "worklight_infra", "tests"]

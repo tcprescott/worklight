@@ -1,6 +1,6 @@
 from typing import Literal, get_args
 
-from call_time.models import ShowRole, TheaterRole
+from worklight.models import ShowRole, TheaterRole
 
 ShowAction = Literal[
     "show:read",

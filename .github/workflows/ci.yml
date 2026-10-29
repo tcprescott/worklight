@@ -20,7 +20,7 @@ jobs:
       - run: uv run pytest
       - name: OpenAPI schema is up to date
         run: |
-          uv run python -m call_time.openapi > backend/openapi.json
+          uv run python -m worklight.openapi > backend/openapi.json
           git diff --exit-code backend/openapi.json
 
   web:

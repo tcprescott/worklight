@@ -1,4 +1,4 @@
-from call_time.roles import can_on_show, can_on_theater
+from worklight.roles import can_on_show, can_on_theater
 
 
 def test_staff_run_the_show_and_cast_only_their_own_conflicts() -> None:

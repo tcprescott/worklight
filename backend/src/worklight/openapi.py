@@ -2,7 +2,7 @@
 
 import json
 
-from call_time.app import AppDeps, create_app
+from worklight.app import AppDeps, create_app
 
 
 def main() -> None:

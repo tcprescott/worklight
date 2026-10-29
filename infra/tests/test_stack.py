@@ -1,14 +1,15 @@
 import aws_cdk as cdk
 import pytest
 from aws_cdk.assertions import Match, Template
-from call_time_infra.stack import CallTimeStack, GoogleSignIn, Settings
+
+from worklight_infra.stack import GoogleSignIn, Settings, WorklightStack
 
 
 def synth(**overrides: object) -> Template:
     # Skip bundling: these tests check the template, not the Lambda bundle.
     app = cdk.App(context={"aws:cdk:bundling-stacks": []})
-    settings = Settings(from_email="no-reply@calltime.test", **overrides)  # type: ignore[arg-type]
-    stack = CallTimeStack(
+    settings = Settings(from_email="no-reply@worklight.test", **overrides)  # type: ignore[arg-type]
+    stack = WorklightStack(
         app, "Test", env=cdk.Environment(account="123456789012", region="us-east-1"), settings=settings
     )
     return Template.from_stack(stack)
@@ -64,11 +65,11 @@ def test_runs_python_arm64_functions_with_short_log_retention(template: Template
     assert len(fns) == 5
     handlers = sorted(f["Properties"]["Handler"] for f in fns.values())
     assert handlers == [
-        "call_time.handlers.api.handler",
-        "call_time.handlers.auth.create_auth_challenge",
-        "call_time.handlers.auth.define_auth_challenge",
-        "call_time.handlers.auth.pre_sign_up",
-        "call_time.handlers.auth.verify_auth_challenge",
+        "worklight.handlers.api.handler",
+        "worklight.handlers.auth.create_auth_challenge",
+        "worklight.handlers.auth.define_auth_challenge",
+        "worklight.handlers.auth.pre_sign_up",
+        "worklight.handlers.auth.verify_auth_challenge",
     ]
     template.all_resources_properties("AWS::Logs::LogGroup", {"RetentionInDays": 7})
 
@@ -90,10 +91,10 @@ def test_only_adds_google_ses_and_the_budget_when_configured(template: Template)
     template.resource_count_is("AWS::Budgets::Budget", 0)
 
     full = synth(
-        ses_domain="calltime.test",
-        cognito_domain_prefix="calltime-test",
-        google=GoogleSignIn("google-client", "calltime/google"),
-        alert_email="owner@calltime.test",
+        ses_domain="worklight.test",
+        cognito_domain_prefix="worklight-test",
+        google=GoogleSignIn("google-client", "worklight/google"),
+        alert_email="owner@worklight.test",
     )
     full.resource_count_is("AWS::Cognito::UserPoolIdentityProvider", 1)
     full.resource_count_is("AWS::SES::EmailIdentity", 1)

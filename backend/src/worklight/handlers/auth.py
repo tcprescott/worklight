@@ -15,10 +15,10 @@ so every sign-in starts with a no-op challenge:
 from functools import cache
 from typing import Any
 
-from call_time.config import get_app_url, require_env
-from call_time.magic_link import MagicLinkDeps, redeem_magic_link, request_magic_link
-from call_time.mailer import SesMailer
-from call_time.store import DynamoStore
+from worklight.config import get_app_url, require_env
+from worklight.magic_link import MagicLinkDeps, redeem_magic_link, request_magic_link
+from worklight.mailer import SesMailer
+from worklight.store import DynamoStore
 
 Event = dict[str, Any]
 

@@ -1,9 +1,9 @@
 import re
 from collections.abc import Iterable
 
-from call_time.keys import normalize_email
-from call_time.mailer import Email
-from call_time.models import Invite, MagicLinkRecord, Membership, Show, Theater, User
+from worklight.keys import normalize_email
+from worklight.mailer import Email
+from worklight.models import Invite, MagicLinkRecord, Membership, Show, Theater, User
 
 
 class FakeMailer:

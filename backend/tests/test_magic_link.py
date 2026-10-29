@@ -1,16 +1,16 @@
 from urllib.parse import parse_qs, urlparse
 
 import pytest
-from call_time import magic_link
-from call_time.handlers import auth
-from call_time.magic_link import (
+
+from tests.fakes import FakeMailer, MemoryStore
+from worklight import magic_link
+from worklight.handlers import auth
+from worklight.magic_link import (
     MAGIC_LINK_RESEND_SECONDS,
     MagicLinkDeps,
     redeem_magic_link,
     request_magic_link,
 )
-
-from tests.fakes import FakeMailer, MemoryStore
 
 
 class Clock:
@@ -29,7 +29,7 @@ def clock(monkeypatch: pytest.MonkeyPatch) -> Clock:
 
 @pytest.fixture
 def deps(store: MemoryStore, mailer: FakeMailer) -> MagicLinkDeps:
-    return MagicLinkDeps(store=store, mailer=mailer, app_url="https://calltime.test")
+    return MagicLinkDeps(store=store, mailer=mailer, app_url="https://worklight.test")
 
 
 def code_from_email(mailer: FakeMailer) -> tuple[str, str, str | None]:
@@ -121,8 +121,8 @@ class TestChallengeTriggers:
     def _wire(self, monkeypatch: pytest.MonkeyPatch, store: MemoryStore, mailer: FakeMailer) -> None:
         monkeypatch.setattr(auth, "_store", lambda: store)
         monkeypatch.setattr(auth, "SesMailer", lambda _sender: mailer)
-        monkeypatch.setattr(auth, "get_app_url", lambda: "https://calltime.test")
-        monkeypatch.setenv("FROM_EMAIL", "no-reply@calltime.test")
+        monkeypatch.setattr(auth, "get_app_url", lambda: "https://worklight.test")
+        monkeypatch.setenv("FROM_EMAIL", "no-reply@worklight.test")
 
     @staticmethod
     def event(

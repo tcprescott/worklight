@@ -4,10 +4,10 @@ from typing import Any
 
 from mangum import Mangum
 
-from call_time.app import AppDeps, create_app
-from call_time.config import get_app_url, require_env
-from call_time.mailer import SesMailer
-from call_time.store import DynamoStore
+from worklight.app import AppDeps, create_app
+from worklight.config import get_app_url, require_env
+from worklight.mailer import SesMailer
+from worklight.store import DynamoStore
 
 _handler: Mangum | None = None
 

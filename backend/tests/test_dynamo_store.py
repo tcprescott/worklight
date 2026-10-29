@@ -4,9 +4,10 @@ from collections.abc import Iterator
 
 import boto3
 import pytest
-from call_time.models import Invite, MagicLinkRecord, Membership, Show, Theater, User
-from call_time.store import DynamoStore
 from moto import mock_aws
+
+from worklight.models import Invite, MagicLinkRecord, Membership, Show, Theater, User
+from worklight.store import DynamoStore
 
 
 @pytest.fixture
@@ -18,7 +19,7 @@ def dynamo(monkeypatch: pytest.MonkeyPatch) -> Iterator[DynamoStore]:
         client = boto3.client("dynamodb")
         string = "S"
         client.create_table(
-            TableName="calltime",
+            TableName="worklight",
             BillingMode="PAY_PER_REQUEST",
             KeySchema=[
                 {"AttributeName": "PK", "KeyType": "HASH"},
@@ -38,7 +39,7 @@ def dynamo(monkeypatch: pytest.MonkeyPatch) -> Iterator[DynamoStore]:
                 }
             ],
         )
-        yield DynamoStore("calltime", client)
+        yield DynamoStore("worklight", client)
 
 
 NOW = "2026-10-29T12:00:00.000Z"

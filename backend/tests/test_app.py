@@ -2,10 +2,10 @@ import json
 from typing import Any
 
 import pytest
-from call_time.app import AppDeps, create_app
 from mangum import Mangum
 
 from tests.fakes import FakeMailer, MemoryStore
+from worklight.app import AppDeps, create_app
 
 
 class Client:
@@ -13,7 +13,7 @@ class Client:
 
     def __init__(self, store: MemoryStore, mailer: FakeMailer) -> None:
         self.handler = Mangum(
-            create_app(AppDeps(store=store, mailer=mailer, app_url="https://calltime.test")), lifespan="off"
+            create_app(AppDeps(store=store, mailer=mailer, app_url="https://worklight.test")), lifespan="off"
         )
 
     def __call__(
@@ -32,7 +32,7 @@ class Client:
             "routeKey": "$default",
             "rawPath": path,
             "rawQueryString": "",
-            "headers": {"content-type": "application/json", "host": "calltime.test"},
+            "headers": {"content-type": "application/json", "host": "worklight.test"},
             "requestContext": {
                 "http": {
                     "method": method,
@@ -42,7 +42,7 @@ class Client:
                     "userAgent": "pytest",
                 },
                 "authorizer": {"jwt": {"claims": claims, "scopes": []}},
-                "domainName": "calltime.test",
+                "domainName": "worklight.test",
                 "stage": "$default",
             },
             "body": raw_body if raw_body is not None else (None if body is None else json.dumps(body)),

@@ -6,8 +6,8 @@ from typing import TYPE_CHECKING, Any, Protocol
 import boto3
 from boto3.dynamodb.types import TypeDeserializer, TypeSerializer
 
-from call_time import keys
-from call_time.models import Invite, MagicLinkRecord, Membership, Model, Show, Theater, User
+from worklight import keys
+from worklight.models import Invite, MagicLinkRecord, Membership, Model, Show, Theater, User
 
 if TYPE_CHECKING:
     from mypy_boto3_dynamodb.client import DynamoDBClient

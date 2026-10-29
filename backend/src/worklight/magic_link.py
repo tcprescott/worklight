@@ -2,11 +2,11 @@ from dataclasses import dataclass
 from typing import Literal
 from urllib.parse import urlencode
 
-from call_time.ids import new_token, now_epoch, sha256
-from call_time.keys import normalize_email
-from call_time.mailer import Mailer, magic_link_email
-from call_time.models import MagicLinkRecord
-from call_time.store import Store
+from worklight.ids import new_token, now_epoch, sha256
+from worklight.keys import normalize_email
+from worklight.mailer import Mailer, magic_link_email
+from worklight.models import MagicLinkRecord
+from worklight.store import Store
 
 MAGIC_LINK_TTL_SECONDS = 15 * 60
 # A new link can't be requested more often than this, which caps email cost per address.

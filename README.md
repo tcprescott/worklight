@@ -26,7 +26,7 @@ root). The web app's API types are generated from the backend's OpenAPI schema, 
 ## Sign-in
 
 - **Magic link:** the user enters an email, gets a one-time link (15 minutes), and can open it on any device.
-  Requests are limited to one per minute per address. See `backend/src/call_time/handlers/auth.py` for the
+  Requests are limited to one per minute per address. See `backend/src/worklight/handlers/auth.py` for the
   Cognito challenge sequence.
 - **Google:** optional, through the Cognito hosted sign-in page.
 
@@ -50,7 +50,7 @@ npm run build              # builds the web app into web/dist
 After changing an API route or model, regenerate the schema and the web app's types (CI checks both):
 
 ```sh
-uv run python -m call_time.openapi > backend/openapi.json
+uv run python -m worklight.openapi > backend/openapi.json
 cd web && npm run gen:api
 ```
 

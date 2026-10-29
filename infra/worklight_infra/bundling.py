@@ -26,7 +26,7 @@ def backend_hash() -> str:
 
 @jsii.implements(ILocalBundling)
 class UvBundling:
-    """Installs locked dependencies as arm64 Linux wheels, then copies in the call_time package."""
+    """Installs locked dependencies as arm64 Linux wheels, then copies in the worklight package."""
 
     def try_bundle(self, output_dir: str, *_args: Any, **_kwargs: Any) -> bool:
         if shutil.which("uv") is None:
@@ -38,7 +38,7 @@ class UvBundling:
                     "uv",
                     "export",
                     "--package",
-                    "call-time-backend",
+                    "worklight-backend",
                     "--no-dev",
                     "--no-emit-workspace",
                     "--no-hashes",
@@ -71,8 +71,8 @@ class UvBundling:
                 check=True,
             )
         shutil.copytree(
-            BACKEND / "src" / "call_time",
-            Path(output_dir) / "call_time",
+            BACKEND / "src" / "worklight",
+            Path(output_dir) / "worklight",
             ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
             dirs_exist_ok=True,
         )

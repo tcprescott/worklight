@@ -2,7 +2,7 @@ export interface AppConfig {
   region: string;
   userPoolId: string;
   userPoolClientId: string;
-  /** e.g. https://calltime.auth.us-east-1.amazoncognito.com, or null when Google sign-in is off. */
+  /** e.g. https://worklight.auth.us-east-1.amazoncognito.com, or null when Google sign-in is off. */
   hostedUiUrl: string | null;
   googleEnabled: boolean;
 }

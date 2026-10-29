@@ -27,7 +27,7 @@ from aws_cdk import aws_ses as ses
 from aws_cdk import aws_ssm as ssm
 from constructs import Construct
 
-from call_time_infra.bundling import BACKEND, UvBundling, backend_hash
+from worklight_infra.bundling import BACKEND, UvBundling, backend_hash
 
 
 @dataclass(frozen=True)
@@ -55,7 +55,7 @@ class Settings:
     web_dist_path: Path | None = None
 
 
-class CallTimeStack(Stack):
+class WorklightStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, *, settings: Settings, **kwargs: object) -> None:
         super().__init__(scope, construct_id, **kwargs)  # type: ignore[arg-type]
         s = settings
@@ -152,7 +152,7 @@ class CallTimeStack(Stack):
                 self,
                 construct_id,
                 code=code,
-                handler=f"call_time.handlers.{handler}",
+                handler=f"worklight.handlers.{handler}",
                 runtime=lambda_.Runtime.PYTHON_3_13,
                 architecture=lambda_.Architecture.ARM_64,
                 memory_size=memory,

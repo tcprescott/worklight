@@ -8,8 +8,8 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "call-time-backend",
-    "call-time-infra",
+    "worklight-backend",
+    "worklight-infra",
 ]
 
 [manifest.dependency-groups]
@@ -241,42 +241,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/1b/ce/9ef87d36adbe856ed481fbddcb5ce525bf90e0457564831c5768fd08d126/botocore_stubs-1.43.121.tar.gz", hash = "sha256:3c868ee61c25222348e4cde824bfc18bf26ded6e642239ef41452604ebae20f4", size = 42896, upload-time = "2026-10-28T20:55:37.964Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/97/0084bbd1838c5f4257b0ef4143ee09e9e9293f30a2fe659bd819a5f02a7d/botocore_stubs-1.43.121-py3-none-any.whl", hash = "sha256:d71db47e0c2455747eeb218108ba459dda44f5dd9a02c5451fcf6e964d44db14", size = 67247, upload-time = "2026-10-28T20:55:36.122Z" },
-]
-
-[[package]]
-name = "call-time-backend"
-version = "0.1.0"
-source = { editable = "backend" }
-dependencies = [
-    { name = "boto3" },
-    { name = "fastapi" },
-    { name = "mangum" },
-    { name = "pydantic" },
-    { name = "tzdata" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "boto3", specifier = ">=1.40" },
-    { name = "fastapi", specifier = ">=0.120" },
-    { name = "mangum", specifier = ">=0.19" },
-    { name = "pydantic", specifier = ">=2.11" },
-    { name = "tzdata", specifier = ">=2025.2" },
-]
-
-[[package]]
-name = "call-time-infra"
-version = "0.1.0"
-source = { editable = "infra" }
-dependencies = [
-    { name = "aws-cdk-lib" },
-    { name = "constructs" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "aws-cdk-lib", specifier = ">=2.220" },
-    { name = "constructs", specifier = ">=10.4" },
 ]
 
 [[package]]
@@ -1404,6 +1368,42 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a4/34/4dd12fc8bb7d61c91467ec3efe415ffa7d5456f799954b40c5bbaeae470e/werkzeug-3.1.9.tar.gz", hash = "sha256:55ca7c70a75689be937aa27f8ff4b018f06ff4838fc73045560bf0f5a1291060", size = 940188, upload-time = "2026-09-27T18:33:41.637Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a1/38/df03f564f43cec2684823f3cccae1a652ee7face1cbaa76fb223096e64d7/werkzeug-3.1.9-py3-none-any.whl", hash = "sha256:6392e50c78460ba618e5b21f08a71f59c99ce99cdc6cf6e3dd7e6ccca8754fab", size = 228700, upload-time = "2026-09-27T18:33:39.685Z" },
+]
+
+[[package]]
+name = "worklight-backend"
+version = "0.1.0"
+source = { editable = "backend" }
+dependencies = [
+    { name = "boto3" },
+    { name = "fastapi" },
+    { name = "mangum" },
+    { name = "pydantic" },
+    { name = "tzdata" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "boto3", specifier = ">=1.40" },
+    { name = "fastapi", specifier = ">=0.120" },
+    { name = "mangum", specifier = ">=0.19" },
+    { name = "pydantic", specifier = ">=2.11" },
+    { name = "tzdata", specifier = ">=2025.2" },
+]
+
+[[package]]
+name = "worklight-infra"
+version = "0.1.0"
+source = { editable = "infra" }
+dependencies = [
+    { name = "aws-cdk-lib" },
+    { name = "constructs" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "aws-cdk-lib", specifier = ">=2.220" },
+    { name = "constructs", specifier = ">=10.4" },
 ]
 
 [[package]]

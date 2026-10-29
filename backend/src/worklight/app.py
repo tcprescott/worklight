@@ -13,10 +13,10 @@ from fastapi.responses import JSONResponse
 from pydantic import AfterValidator, BeforeValidator, StringConstraints, model_validator
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
-from call_time import keys
-from call_time.ids import new_id, new_token, now_epoch, now_iso
-from call_time.mailer import Mailer, invite_email
-from call_time.models import (
+from worklight import keys
+from worklight.ids import new_id, new_token, now_epoch, now_iso
+from worklight.mailer import Mailer, invite_email
+from worklight.models import (
     Invite,
     InviteAccepted,
     InviteSent,
@@ -32,8 +32,8 @@ from call_time.models import (
     Theater,
     User,
 )
-from call_time.roles import can_on_show
-from call_time.store import Store
+from worklight.roles import can_on_show
+from worklight.store import Store
 
 log = logging.getLogger(__name__)
 
@@ -44,7 +44,7 @@ INVITE_TTL_SECONDS = 30 * 24 * 60 * 60
 class AppDeps:
     store: Store
     mailer: Mailer
-    # Public site origin, e.g. https://calltime.example.org. Used in emailed links.
+    # Public site origin, e.g. https://worklight.example.org. Used in emailed links.
     app_url: str
 
 

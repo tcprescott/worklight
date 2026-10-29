@@ -2,7 +2,8 @@ import os
 from pathlib import Path
 
 import aws_cdk as cdk
-from call_time_infra.stack import CallTimeStack, GoogleSignIn, Settings
+
+from worklight_infra.stack import GoogleSignIn, Settings, WorklightStack
 
 app = cdk.App()
 
@@ -20,9 +21,9 @@ if not from_email:
 
 google_client_id, google_secret = ctx("googleClientId"), ctx("googleClientSecretName")
 
-CallTimeStack(
+WorklightStack(
     app,
-    "CallTime",
+    "Worklight",
     env=cdk.Environment(
         account=os.environ.get("CDK_DEFAULT_ACCOUNT"),
         region=os.environ.get("CDK_DEFAULT_REGION", "us-east-1"),

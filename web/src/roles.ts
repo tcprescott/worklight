@@ -1,6 +1,6 @@
 import type { ShowRole } from "./types";
 
-// Mirrors backend/src/call_time/roles.py so the UI only offers what the API will allow.
+// Mirrors backend/src/worklight/roles.py so the UI only offers what the API will allow.
 export type ShowAction = "show:read" | "members:read" | "members:invite";
 
 const SHOW_PERMISSIONS: Record<ShowRole, ReadonlySet<ShowAction>> = {
