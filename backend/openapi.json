@@ -1,11 +1,1549 @@
 {
   "components": {
     "schemas": {
-      "CreateInviteBody": {
+      "Act": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "actId",
+          "showId",
+          "name",
+          "order"
+        ],
+        "title": "Act",
+        "type": "object"
+      },
+      "ActBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ActBody",
+        "type": "object"
+      },
+      "AddAdminBody": {
         "properties": {
           "email": {
             "title": "Email",
             "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "AddAdminBody",
+        "type": "object"
+      },
+      "AddSceneBody": {
+        "properties": {
+          "callId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callid"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sceneId"
+        ],
+        "title": "AddSceneBody",
+        "type": "object"
+      },
+      "Admin": {
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "email"
+        ],
+        "title": "Admin",
+        "type": "object"
+      },
+      "ApiKey": {
+        "description": "A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.",
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "keyId": {
+            "title": "Keyid",
+            "type": "string"
+          },
+          "lastUsedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastusedat"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "prefix": {
+            "title": "Prefix",
+            "type": "string"
+          },
+          "scope": {
+            "default": "read",
+            "enum": [
+              "read",
+              "write"
+            ],
+            "title": "Scope",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyId",
+          "theaterId",
+          "name",
+          "prefix",
+          "createdBy",
+          "createdAt"
+        ],
+        "title": "ApiKey",
+        "type": "object"
+      },
+      "Appearance": {
+        "properties": {
+          "charId": {
+            "title": "Charid",
+            "type": "string"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "showId",
+          "sceneId",
+          "charId"
+        ],
+        "title": "Appearance",
+        "type": "object"
+      },
+      "Attendance": {
+        "properties": {
+          "checkins": {
+            "items": {
+              "$ref": "#/components/schemas/CheckIn"
+            },
+            "title": "Checkins",
+            "type": "array"
+          },
+          "doorCode": {
+            "title": "Doorcode",
+            "type": "string"
+          },
+          "nights": {
+            "items": {
+              "$ref": "#/components/schemas/AttendanceNight"
+            },
+            "title": "Nights",
+            "type": "array"
+          },
+          "people": {
+            "items": {
+              "$ref": "#/components/schemas/AttendancePerson"
+            },
+            "title": "People",
+            "type": "array"
+          },
+          "tonight": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tonight"
+          }
+        },
+        "required": [
+          "nights",
+          "people",
+          "checkins",
+          "doorCode"
+        ],
+        "title": "Attendance",
+        "type": "object"
+      },
+      "AttendanceNight": {
+        "properties": {
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "required": [
+          "date",
+          "callId",
+          "start"
+        ],
+        "title": "AttendanceNight",
+        "type": "object"
+      },
+      "AttendancePerson": {
+        "properties": {
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "role"
+        ],
+        "title": "AttendancePerson",
+        "type": "object"
+      },
+      "Block": {
+        "description": "A timed slice of a call: these scenes (or a label like \"Warm-up\"), from start for minutes.",
+        "properties": {
+          "blockId": {
+            "title": "Blockid",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Userids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "blockId",
+          "minutes"
+        ],
+        "title": "Block",
+        "type": "object"
+      },
+      "BlockBody": {
+        "properties": {
+          "blockId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blockid"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "minutes": {
+            "anyOf": [
+              {
+                "maximum": 600.0,
+                "minimum": 5.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutes"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Userids",
+            "type": "array"
+          }
+        },
+        "title": "BlockBody",
+        "type": "object"
+      },
+      "Breakdown": {
+        "properties": {
+          "acts": {
+            "items": {
+              "$ref": "#/components/schemas/Act"
+            },
+            "title": "Acts",
+            "type": "array"
+          },
+          "appearances": {
+            "items": {
+              "$ref": "#/components/schemas/Appearance"
+            },
+            "title": "Appearances",
+            "type": "array"
+          },
+          "characters": {
+            "items": {
+              "$ref": "#/components/schemas/Character"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/Scene"
+            },
+            "title": "Scenes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "acts",
+          "scenes",
+          "characters",
+          "appearances"
+        ],
+        "title": "Breakdown",
+        "type": "object"
+      },
+      "CalendarLinks": {
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "webcalUrl": {
+            "title": "Webcalurl",
+            "type": "string"
+          }
+        },
+        "required": [
+          "url",
+          "webcalUrl"
+        ],
+        "title": "CalendarLinks",
+        "type": "object"
+      },
+      "Call": {
+        "properties": {
+          "blocks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Block"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "cancelled": {
+            "default": false,
+            "title": "Cancelled",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "departments": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Departments",
+            "type": "array"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "groups": {
+            "default": [],
+            "items": {
+              "enum": [
+                "everyone",
+                "cast",
+                "crew"
+              ],
+              "type": "string"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "published": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/CallContent"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "publishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedat"
+          },
+          "remindedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remindedat"
+          },
+          "sequence": {
+            "default": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "status": {
+            "default": "draft",
+            "enum": [
+              "draft",
+              "published"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "default": "rehearsal",
+            "enum": [
+              "rehearsal",
+              "music",
+              "choreography",
+              "run",
+              "tech",
+              "dress",
+              "performance"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Userids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "date",
+          "start",
+          "end",
+          "callId",
+          "showId",
+          "theaterId",
+          "updatedAt",
+          "createdAt"
+        ],
+        "title": "Call",
+        "type": "object"
+      },
+      "CallContent": {
+        "description": "What a call is. Staff edit a working copy; cast and crew see the copy as of the last publish.",
+        "properties": {
+          "blocks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Block"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "cancelled": {
+            "default": false,
+            "title": "Cancelled",
+            "type": "boolean"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "departments": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Departments",
+            "type": "array"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "groups": {
+            "default": [],
+            "items": {
+              "enum": [
+                "everyone",
+                "cast",
+                "crew"
+              ],
+              "type": "string"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "default": "rehearsal",
+            "enum": [
+              "rehearsal",
+              "music",
+              "choreography",
+              "run",
+              "tech",
+              "dress",
+              "performance"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Userids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "date",
+          "start",
+          "end"
+        ],
+        "title": "CallContent",
+        "type": "object"
+      },
+      "CallView": {
+        "properties": {
+          "blocks": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TimedBlock"
+            },
+            "title": "Blocks",
+            "type": "array"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "calledCount": {
+            "default": 0,
+            "title": "Calledcount",
+            "type": "integer"
+          },
+          "cancelled": {
+            "default": false,
+            "title": "Cancelled",
+            "type": "boolean"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "departments": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Departments",
+            "type": "array"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "freeMinutes": {
+            "default": 0,
+            "title": "Freeminutes",
+            "type": "integer"
+          },
+          "groups": {
+            "default": [],
+            "items": {
+              "enum": [
+                "everyone",
+                "cast",
+                "crew"
+              ],
+              "type": "string"
+            },
+            "title": "Groups",
+            "type": "array"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "publishedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publishedat"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "draft",
+              "published"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "enum": [
+              "rehearsal",
+              "music",
+              "choreography",
+              "run",
+              "tech",
+              "dress",
+              "performance"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "unpublishedChanges": {
+            "default": false,
+            "title": "Unpublishedchanges",
+            "type": "boolean"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Userids",
+            "type": "array"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "callId",
+          "date",
+          "start",
+          "end",
+          "type",
+          "status"
+        ],
+        "title": "CallView",
+        "type": "object"
+      },
+      "Callboard": {
+        "properties": {
+          "canPost": {
+            "title": "Canpost",
+            "type": "boolean"
+          },
+          "notices": {
+            "items": {
+              "$ref": "#/components/schemas/NoticeView"
+            },
+            "title": "Notices",
+            "type": "array"
+          },
+          "unread": {
+            "title": "Unread",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "notices",
+          "unread",
+          "canPost"
+        ],
+        "title": "Callboard",
+        "type": "object"
+      },
+      "Character": {
+        "properties": {
+          "castUserIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Castuserids",
+            "type": "array"
+          },
+          "charId": {
+            "title": "Charid",
+            "type": "string"
+          },
+          "ensemble": {
+            "default": false,
+            "title": "Ensemble",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "charId",
+          "showId",
+          "name",
+          "order"
+        ],
+        "title": "Character",
+        "type": "object"
+      },
+      "CheckIn": {
+        "description": "One person on one tech or performance night (or a rehearsal they said they'd be late to).",
+        "properties": {
+          "arrivedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivedat"
+          },
+          "bySelf": {
+            "default": false,
+            "title": "Byself",
+            "type": "boolean"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "runningLateMinutes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Runninglateminutes"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "on_time",
+                  "late",
+                  "absent"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "showId",
+          "date",
+          "userId",
+          "updatedAt"
+        ],
+        "title": "CheckIn",
+        "type": "object"
+      },
+      "CheckInBody": {
+        "properties": {
+          "code": {
+            "maxLength": 64,
+            "minLength": 1,
+            "title": "Code",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "title": "CheckInBody",
+        "type": "object"
+      },
+      "CheckInResult": {
+        "properties": {
+          "callStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callstart"
+          },
+          "checkin": {
+            "$ref": "#/components/schemas/CheckIn"
+          },
+          "minutesLate": {
+            "default": 0,
+            "title": "Minuteslate",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "checkin"
+        ],
+        "title": "CheckInResult",
+        "type": "object"
+      },
+      "CreateApiKeyBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "scope": {
+            "default": "read",
+            "enum": [
+              "read",
+              "write"
+            ],
+            "title": "Scope",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateApiKeyBody",
+        "type": "object"
+      },
+      "CreateCallBody": {
+        "properties": {
+          "blocks": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/BlockBody"
+                },
+                "maxItems": 40,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blocks"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "departments": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departments"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "everyone",
+                    "cast",
+                    "crew"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Groups"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "rehearsal",
+                  "music",
+                  "choreography",
+                  "run",
+                  "tech",
+                  "dress",
+                  "performance"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "userIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 300,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userids"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "CreateCallBody",
+        "type": "object"
+      },
+      "CreateCharacterBody": {
+        "properties": {
+          "castUserIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 100,
+            "title": "Castuserids",
+            "type": "array"
+          },
+          "ensemble": {
+            "default": false,
+            "title": "Ensemble",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreateCharacterBody",
+        "type": "object"
+      },
+      "CreateInviteBody": {
+        "properties": {
+          "characterIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Characterids",
+            "type": "array"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
           },
           "role": {
             "default": "cast",
@@ -20,14 +1558,14 @@
           "title": {
             "anyOf": [
               {
+                "maxLength": 60,
+                "minLength": 1,
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "maxLength": 60,
-            "minLength": 1,
             "title": "Title"
           }
         },
@@ -37,9 +1575,84 @@
         "title": "CreateInviteBody",
         "type": "object"
       },
+      "CreateSceneBody": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "characterIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Characterids",
+            "type": "array"
+          },
+          "eighths": {
+            "default": 0,
+            "maximum": 1600.0,
+            "minimum": 0.0,
+            "title": "Eighths",
+            "type": "integer"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "maximum": 600.0,
+                "minimum": 5.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          }
+        },
+        "required": [
+          "actId",
+          "name"
+        ],
+        "title": "CreateSceneBody",
+        "type": "object"
+      },
       "CreateShowBody": {
         "properties": {
-          "creatorTitle": {
+          "address": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "conflictDeadline": {
             "anyOf": [
               {
                 "type": "string"
@@ -48,13 +1661,37 @@
                 "type": "null"
               }
             ],
-            "maxLength": 60,
-            "minLength": 1,
+            "title": "Conflictdeadline"
+          },
+          "creatorTitle": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Creatortitle"
           },
           "endDate": {
             "title": "Enddate",
             "type": "string"
+          },
+          "minutesPerPage": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 120.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesperpage"
           },
           "name": {
             "maxLength": 120,
@@ -62,9 +1699,72 @@
             "title": "Name",
             "type": "string"
           },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
+          },
+          "skippedDates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 400,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skippeddates"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotBody"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots"
+          },
           "startDate": {
             "title": "Startdate",
             "type": "string"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
           },
           "timezone": {
             "title": "Timezone",
@@ -73,14 +1773,14 @@
           "venue": {
             "anyOf": [
               {
+                "maxLength": 200,
+                "minLength": 1,
                 "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "maxLength": 200,
-            "minLength": 1,
             "title": "Venue"
           }
         },
@@ -100,12 +1800,219 @@
             "minLength": 1,
             "title": "Name",
             "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
           }
         },
         "required": [
           "name"
         ],
         "title": "CreateTheaterBody",
+        "type": "object"
+      },
+      "DateBody": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "DateBody",
+        "type": "object"
+      },
+      "DateConflict": {
+        "description": "An answer for one date. It wins over a weekly rule for that date.",
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "date",
+          "level",
+          "updatedAt"
+        ],
+        "title": "DateConflict",
+        "type": "object"
+      },
+      "DateItem": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "free",
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level",
+          "date"
+        ],
+        "title": "DateItem",
+        "type": "object"
+      },
+      "DoorCode": {
+        "properties": {
+          "doorCode": {
+            "title": "Doorcode",
+            "type": "string"
+          }
+        },
+        "required": [
+          "doorCode"
+        ],
+        "title": "DoorCode",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -144,6 +2051,56 @@
         "title": "InviteAccepted",
         "type": "object"
       },
+      "InvitePreview": {
+        "description": "What the sign-in page shows for an invite link, before anyone signs in.",
+        "properties": {
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "inviterName": {
+            "title": "Invitername",
+            "type": "string"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "showName": {
+            "title": "Showname",
+            "type": "string"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "email",
+          "showName",
+          "theaterName",
+          "inviterName",
+          "role"
+        ],
+        "title": "InvitePreview",
+        "type": "object"
+      },
       "InviteSent": {
         "properties": {
           "email": {
@@ -173,14 +2130,61 @@
               }
             ],
             "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
           }
         },
         "required": [
+          "userId",
           "email",
           "role",
           "expiresAt"
         ],
         "title": "InviteSent",
+        "type": "object"
+      },
+      "MarkBody": {
+        "properties": {
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "on_time",
+                  "late",
+                  "absent"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "MarkBody",
+        "type": "object"
+      },
+      "MarkReadBody": {
+        "properties": {
+          "noticeIds": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Noticeids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "noticeIds"
+        ],
+        "title": "MarkReadBody",
         "type": "object"
       },
       "Me": {
@@ -214,6 +2218,28 @@
       },
       "Member": {
         "properties": {
+          "conflictsSubmittedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictssubmittedat"
+          },
+          "department": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
           "email": {
             "anyOf": [
               {
@@ -245,6 +2271,14 @@
             "title": "Role",
             "type": "string"
           },
+          "status": {
+            "enum": [
+              "invited",
+              "joined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
           "title": {
             "anyOf": [
               {
@@ -263,13 +2297,226 @@
         },
         "required": [
           "userId",
-          "role"
+          "role",
+          "status"
         ],
         "title": "Member",
         "type": "object"
       },
+      "MemberConflicts": {
+        "properties": {
+          "dates": {
+            "items": {
+              "$ref": "#/components/schemas/DateConflict"
+            },
+            "title": "Dates",
+            "type": "array"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "weekly": {
+            "items": {
+              "$ref": "#/components/schemas/WeeklyConflict"
+            },
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "required": [
+          "userId",
+          "weekly",
+          "dates"
+        ],
+        "title": "MemberConflicts",
+        "type": "object"
+      },
+      "MyCall": {
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "callEnd": {
+            "title": "Callend",
+            "type": "string"
+          },
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "callStart": {
+            "title": "Callstart",
+            "type": "string"
+          },
+          "cancelled": {
+            "default": false,
+            "title": "Cancelled",
+            "type": "boolean"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "labels": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Labels",
+            "type": "array"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "sequence": {
+            "default": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "showName": {
+            "title": "Showname",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "enum": [
+              "rehearsal",
+              "music",
+              "choreography",
+              "run",
+              "tech",
+              "dress",
+              "performance"
+            ],
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "showId",
+          "showName",
+          "callId",
+          "date",
+          "start",
+          "end",
+          "callStart",
+          "callEnd",
+          "type",
+          "timezone"
+        ],
+        "title": "MyCall",
+        "type": "object"
+      },
+      "MyConflicts": {
+        "properties": {
+          "dates": {
+            "items": {
+              "$ref": "#/components/schemas/DateConflict"
+            },
+            "title": "Dates",
+            "type": "array"
+          },
+          "weekly": {
+            "items": {
+              "$ref": "#/components/schemas/WeeklyConflict"
+            },
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "required": [
+          "weekly",
+          "dates"
+        ],
+        "title": "MyConflicts",
+        "type": "object"
+      },
       "MyShow": {
         "properties": {
+          "conflictsSubmittedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictssubmittedat"
+          },
           "role": {
             "enum": [
               "staff",
@@ -281,6 +2528,19 @@
           },
           "show": {
             "$ref": "#/components/schemas/Show"
+          },
+          "status": {
+            "default": "joined",
+            "enum": [
+              "invited",
+              "joined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
           },
           "title": {
             "anyOf": [
@@ -296,6 +2556,7 @@
         },
         "required": [
           "show",
+          "theaterName",
           "role"
         ],
         "title": "MyShow",
@@ -319,27 +2580,800 @@
         "title": "MyTheater",
         "type": "object"
       },
-      "Show": {
+      "NewApiKey": {
         "properties": {
+          "key": {
+            "$ref": "#/components/schemas/ApiKey"
+          },
+          "secret": {
+            "title": "Secret",
+            "type": "string"
+          }
+        },
+        "required": [
+          "key",
+          "secret"
+        ],
+        "title": "NewApiKey",
+        "type": "object"
+      },
+      "Notice": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "authorId": {
+            "title": "Authorid",
+            "type": "string"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
           },
-          "endDate": {
-            "title": "Enddate",
+          "noticeId": {
+            "title": "Noticeid",
             "type": "string"
           },
-          "name": {
-            "title": "Name",
-            "type": "string"
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
           },
           "showId": {
             "title": "Showid",
             "type": "string"
           },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noticeId",
+          "showId",
+          "theaterId",
+          "title",
+          "body",
+          "authorId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "Notice",
+        "type": "object"
+      },
+      "NoticeView": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "audienceCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audiencecount"
+          },
+          "authorId": {
+            "title": "Authorid",
+            "type": "string"
+          },
+          "authorName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Authorname"
+          },
+          "body": {
+            "title": "Body",
+            "type": "string"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "noticeId": {
+            "title": "Noticeid",
+            "type": "string"
+          },
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "read": {
+            "default": false,
+            "title": "Read",
+            "type": "boolean"
+          },
+          "readCount": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Readcount"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noticeId",
+          "showId",
+          "theaterId",
+          "title",
+          "body",
+          "authorId",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "NoticeView",
+        "type": "object"
+      },
+      "NotifyPrefs": {
+        "description": "What a person wants emailed to them. Calendar feeds and the app are always on.",
+        "properties": {
+          "changeEmails": {
+            "default": true,
+            "title": "Changeemails",
+            "type": "boolean"
+          },
+          "emailReminders": {
+            "default": true,
+            "title": "Emailreminders",
+            "type": "boolean"
+          },
+          "noticeEmails": {
+            "default": true,
+            "title": "Noticeemails",
+            "type": "boolean"
+          }
+        },
+        "title": "NotifyPrefs",
+        "type": "object"
+      },
+      "PostNoticeBody": {
+        "properties": {
+          "audience": {
+            "default": "everyone",
+            "enum": [
+              "everyone",
+              "cast",
+              "crew"
+            ],
+            "title": "Audience",
+            "type": "string"
+          },
+          "body": {
+            "maxLength": 4000,
+            "minLength": 1,
+            "title": "Body",
+            "type": "string"
+          },
+          "email": {
+            "default": true,
+            "title": "Email",
+            "type": "boolean"
+          },
+          "pinned": {
+            "default": false,
+            "title": "Pinned",
+            "type": "boolean"
+          },
+          "title": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "body"
+        ],
+        "title": "PostNoticeBody",
+        "type": "object"
+      },
+      "PublishBody": {
+        "properties": {
+          "from": {
+            "title": "From",
+            "type": "string"
+          },
+          "to": {
+            "title": "To",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "title": "PublishBody",
+        "type": "object"
+      },
+      "PublishResult": {
+        "properties": {
+          "callIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Callids",
+            "type": "array"
+          },
+          "cancelled": {
+            "title": "Cancelled",
+            "type": "integer"
+          },
+          "notified": {
+            "default": 0,
+            "title": "Notified",
+            "type": "integer"
+          },
+          "published": {
+            "title": "Published",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "published",
+          "cancelled",
+          "callIds"
+        ],
+        "title": "PublishResult",
+        "type": "object"
+      },
+      "RehearsalSlot": {
+        "description": "A usual rehearsal night: weekday 0 = Monday ... 6 = Sunday, times as HH:MM in the show's timezone.",
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weekday",
+          "start",
+          "end"
+        ],
+        "title": "RehearsalSlot",
+        "type": "object"
+      },
+      "RemindBody": {
+        "properties": {
+          "userIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 200,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userids"
+          }
+        },
+        "title": "RemindBody",
+        "type": "object"
+      },
+      "Reminded": {
+        "properties": {
+          "conflictReminders": {
+            "title": "Conflictreminders",
+            "type": "integer"
+          },
+          "invitesResent": {
+            "title": "Invitesresent",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "invitesResent",
+          "conflictReminders"
+        ],
+        "title": "Reminded",
+        "type": "object"
+      },
+      "ReorderBody": {
+        "properties": {
+          "ids": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 500,
+            "title": "Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "ids"
+        ],
+        "title": "ReorderBody",
+        "type": "object"
+      },
+      "RunningLateBody": {
+        "properties": {
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "minutes": {
+            "maximum": 240.0,
+            "minimum": 5.0,
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "minutes"
+        ],
+        "title": "RunningLateBody",
+        "type": "object"
+      },
+      "SaveConflictsBody": {
+        "description": "Saves several answers at once, as the guided setup does at the end.",
+        "properties": {
+          "clearDates": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 400,
+            "title": "Cleardates",
+            "type": "array"
+          },
+          "dates": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/DateItem"
+            },
+            "maxItems": 400,
+            "title": "Dates",
+            "type": "array"
+          },
+          "replaceWeekly": {
+            "default": false,
+            "title": "Replaceweekly",
+            "type": "boolean"
+          },
+          "submitTo": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "const": "all",
+                "type": "string"
+              }
+            ],
+            "default": [],
+            "title": "Submitto"
+          },
+          "weekly": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/WeeklyItem"
+            },
+            "maxItems": 7,
+            "title": "Weekly",
+            "type": "array"
+          }
+        },
+        "title": "SaveConflictsBody",
+        "type": "object"
+      },
+      "Scene": {
+        "properties": {
+          "actId": {
+            "title": "Actid",
+            "type": "string"
+          },
+          "eighths": {
+            "default": 0,
+            "title": "Eighths",
+            "type": "integer"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sceneId",
+          "showId",
+          "actId",
+          "number",
+          "name",
+          "order"
+        ],
+        "title": "Scene",
+        "type": "object"
+      },
+      "SceneSuggestion": {
+        "properties": {
+          "fits": {
+            "default": true,
+            "title": "Fits",
+            "type": "boolean"
+          },
+          "lastRehearsed": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastrehearsed"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "nightsInRange": {
+            "title": "Nightsinrange",
+            "type": "integer"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          },
+          "score": {
+            "title": "Score",
+            "type": "integer"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sceneId",
+          "minutes",
+          "score",
+          "nightsInRange"
+        ],
+        "title": "SceneSuggestion",
+        "type": "object"
+      },
+      "ScheduleDay": {
+        "properties": {
+          "calls": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CallView"
+            },
+            "title": "Calls",
+            "type": "array"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "kind": {
+            "enum": [
+              "rehearsal",
+              "tech",
+              "performance",
+              "extra"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "noConflicts": {
+            "default": false,
+            "title": "Noconflicts",
+            "type": "boolean"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          }
+        },
+        "required": [
+          "date",
+          "kind"
+        ],
+        "title": "ScheduleDay",
+        "type": "object"
+      },
+      "ScheduleView": {
+        "properties": {
+          "days": {
+            "items": {
+              "$ref": "#/components/schemas/ScheduleDay"
+            },
+            "title": "Days",
+            "type": "array"
+          },
+          "editing": {
+            "title": "Editing",
+            "type": "boolean"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "days",
+          "editing"
+        ],
+        "title": "ScheduleView",
+        "type": "object"
+      },
+      "Show": {
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "archivedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Archivedat"
+          },
+          "conflictDeadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictdeadline"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "doorCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doorcode"
+          },
+          "endDate": {
+            "title": "Enddate",
+            "type": "string"
+          },
+          "minutesPerPage": {
+            "default": 8,
+            "title": "Minutesperpage",
+            "type": "number"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "skippedDates": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Skippeddates",
+            "type": "array"
+          },
+          "slots": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/RehearsalSlot"
+            },
+            "title": "Slots",
+            "type": "array"
+          },
           "startDate": {
             "title": "Startdate",
             "type": "string"
+          },
+          "status": {
+            "default": "active",
+            "enum": [
+              "active",
+              "archived"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
           },
           "theaterId": {
             "title": "Theaterid",
@@ -373,6 +3407,112 @@
         "title": "Show",
         "type": "object"
       },
+      "ShowDayView": {
+        "properties": {
+          "called": {
+            "default": false,
+            "title": "Called",
+            "type": "boolean"
+          },
+          "calledBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calledby"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "kind": {
+            "enum": [
+              "rehearsal",
+              "tech",
+              "performance"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "noConflicts": {
+            "default": false,
+            "title": "Noconflicts",
+            "type": "boolean"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          }
+        },
+        "required": [
+          "showId",
+          "date",
+          "kind"
+        ],
+        "title": "ShowDayView",
+        "type": "object"
+      },
+      "ShowSummary": {
+        "properties": {
+          "castCount": {
+            "title": "Castcount",
+            "type": "integer"
+          },
+          "crewCount": {
+            "title": "Crewcount",
+            "type": "integer"
+          },
+          "show": {
+            "$ref": "#/components/schemas/Show"
+          },
+          "staff": {
+            "items": {
+              "$ref": "#/components/schemas/Member"
+            },
+            "title": "Staff",
+            "type": "array"
+          },
+          "waitingCount": {
+            "title": "Waitingcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "show",
+          "staff",
+          "castCount",
+          "crewCount",
+          "waitingCount"
+        ],
+        "title": "ShowSummary",
+        "type": "object"
+      },
       "ShowView": {
         "properties": {
           "role": {
@@ -387,6 +3527,10 @@
           "show": {
             "$ref": "#/components/schemas/Show"
           },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          },
           "title": {
             "anyOf": [
               {
@@ -397,13 +3541,141 @@
               }
             ],
             "title": "Title"
+          },
+          "viaAdmin": {
+            "default": false,
+            "title": "Viaadmin",
+            "type": "boolean"
           }
         },
         "required": [
           "show",
+          "theaterName",
           "role"
         ],
         "title": "ShowView",
+        "type": "object"
+      },
+      "SlotBody": {
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weekday",
+          "start",
+          "end"
+        ],
+        "title": "SlotBody",
+        "type": "object"
+      },
+      "Suggestions": {
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "freeMinutes": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Freeminutes"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/SceneSuggestion"
+            },
+            "title": "Scenes",
+            "type": "array"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          }
+        },
+        "required": [
+          "date",
+          "scenes"
+        ],
+        "title": "Suggestions",
+        "type": "object"
+      },
+      "TechCallsBody": {
+        "description": "Makes an everyone-called call for each tech and performance night that doesn't have one.",
+        "properties": {
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end"
+        ],
+        "title": "TechCallsBody",
         "type": "object"
       },
       "Theater": {
@@ -438,23 +3710,727 @@
         "title": "Theater",
         "type": "object"
       },
-      "UpdateMeBody": {
+      "TheaterView": {
         "properties": {
-          "name": {
-            "maxLength": 100,
-            "minLength": 1,
-            "title": "Name",
-            "type": "string"
+          "admins": {
+            "items": {
+              "$ref": "#/components/schemas/Admin"
+            },
+            "title": "Admins",
+            "type": "array"
+          },
+          "shows": {
+            "items": {
+              "$ref": "#/components/schemas/ShowSummary"
+            },
+            "title": "Shows",
+            "type": "array"
+          },
+          "theater": {
+            "$ref": "#/components/schemas/Theater"
           }
         },
         "required": [
-          "name"
+          "theater",
+          "admins",
+          "shows"
         ],
+        "title": "TheaterView",
+        "type": "object"
+      },
+      "TimedBlock": {
+        "properties": {
+          "blockId": {
+            "title": "Blockid",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "fixedStart": {
+            "default": false,
+            "title": "Fixedstart",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "minutes": {
+            "title": "Minutes",
+            "type": "integer"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "userIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Userids",
+            "type": "array"
+          },
+          "warnings": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "blockId",
+          "start",
+          "minutes",
+          "end"
+        ],
+        "title": "TimedBlock",
+        "type": "object"
+      },
+      "UpdateCallBody": {
+        "properties": {
+          "blocks": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/BlockBody"
+                },
+                "maxItems": 40,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blocks"
+          },
+          "bring": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bring"
+          },
+          "cancelled": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Cancelled"
+          },
+          "crewStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Crewstart"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "departments": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Departments"
+          },
+          "end": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "End"
+          },
+          "groups": {
+            "anyOf": [
+              {
+                "items": {
+                  "enum": [
+                    "everyone",
+                    "cast",
+                    "crew"
+                  ],
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Groups"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Start"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "anyOf": [
+              {
+                "enum": [
+                  "rehearsal",
+                  "music",
+                  "choreography",
+                  "run",
+                  "tech",
+                  "dress",
+                  "performance"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Type"
+          },
+          "userIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 300,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userids"
+          }
+        },
+        "title": "UpdateCallBody",
+        "type": "object"
+      },
+      "UpdateCharacterBody": {
+        "properties": {
+          "castUserIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 100,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Castuserids"
+          },
+          "ensemble": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ensemble"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          }
+        },
+        "title": "UpdateCharacterBody",
+        "type": "object"
+      },
+      "UpdateMeBody": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "prefs": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/NotifyPrefs"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
         "title": "UpdateMeBody",
+        "type": "object"
+      },
+      "UpdateMemberBody": {
+        "properties": {
+          "department": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Department"
+          },
+          "role": {
+            "anyOf": [
+              {
+                "enum": [
+                  "staff",
+                  "cast",
+                  "crew"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Role"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateMemberBody",
+        "type": "object"
+      },
+      "UpdateNoticeBody": {
+        "properties": {
+          "audience": {
+            "anyOf": [
+              {
+                "enum": [
+                  "everyone",
+                  "cast",
+                  "crew"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Audience"
+          },
+          "body": {
+            "anyOf": [
+              {
+                "maxLength": 4000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Body"
+          },
+          "pinned": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pinned"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateNoticeBody",
+        "type": "object"
+      },
+      "UpdateSceneBody": {
+        "properties": {
+          "actId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actid"
+          },
+          "eighths": {
+            "anyOf": [
+              {
+                "maximum": 1600.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eighths"
+          },
+          "minutesOverride": {
+            "anyOf": [
+              {
+                "maximum": 600.0,
+                "minimum": 5.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesoverride"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "number": {
+            "anyOf": [
+              {
+                "maxLength": 20,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Number"
+          }
+        },
+        "title": "UpdateSceneBody",
+        "type": "object"
+      },
+      "UpdateShowBody": {
+        "properties": {
+          "address": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Address"
+          },
+          "conflictDeadline": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conflictdeadline"
+          },
+          "endDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Enddate"
+          },
+          "minutesPerPage": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 120.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Minutesperpage"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "offBookDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Offbookdate"
+          },
+          "openingDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openingdate"
+          },
+          "skippedDates": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 400,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Skippeddates"
+          },
+          "slots": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/SlotBody"
+                },
+                "maxItems": 7,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slots"
+          },
+          "startDate": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Startdate"
+          },
+          "techStart": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Techstart"
+          },
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Timezone"
+          },
+          "venue": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venue"
+          }
+        },
+        "title": "UpdateShowBody",
         "type": "object"
       },
       "User": {
         "properties": {
+          "calendarToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Calendartoken"
+          },
           "createdAt": {
             "title": "Createdat",
             "type": "string"
@@ -473,6 +4449,14 @@
               }
             ],
             "title": "Name"
+          },
+          "prefs": {
+            "$ref": "#/components/schemas/NotifyPrefs",
+            "default": {
+              "changeEmails": true,
+              "emailReminders": true,
+              "noticeEmails": true
+            }
           },
           "userId": {
             "title": "Userid",
@@ -525,6 +4509,268 @@
           "type"
         ],
         "title": "ValidationError",
+        "type": "object"
+      },
+      "Warning": {
+        "description": "Someone a block or call needs who can't make all of it.",
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "kind": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial",
+              "elsewhere"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "part": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Part"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "kind"
+        ],
+        "title": "Warning",
+        "type": "object"
+      },
+      "WeeklyBody": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "WeeklyBody",
+        "type": "object"
+      },
+      "WeeklyConflict": {
+        "description": "A usual-week rule, e.g. \"never Tuesdays\" or \"late on Wednesdays\". One per weekday.",
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "userId",
+          "weekday",
+          "level",
+          "updatedAt"
+        ],
+        "title": "WeeklyConflict",
+        "type": "object"
+      },
+      "WeeklyItem": {
+        "properties": {
+          "arrive": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrive"
+          },
+          "leave": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Leave"
+          },
+          "level": {
+            "enum": [
+              "hard",
+              "soft",
+              "partial"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "weekday": {
+            "maximum": 6.0,
+            "minimum": 0.0,
+            "title": "Weekday",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "level",
+          "weekday"
+        ],
+        "title": "WeeklyItem",
         "type": "object"
       }
     }
@@ -628,6 +4874,433 @@
         "summary": "Update Me"
       }
     },
+    "/api/me/calendar": {
+      "get": {
+        "operationId": "calendar_links_api_me_calendar_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarLinks"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Calendar Links"
+      }
+    },
+    "/api/me/calendar/rotate": {
+      "post": {
+        "operationId": "rotate_calendar_api_me_calendar_rotate_post",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CalendarLinks"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Rotate Calendar"
+      }
+    },
+    "/api/me/calls": {
+      "get": {
+        "operationId": "my_calls_api_me_calls_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "showId",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Showid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MyCall"
+                  },
+                  "title": "Response My Calls Api Me Calls Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Calls"
+      }
+    },
+    "/api/me/calls/{call_id}.ics": {
+      "get": {
+        "operationId": "call_ics_api_me_calls__call_id__ics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Call Ics"
+      }
+    },
+    "/api/me/conflicts": {
+      "get": {
+        "operationId": "get_my_conflicts_api_me_conflicts_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyConflicts"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get My Conflicts"
+      },
+      "post": {
+        "operationId": "save_conflicts_api_me_conflicts_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveConflictsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyConflicts"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Conflicts"
+      }
+    },
+    "/api/me/conflicts/dates/{day}": {
+      "delete": {
+        "operationId": "delete_date_api_me_conflicts_dates__day__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Date"
+      },
+      "put": {
+        "operationId": "put_date_api_me_conflicts_dates__day__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateConflict"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Date"
+      }
+    },
+    "/api/me/conflicts/weekly/{weekday}": {
+      "delete": {
+        "operationId": "delete_weekly_api_me_conflicts_weekly__weekday__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weekday",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 0,
+              "title": "Weekday",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Weekly"
+      },
+      "put": {
+        "operationId": "put_weekly_api_me_conflicts_weekly__weekday__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "weekday",
+            "required": true,
+            "schema": {
+              "maximum": 6,
+              "minimum": 0,
+              "title": "Weekday",
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeeklyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WeeklyConflict"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Weekly"
+      }
+    },
+    "/api/me/days": {
+      "get": {
+        "operationId": "my_days_api_me_days_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ShowDayView"
+                  },
+                  "title": "Response My Days Api Me Days Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Days"
+      }
+    },
+    "/api/public/calendar/{token}.ics": {
+      "get": {
+        "operationId": "feed_api_public_calendar__token__ics_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Feed"
+      }
+    },
+    "/api/public/invites/{token}": {
+      "get": {
+        "operationId": "preview_invite_api_public_invites__token__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "token",
+            "required": true,
+            "schema": {
+              "title": "Token",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvitePreview"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Preview Invite"
+      }
+    },
     "/api/shows/{show_id}": {
       "get": {
         "operationId": "get_show_api_shows__show_id__get",
@@ -665,6 +5338,814 @@
           }
         },
         "summary": "Get Show"
+      },
+      "patch": {
+        "operationId": "update_show_api_shows__show_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShowBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Show"
+      }
+    },
+    "/api/shows/{show_id}/acts": {
+      "post": {
+        "operationId": "create_act_api_shows__show_id__acts_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Act"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Act"
+      }
+    },
+    "/api/shows/{show_id}/acts/{act_id}": {
+      "delete": {
+        "operationId": "delete_act_api_shows__show_id__acts__act_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "act_id",
+            "required": true,
+            "schema": {
+              "title": "Act Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Act"
+      },
+      "patch": {
+        "operationId": "update_act_api_shows__show_id__acts__act_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "act_id",
+            "required": true,
+            "schema": {
+              "title": "Act Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Act"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Act"
+      }
+    },
+    "/api/shows/{show_id}/archive": {
+      "post": {
+        "operationId": "archive_show_api_shows__show_id__archive_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Archive Show"
+      }
+    },
+    "/api/shows/{show_id}/attendance": {
+      "get": {
+        "operationId": "attendance_api_shows__show_id__attendance_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Attendance"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Attendance"
+      }
+    },
+    "/api/shows/{show_id}/attendance/{day}/{user_id}": {
+      "put": {
+        "operationId": "mark_api_shows__show_id__attendance__day___user_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/CheckIn"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Mark Api Shows  Show Id  Attendance  Day   User Id  Put"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mark"
+      }
+    },
+    "/api/shows/{show_id}/breakdown": {
+      "get": {
+        "operationId": "get_breakdown_api_shows__show_id__breakdown_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breakdown"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Breakdown"
+      }
+    },
+    "/api/shows/{show_id}/calls": {
+      "post": {
+        "operationId": "create_call_api_shows__show_id__calls_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCallBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Call"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Call"
+      }
+    },
+    "/api/shows/{show_id}/calls/{call_id}": {
+      "delete": {
+        "operationId": "delete_call_api_shows__show_id__calls__call_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Call"
+      },
+      "patch": {
+        "operationId": "update_call_api_shows__show_id__calls__call_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "call_id",
+            "required": true,
+            "schema": {
+              "title": "Call Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCallBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Call"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Call"
+      }
+    },
+    "/api/shows/{show_id}/characters": {
+      "post": {
+        "operationId": "create_character_api_shows__show_id__characters_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCharacterBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Character"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Character"
+      }
+    },
+    "/api/shows/{show_id}/characters/{char_id}": {
+      "delete": {
+        "operationId": "delete_character_api_shows__show_id__characters__char_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Character"
+      },
+      "patch": {
+        "operationId": "update_character_api_shows__show_id__characters__char_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCharacterBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Character"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Character"
+      }
+    },
+    "/api/shows/{show_id}/check-in": {
+      "post": {
+        "operationId": "check_in_api_shows__show_id__check_in_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckInBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckInResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Check In"
+      }
+    },
+    "/api/shows/{show_id}/conflicts": {
+      "get": {
+        "operationId": "show_conflicts_api_shows__show_id__conflicts_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MemberConflicts"
+                  },
+                  "title": "Response Show Conflicts Api Shows  Show Id  Conflicts Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Show Conflicts"
+      }
+    },
+    "/api/shows/{show_id}/door-code": {
+      "post": {
+        "operationId": "rotate_api_shows__show_id__door_code_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoorCode"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Rotate"
       }
     },
     "/api/shows/{show_id}/invites": {
@@ -716,6 +6197,45 @@
         "summary": "Create Invite"
       }
     },
+    "/api/shows/{show_id}/join": {
+      "post": {
+        "operationId": "join_show_api_shows__show_id__join_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InviteAccepted"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Join Show"
+      }
+    },
     "/api/shows/{show_id}/members": {
       "get": {
         "operationId": "list_members_api_shows__show_id__members_get",
@@ -759,6 +6279,1083 @@
         "summary": "List Members"
       }
     },
+    "/api/shows/{show_id}/members/{member_id}": {
+      "delete": {
+        "operationId": "remove_member_api_shows__show_id__members__member_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "member_id",
+            "required": true,
+            "schema": {
+              "title": "Member Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Member"
+      },
+      "patch": {
+        "operationId": "update_member_api_shows__show_id__members__member_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "member_id",
+            "required": true,
+            "schema": {
+              "title": "Member Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMemberBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Member"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Member"
+      }
+    },
+    "/api/shows/{show_id}/notices": {
+      "get": {
+        "operationId": "get_callboard_api_shows__show_id__notices_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Callboard"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Callboard"
+      },
+      "post": {
+        "operationId": "post_notice_api_shows__show_id__notices_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PostNoticeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Post Notice"
+      }
+    },
+    "/api/shows/{show_id}/notices/read": {
+      "post": {
+        "operationId": "mark_read_api_shows__show_id__notices_read_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkReadBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Mark Read"
+      }
+    },
+    "/api/shows/{show_id}/notices/{notice_id}": {
+      "delete": {
+        "operationId": "delete_notice_api_shows__show_id__notices__notice_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "notice_id",
+            "required": true,
+            "schema": {
+              "title": "Notice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Notice"
+      },
+      "patch": {
+        "operationId": "update_notice_api_shows__show_id__notices__notice_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "notice_id",
+            "required": true,
+            "schema": {
+              "title": "Notice Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNoticeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Notice"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Notice"
+      }
+    },
+    "/api/shows/{show_id}/remind": {
+      "post": {
+        "operationId": "remind_api_shows__show_id__remind_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemindBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Reminded"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remind"
+      }
+    },
+    "/api/shows/{show_id}/reorder/{kind}": {
+      "post": {
+        "operationId": "reorder_api_shows__show_id__reorder__kind__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "kind",
+            "required": true,
+            "schema": {
+              "enum": [
+                "acts",
+                "scenes",
+                "characters"
+              ],
+              "title": "Kind",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReorderBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Breakdown"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Reorder"
+      }
+    },
+    "/api/shows/{show_id}/restore": {
+      "post": {
+        "operationId": "restore_show_api_shows__show_id__restore_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Show"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Restore Show"
+      }
+    },
+    "/api/shows/{show_id}/running-late": {
+      "post": {
+        "operationId": "running_late_api_shows__show_id__running_late_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunningLateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckIn"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Running Late"
+      }
+    },
+    "/api/shows/{show_id}/scenes": {
+      "post": {
+        "operationId": "create_scene_api_shows__show_id__scenes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSceneBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Scene"
+      }
+    },
+    "/api/shows/{show_id}/scenes/{scene_id}": {
+      "delete": {
+        "operationId": "delete_scene_api_shows__show_id__scenes__scene_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Scene"
+      },
+      "patch": {
+        "operationId": "update_scene_api_shows__show_id__scenes__scene_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSceneBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Scene"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Scene"
+      }
+    },
+    "/api/shows/{show_id}/scenes/{scene_id}/characters/{char_id}": {
+      "delete": {
+        "operationId": "remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove From Scene"
+      },
+      "put": {
+        "operationId": "add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scene_id",
+            "required": true,
+            "schema": {
+              "title": "Scene Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "char_id",
+            "required": true,
+            "schema": {
+              "title": "Char Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add To Scene"
+      }
+    },
+    "/api/shows/{show_id}/schedule": {
+      "get": {
+        "operationId": "get_schedule_api_shows__show_id__schedule_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScheduleView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Schedule"
+      }
+    },
+    "/api/shows/{show_id}/schedule/publish": {
+      "post": {
+        "operationId": "publish_api_shows__show_id__schedule_publish_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PublishBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublishResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Publish"
+      }
+    },
+    "/api/shows/{show_id}/schedule/suggestions": {
+      "get": {
+        "operationId": "suggest_api_shows__show_id__schedule_suggestions_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": true,
+            "schema": {
+              "title": "Date",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "To"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Suggestions"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Suggest"
+      }
+    },
+    "/api/shows/{show_id}/schedule/{day}/scenes": {
+      "post": {
+        "operationId": "add_scene_api_shows__show_id__schedule__day__scenes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddSceneBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Call"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Scene"
+      }
+    },
+    "/api/shows/{show_id}/tech-calls": {
+      "post": {
+        "operationId": "tech_calls_api_shows__show_id__tech_calls_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TechCallsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Call"
+                  },
+                  "title": "Response Tech Calls Api Shows  Show Id  Tech Calls Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Tech Calls"
+      }
+    },
     "/api/theaters": {
       "post": {
         "operationId": "create_theater_api_theaters_post",
@@ -795,6 +7392,281 @@
           }
         },
         "summary": "Create Theater"
+      }
+    },
+    "/api/theaters/{theater_id}": {
+      "get": {
+        "operationId": "get_theater_api_theaters__theater_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TheaterView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Theater"
+      }
+    },
+    "/api/theaters/{theater_id}/admins": {
+      "post": {
+        "operationId": "add_admin_api_theaters__theater_id__admins_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddAdminBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Admin"
+                  },
+                  "title": "Response Add Admin Api Theaters  Theater Id  Admins Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Admin"
+      }
+    },
+    "/api/theaters/{theater_id}/admins/{admin_id}": {
+      "delete": {
+        "operationId": "remove_admin_api_theaters__theater_id__admins__admin_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "admin_id",
+            "required": true,
+            "schema": {
+              "title": "Admin Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Admin"
+                  },
+                  "title": "Response Remove Admin Api Theaters  Theater Id  Admins  Admin Id  Delete",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Admin"
+      }
+    },
+    "/api/theaters/{theater_id}/api-keys": {
+      "get": {
+        "operationId": "list_keys_api_theaters__theater_id__api_keys_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiKey"
+                  },
+                  "title": "Response List Keys Api Theaters  Theater Id  Api Keys Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Keys"
+      },
+      "post": {
+        "operationId": "create_key_api_theaters__theater_id__api_keys_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateApiKeyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewApiKey"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Key"
+      }
+    },
+    "/api/theaters/{theater_id}/api-keys/{key_id}": {
+      "delete": {
+        "operationId": "revoke_key_api_theaters__theater_id__api_keys__key_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "key_id",
+            "required": true,
+            "schema": {
+              "title": "Key Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revoke Key"
       }
     },
     "/api/theaters/{theater_id}/shows": {

@@ -39,6 +39,179 @@ export interface paths {
         patch: operations["update_me_api_me_patch"];
         trace?: never;
     };
+    "/api/me/calendar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Calendar Links */
+        get: operations["calendar_links_api_me_calendar_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calendar/rotate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate Calendar */
+        post: operations["rotate_calendar_api_me_calendar_rotate_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Calls */
+        get: operations["my_calls_api_me_calls_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/calls/{call_id}.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Call Ics */
+        get: operations["call_ics_api_me_calls__call_id__ics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/conflicts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get My Conflicts */
+        get: operations["get_my_conflicts_api_me_conflicts_get"];
+        put?: never;
+        /** Save Conflicts */
+        post: operations["save_conflicts_api_me_conflicts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/conflicts/dates/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Put Date */
+        put: operations["put_date_api_me_conflicts_dates__day__put"];
+        post?: never;
+        /** Delete Date */
+        delete: operations["delete_date_api_me_conflicts_dates__day__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/conflicts/weekly/{weekday}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Put Weekly */
+        put: operations["put_weekly_api_me_conflicts_weekly__weekday__put"];
+        post?: never;
+        /** Delete Weekly */
+        delete: operations["delete_weekly_api_me_conflicts_weekly__weekday__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/days": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Days */
+        get: operations["my_days_api_me_days_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public/calendar/{token}.ics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Feed */
+        get: operations["feed_api_public_calendar__token__ics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/public/invites/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Preview Invite */
+        get: operations["preview_invite_api_public_invites__token__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}": {
         parameters: {
             query?: never;
@@ -50,6 +223,231 @@ export interface paths {
         get: operations["get_show_api_shows__show_id__get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update Show */
+        patch: operations["update_show_api_shows__show_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/acts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Act */
+        post: operations["create_act_api_shows__show_id__acts_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/acts/{act_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Act */
+        delete: operations["delete_act_api_shows__show_id__acts__act_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Act */
+        patch: operations["update_act_api_shows__show_id__acts__act_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/archive": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Archive Show */
+        post: operations["archive_show_api_shows__show_id__archive_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Attendance */
+        get: operations["attendance_api_shows__show_id__attendance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/attendance/{day}/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Mark */
+        put: operations["mark_api_shows__show_id__attendance__day___user_id__put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/breakdown": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Breakdown */
+        get: operations["get_breakdown_api_shows__show_id__breakdown_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Call */
+        post: operations["create_call_api_shows__show_id__calls_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/calls/{call_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Call */
+        delete: operations["delete_call_api_shows__show_id__calls__call_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Call */
+        patch: operations["update_call_api_shows__show_id__calls__call_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/characters": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Character */
+        post: operations["create_character_api_shows__show_id__characters_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/characters/{char_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Character */
+        delete: operations["delete_character_api_shows__show_id__characters__char_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Character */
+        patch: operations["update_character_api_shows__show_id__characters__char_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/check-in": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Check In */
+        post: operations["check_in_api_shows__show_id__check_in_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/conflicts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show Conflicts */
+        get: operations["show_conflicts_api_shows__show_id__conflicts_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/door-code": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Rotate */
+        post: operations["rotate_api_shows__show_id__door_code_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -73,6 +471,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/join": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Join Show */
+        post: operations["join_show_api_shows__show_id__join_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/members": {
         parameters: {
             query?: never;
@@ -84,6 +499,283 @@ export interface paths {
         get: operations["list_members_api_shows__show_id__members_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/members/{member_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Member */
+        delete: operations["remove_member_api_shows__show_id__members__member_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Member */
+        patch: operations["update_member_api_shows__show_id__members__member_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Callboard */
+        get: operations["get_callboard_api_shows__show_id__notices_get"];
+        put?: never;
+        /** Post Notice */
+        post: operations["post_notice_api_shows__show_id__notices_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices/read": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Mark Read */
+        post: operations["mark_read_api_shows__show_id__notices_read_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notices/{notice_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Notice */
+        delete: operations["delete_notice_api_shows__show_id__notices__notice_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Notice */
+        patch: operations["update_notice_api_shows__show_id__notices__notice_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/remind": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Remind */
+        post: operations["remind_api_shows__show_id__remind_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/reorder/{kind}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reorder */
+        post: operations["reorder_api_shows__show_id__reorder__kind__post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/restore": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Restore Show */
+        post: operations["restore_show_api_shows__show_id__restore_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/running-late": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Running Late */
+        post: operations["running_late_api_shows__show_id__running_late_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Scene */
+        post: operations["create_scene_api_shows__show_id__scenes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes/{scene_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Scene */
+        delete: operations["delete_scene_api_shows__show_id__scenes__scene_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Scene */
+        patch: operations["update_scene_api_shows__show_id__scenes__scene_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/scenes/{scene_id}/characters/{char_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Add To Scene */
+        put: operations["add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put"];
+        post?: never;
+        /** Remove From Scene */
+        delete: operations["remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Schedule */
+        get: operations["get_schedule_api_shows__show_id__schedule_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Publish */
+        post: operations["publish_api_shows__show_id__schedule_publish_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Suggest */
+        get: operations["suggest_api_shows__show_id__schedule_suggestions_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/schedule/{day}/scenes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Scene */
+        post: operations["add_scene_api_shows__show_id__schedule__day__scenes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/tech-calls": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Tech Calls */
+        post: operations["tech_calls_api_shows__show_id__tech_calls_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -102,6 +794,92 @@ export interface paths {
         /** Create Theater */
         post: operations["create_theater_api_theaters_post"];
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Theater */
+        get: operations["get_theater_api_theaters__theater_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/admins": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Admin */
+        post: operations["add_admin_api_theaters__theater_id__admins_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/admins/{admin_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Admin */
+        delete: operations["remove_admin_api_theaters__theater_id__admins__admin_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Keys */
+        get: operations["list_keys_api_theaters__theater_id__api_keys_get"];
+        put?: never;
+        /** Create Key */
+        post: operations["create_key_api_theaters__theater_id__api_keys_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/api-keys/{key_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Key */
+        delete: operations["revoke_key_api_theaters__theater_id__api_keys__key_id__delete"];
         options?: never;
         head?: never;
         patch?: never;
@@ -128,10 +906,535 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** CreateInviteBody */
-        CreateInviteBody: {
+        /** Act */
+        Act: {
+            /** Actid */
+            actId: string;
+            /** Name */
+            name: string;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+        };
+        /** ActBody */
+        ActBody: {
+            /** Name */
+            name: string;
+        };
+        /** AddAdminBody */
+        AddAdminBody: {
             /** Email */
             email: string;
+            /** Name */
+            name?: string | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** AddSceneBody */
+        AddSceneBody: {
+            /** Callid */
+            callId?: string | null;
+            /** Sceneid */
+            sceneId: string;
+        };
+        /** Admin */
+        Admin: {
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /**
+         * ApiKey
+         * @description A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.
+         */
+        ApiKey: {
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /** Keyid */
+            keyId: string;
+            /** Lastusedat */
+            lastUsedAt?: string | null;
+            /** Name */
+            name: string;
+            /** Prefix */
+            prefix: string;
+            /**
+             * Scope
+             * @default read
+             * @enum {string}
+             */
+            scope: "read" | "write";
+            /** Theaterid */
+            theaterId: string;
+        };
+        /** Appearance */
+        Appearance: {
+            /** Charid */
+            charId: string;
+            /** Sceneid */
+            sceneId: string;
+            /** Showid */
+            showId: string;
+        };
+        /** Attendance */
+        Attendance: {
+            /** Checkins */
+            checkins: components["schemas"]["CheckIn"][];
+            /** Doorcode */
+            doorCode: string;
+            /** Nights */
+            nights: components["schemas"]["AttendanceNight"][];
+            /** People */
+            people: components["schemas"]["AttendancePerson"][];
+            /** Tonight */
+            tonight?: string | null;
+        };
+        /** AttendanceNight */
+        AttendanceNight: {
+            /** Callid */
+            callId: string;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /** Start */
+            start: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** AttendancePerson */
+        AttendancePerson: {
+            /** Label */
+            label?: string | null;
+            /** Name */
+            name?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Userid */
+            userId: string;
+        };
+        /**
+         * Block
+         * @description A timed slice of a call: these scenes (or a label like "Warm-up"), from start for minutes.
+         */
+        Block: {
+            /** Blockid */
+            blockId: string;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes: number;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start?: string | null;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /** BlockBody */
+        BlockBody: {
+            /** Blockid */
+            blockId?: string | null;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes?: number | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start?: string | null;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /** Breakdown */
+        Breakdown: {
+            /** Acts */
+            acts: components["schemas"]["Act"][];
+            /** Appearances */
+            appearances: components["schemas"]["Appearance"][];
+            /** Characters */
+            characters: components["schemas"]["Character"][];
+            /** Scenes */
+            scenes: components["schemas"]["Scene"][];
+        };
+        /** CalendarLinks */
+        CalendarLinks: {
+            /** Url */
+            url: string;
+            /** Webcalurl */
+            webcalUrl: string;
+        };
+        /** Call */
+        Call: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["Block"][];
+            /** Bring */
+            bring?: string | null;
+            /** Callid */
+            callId: string;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Createdat */
+            createdAt: string;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            published?: components["schemas"]["CallContent"] | null;
+            /** Publishedat */
+            publishedAt?: string | null;
+            /** Remindedat */
+            remindedAt?: string | null;
+            /**
+             * Sequence
+             * @default 0
+             */
+            sequence: number;
+            /** Showid */
+            showId: string;
+            /** Start */
+            start: string;
+            /**
+             * Status
+             * @default draft
+             * @enum {string}
+             */
+            status: "draft" | "published";
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @default rehearsal
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /** Updatedat */
+            updatedAt: string;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /**
+         * CallContent
+         * @description What a call is. Staff edit a working copy; cast and crew see the copy as of the last publish.
+         */
+        CallContent: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["Block"][];
+            /** Bring */
+            bring?: string | null;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @default rehearsal
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+        };
+        /** CallView */
+        CallView: {
+            /**
+             * Blocks
+             * @default []
+             */
+            blocks: components["schemas"]["TimedBlock"][];
+            /** Bring */
+            bring?: string | null;
+            /** Callid */
+            callId: string;
+            /**
+             * Calledcount
+             * @default 0
+             */
+            calledCount: number;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /**
+             * Departments
+             * @default []
+             */
+            departments: string[];
+            /** End */
+            end: string;
+            /**
+             * Freeminutes
+             * @default 0
+             */
+            freeMinutes: number;
+            /**
+             * Groups
+             * @default []
+             */
+            groups: ("everyone" | "cast" | "crew")[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Publishedat */
+            publishedAt?: string | null;
+            /** Start */
+            start: string;
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "draft" | "published";
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            /**
+             * Unpublishedchanges
+             * @default false
+             */
+            unpublishedChanges: boolean;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
+        };
+        /** Callboard */
+        Callboard: {
+            /** Canpost */
+            canPost: boolean;
+            /** Notices */
+            notices: components["schemas"]["NoticeView"][];
+            /** Unread */
+            unread: number;
+        };
+        /** Character */
+        Character: {
+            /**
+             * Castuserids
+             * @default []
+             */
+            castUserIds: string[];
+            /** Charid */
+            charId: string;
+            /**
+             * Ensemble
+             * @default false
+             */
+            ensemble: boolean;
+            /** Name */
+            name: string;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+        };
+        /**
+         * CheckIn
+         * @description One person on one tech or performance night (or a rehearsal they said they'd be late to).
+         */
+        CheckIn: {
+            /** Arrivedat */
+            arrivedAt?: string | null;
+            /**
+             * Byself
+             * @default false
+             */
+            bySelf: boolean;
+            /** Date */
+            date: string;
+            /** Note */
+            note?: string | null;
+            /** Runninglateminutes */
+            runningLateMinutes?: number | null;
+            /** Showid */
+            showId: string;
+            /** Status */
+            status?: ("on_time" | "late" | "absent") | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+        };
+        /** CheckInBody */
+        CheckInBody: {
+            /** Code */
+            code: string;
+        };
+        /** CheckInResult */
+        CheckInResult: {
+            /** Callstart */
+            callStart?: string | null;
+            checkin: components["schemas"]["CheckIn"];
+            /**
+             * Minuteslate
+             * @default 0
+             */
+            minutesLate: number;
+        };
+        /** CreateApiKeyBody */
+        CreateApiKeyBody: {
+            /** Name */
+            name: string;
+            /**
+             * Scope
+             * @default read
+             * @enum {string}
+             */
+            scope: "read" | "write";
+        };
+        /** CreateCallBody */
+        CreateCallBody: {
+            /** Blocks */
+            blocks?: components["schemas"]["BlockBody"][] | null;
+            /** Bring */
+            bring?: string | null;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date: string;
+            /** Departments */
+            departments?: string[] | null;
+            /** End */
+            end?: string | null;
+            /** Groups */
+            groups?: ("everyone" | "cast" | "crew")[] | null;
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Type */
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            /** Userids */
+            userIds?: string[] | null;
+        };
+        /** CreateCharacterBody */
+        CreateCharacterBody: {
+            /**
+             * Castuserids
+             * @default []
+             */
+            castUserIds: string[];
+            /**
+             * Ensemble
+             * @default false
+             */
+            ensemble: boolean;
+            /** Name */
+            name: string;
+        };
+        /** CreateInviteBody */
+        CreateInviteBody: {
+            /**
+             * Characterids
+             * @default []
+             */
+            characterIds: string[];
+            /** Department */
+            department?: string | null;
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
             /**
              * Role
              * @default cast
@@ -141,16 +1444,53 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /** CreateSceneBody */
+        CreateSceneBody: {
+            /** Actid */
+            actId: string;
+            /**
+             * Characterids
+             * @default []
+             */
+            characterIds: string[];
+            /**
+             * Eighths
+             * @default 0
+             */
+            eighths: number;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name: string;
+            /** Number */
+            number?: string | null;
+        };
         /** CreateShowBody */
         CreateShowBody: {
+            /** Address */
+            address?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
             /** Creatortitle */
             creatorTitle?: string | null;
             /** Enddate */
             endDate: string;
+            /** Minutesperpage */
+            minutesPerPage?: number | null;
             /** Name */
             name: string;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
+            /** Skippeddates */
+            skippedDates?: string[] | null;
+            /** Slots */
+            slots?: components["schemas"]["SlotBody"][] | null;
             /** Startdate */
             startDate: string;
+            /** Techstart */
+            techStart?: string | null;
             /** Timezone */
             timezone: string;
             /** Venue */
@@ -160,6 +1500,66 @@ export interface components {
         CreateTheaterBody: {
             /** Name */
             name: string;
+            /** Title */
+            title?: string | null;
+        };
+        /** DateBody */
+        DateBody: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * DateConflict
+         * @description An answer for one date. It wins over a weekly rule for that date.
+         */
+        DateConflict: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Date */
+            date: string;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+        };
+        /** DateItem */
+        DateItem: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Date */
+            date: string;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "free" | "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+        };
+        /** DoorCode */
+        DoorCode: {
+            /** Doorcode */
+            doorCode: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -176,6 +1576,27 @@ export interface components {
             /** Showid */
             showId: string;
         };
+        /**
+         * InvitePreview
+         * @description What the sign-in page shows for an invite link, before anyone signs in.
+         */
+        InvitePreview: {
+            /** Email */
+            email: string;
+            /** Invitername */
+            inviterName: string;
+            /** Part */
+            part?: string | null;
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Showname */
+            showName: string;
+            /** Theatername */
+            theaterName: string;
+        };
         /** InviteSent */
         InviteSent: {
             /** Email */
@@ -189,6 +1610,18 @@ export interface components {
             role: "staff" | "cast" | "crew";
             /** Title */
             title?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /** MarkBody */
+        MarkBody: {
+            /** Status */
+            status: ("on_time" | "late" | "absent") | null;
+        };
+        /** MarkReadBody */
+        MarkReadBody: {
+            /** Noticeids */
+            noticeIds: string[];
         };
         /**
          * Me
@@ -203,6 +1636,10 @@ export interface components {
         };
         /** Member */
         Member: {
+            /** Conflictssubmittedat */
+            conflictsSubmittedAt?: string | null;
+            /** Department */
+            department?: string | null;
             /** Email */
             email?: string | null;
             /** Name */
@@ -212,19 +1649,106 @@ export interface components {
              * @enum {string}
              */
             role: "staff" | "cast" | "crew";
+            /**
+             * Status
+             * @enum {string}
+             */
+            status: "invited" | "joined";
             /** Title */
             title?: string | null;
             /** Userid */
             userId: string;
         };
+        /** MemberConflicts */
+        MemberConflicts: {
+            /** Dates */
+            dates: components["schemas"]["DateConflict"][];
+            /** Userid */
+            userId: string;
+            /** Weekly */
+            weekly: components["schemas"]["WeeklyConflict"][];
+        };
+        /** MyCall */
+        MyCall: {
+            /** Address */
+            address?: string | null;
+            /** Bring */
+            bring?: string | null;
+            /** Callend */
+            callEnd: string;
+            /** Callid */
+            callId: string;
+            /** Callstart */
+            callStart: string;
+            /**
+             * Cancelled
+             * @default false
+             */
+            cancelled: boolean;
+            /** Date */
+            date: string;
+            /** End */
+            end: string;
+            /**
+             * Labels
+             * @default []
+             */
+            labels: string[];
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /**
+             * Sequence
+             * @default 0
+             */
+            sequence: number;
+            /** Showid */
+            showId: string;
+            /** Showname */
+            showName: string;
+            /** Start */
+            start: string;
+            /** Timezone */
+            timezone: string;
+            /** Title */
+            title?: string | null;
+            /**
+             * Type
+             * @enum {string}
+             */
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+        };
+        /** MyConflicts */
+        MyConflicts: {
+            /** Dates */
+            dates: components["schemas"]["DateConflict"][];
+            /** Weekly */
+            weekly: components["schemas"]["WeeklyConflict"][];
+        };
         /** MyShow */
         MyShow: {
+            /** Conflictssubmittedat */
+            conflictsSubmittedAt?: string | null;
             /**
              * Role
              * @enum {string}
              */
             role: "staff" | "cast" | "crew";
             show: components["schemas"]["Show"];
+            /**
+             * Status
+             * @default joined
+             * @enum {string}
+             */
+            status: "invited" | "joined";
+            /** Theatername */
+            theaterName: string;
             /** Title */
             title?: string | null;
         };
@@ -237,24 +1761,390 @@ export interface components {
             role: "admin";
             theater: components["schemas"]["Theater"];
         };
-        /** Show */
-        Show: {
+        /** NewApiKey */
+        NewApiKey: {
+            key: components["schemas"]["ApiKey"];
+            /** Secret */
+            secret: string;
+        };
+        /** Notice */
+        Notice: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Authorid */
+            authorId: string;
+            /** Body */
+            body: string;
             /** Createdat */
             createdAt: string;
-            /** Enddate */
-            endDate: string;
-            /** Name */
-            name: string;
+            /** Noticeid */
+            noticeId: string;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
             /** Showid */
             showId: string;
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** NoticeView */
+        NoticeView: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Audiencecount */
+            audienceCount?: number | null;
+            /** Authorid */
+            authorId: string;
+            /** Authorname */
+            authorName?: string | null;
+            /** Body */
+            body: string;
+            /** Createdat */
+            createdAt: string;
+            /** Noticeid */
+            noticeId: string;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
+            /**
+             * Read
+             * @default false
+             */
+            read: boolean;
+            /** Readcount */
+            readCount?: number | null;
+            /** Showid */
+            showId: string;
+            /** Theaterid */
+            theaterId: string;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /**
+         * NotifyPrefs
+         * @description What a person wants emailed to them. Calendar feeds and the app are always on.
+         */
+        NotifyPrefs: {
+            /**
+             * Changeemails
+             * @default true
+             */
+            changeEmails: boolean;
+            /**
+             * Emailreminders
+             * @default true
+             */
+            emailReminders: boolean;
+            /**
+             * Noticeemails
+             * @default true
+             */
+            noticeEmails: boolean;
+        };
+        /** PostNoticeBody */
+        PostNoticeBody: {
+            /**
+             * Audience
+             * @default everyone
+             * @enum {string}
+             */
+            audience: "everyone" | "cast" | "crew";
+            /** Body */
+            body: string;
+            /**
+             * Email
+             * @default true
+             */
+            email: boolean;
+            /**
+             * Pinned
+             * @default false
+             */
+            pinned: boolean;
+            /** Title */
+            title: string;
+        };
+        /** PublishBody */
+        PublishBody: {
+            /** From */
+            from: string;
+            /** To */
+            to: string;
+        };
+        /** PublishResult */
+        PublishResult: {
+            /** Callids */
+            callIds: string[];
+            /** Cancelled */
+            cancelled: number;
+            /**
+             * Notified
+             * @default 0
+             */
+            notified: number;
+            /** Published */
+            published: number;
+        };
+        /**
+         * RehearsalSlot
+         * @description A usual rehearsal night: weekday 0 = Monday ... 6 = Sunday, times as HH:MM in the show's timezone.
+         */
+        RehearsalSlot: {
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Weekday */
+            weekday: number;
+        };
+        /** RemindBody */
+        RemindBody: {
+            /** Userids */
+            userIds?: string[] | null;
+        };
+        /** Reminded */
+        Reminded: {
+            /** Conflictreminders */
+            conflictReminders: number;
+            /** Invitesresent */
+            invitesResent: number;
+        };
+        /** ReorderBody */
+        ReorderBody: {
+            /** Ids */
+            ids: string[];
+        };
+        /** RunningLateBody */
+        RunningLateBody: {
+            /** Date */
+            date?: string | null;
+            /** Minutes */
+            minutes: number;
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * SaveConflictsBody
+         * @description Saves several answers at once, as the guided setup does at the end.
+         */
+        SaveConflictsBody: {
+            /**
+             * Cleardates
+             * @default []
+             */
+            clearDates: string[];
+            /**
+             * Dates
+             * @default []
+             */
+            dates: components["schemas"]["DateItem"][];
+            /**
+             * Replaceweekly
+             * @default false
+             */
+            replaceWeekly: boolean;
+            /**
+             * Submitto
+             * @default []
+             */
+            submitTo: string[] | "all";
+            /**
+             * Weekly
+             * @default []
+             */
+            weekly: components["schemas"]["WeeklyItem"][];
+        };
+        /** Scene */
+        Scene: {
+            /** Actid */
+            actId: string;
+            /**
+             * Eighths
+             * @default 0
+             */
+            eighths: number;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /** Order */
+            order: number;
+            /** Sceneid */
+            sceneId: string;
+            /** Showid */
+            showId: string;
+        };
+        /** SceneSuggestion */
+        SceneSuggestion: {
+            /**
+             * Fits
+             * @default true
+             */
+            fits: boolean;
+            /** Lastrehearsed */
+            lastRehearsed?: string | null;
+            /** Minutes */
+            minutes: number;
+            /** Nightsinrange */
+            nightsInRange: number;
+            /** Sceneid */
+            sceneId: string;
+            /** Score */
+            score: number;
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
+        };
+        /** ScheduleDay */
+        ScheduleDay: {
+            /**
+             * Calls
+             * @default []
+             */
+            calls: components["schemas"]["CallView"][];
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "rehearsal" | "tech" | "performance" | "extra";
+            /**
+             * Noconflicts
+             * @default false
+             */
+            noConflicts: boolean;
+            /** Start */
+            start?: string | null;
+        };
+        /** ScheduleView */
+        ScheduleView: {
+            /** Days */
+            days: components["schemas"]["ScheduleDay"][];
+            /** Editing */
+            editing: boolean;
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+        };
+        /** Show */
+        Show: {
+            /** Address */
+            address?: string | null;
+            /** Archivedat */
+            archivedAt?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Doorcode */
+            doorCode?: string | null;
+            /** Enddate */
+            endDate: string;
+            /**
+             * Minutesperpage
+             * @default 8
+             */
+            minutesPerPage: number;
+            /** Name */
+            name: string;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
+            /** Showid */
+            showId: string;
+            /**
+             * Skippeddates
+             * @default []
+             */
+            skippedDates: string[];
+            /**
+             * Slots
+             * @default []
+             */
+            slots: components["schemas"]["RehearsalSlot"][];
             /** Startdate */
             startDate: string;
+            /**
+             * Status
+             * @default active
+             * @enum {string}
+             */
+            status: "active" | "archived";
+            /** Techstart */
+            techStart?: string | null;
             /** Theaterid */
             theaterId: string;
             /** Timezone */
             timezone: string;
             /** Venue */
             venue?: string | null;
+        };
+        /** ShowDayView */
+        ShowDayView: {
+            /**
+             * Called
+             * @default false
+             */
+            called: boolean;
+            /** Calledby */
+            calledBy?: string | null;
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "rehearsal" | "tech" | "performance";
+            /**
+             * Noconflicts
+             * @default false
+             */
+            noConflicts: boolean;
+            /** Showid */
+            showId: string;
+            /** Start */
+            start?: string | null;
+        };
+        /** ShowSummary */
+        ShowSummary: {
+            /** Castcount */
+            castCount: number;
+            /** Crewcount */
+            crewCount: number;
+            show: components["schemas"]["Show"];
+            /** Staff */
+            staff: components["schemas"]["Member"][];
+            /** Waitingcount */
+            waitingCount: number;
         };
         /** ShowView */
         ShowView: {
@@ -264,8 +2154,51 @@ export interface components {
              */
             role: "staff" | "cast" | "crew";
             show: components["schemas"]["Show"];
+            /** Theatername */
+            theaterName: string;
             /** Title */
             title?: string | null;
+            /**
+             * Viaadmin
+             * @default false
+             */
+            viaAdmin: boolean;
+        };
+        /** SlotBody */
+        SlotBody: {
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Weekday */
+            weekday: number;
+        };
+        /** Suggestions */
+        Suggestions: {
+            /** Date */
+            date: string;
+            /** End */
+            end?: string | null;
+            /** Freeminutes */
+            freeMinutes?: number | null;
+            /** Scenes */
+            scenes: components["schemas"]["SceneSuggestion"][];
+            /** Start */
+            start?: string | null;
+        };
+        /**
+         * TechCallsBody
+         * @description Makes an everyone-called call for each tech and performance night that doesn't have one.
+         */
+        TechCallsBody: {
+            /** Crewstart */
+            crewStart?: string | null;
+            /** End */
+            end: string;
+            /** Location */
+            location?: string | null;
+            /** Start */
+            start: string;
         };
         /** Theater */
         Theater: {
@@ -281,19 +2214,173 @@ export interface components {
             /** Theaterid */
             theaterId: string;
         };
+        /** TheaterView */
+        TheaterView: {
+            /** Admins */
+            admins: components["schemas"]["Admin"][];
+            /** Shows */
+            shows: components["schemas"]["ShowSummary"][];
+            theater: components["schemas"]["Theater"];
+        };
+        /** TimedBlock */
+        TimedBlock: {
+            /** Blockid */
+            blockId: string;
+            /** End */
+            end: string;
+            /**
+             * Fixedstart
+             * @default false
+             */
+            fixedStart: boolean;
+            /** Label */
+            label?: string | null;
+            /** Minutes */
+            minutes: number;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Start */
+            start: string;
+            /**
+             * Userids
+             * @default []
+             */
+            userIds: string[];
+            /**
+             * Warnings
+             * @default []
+             */
+            warnings: components["schemas"]["Warning"][];
+        };
+        /** UpdateCallBody */
+        UpdateCallBody: {
+            /** Blocks */
+            blocks?: components["schemas"]["BlockBody"][] | null;
+            /** Bring */
+            bring?: string | null;
+            /** Cancelled */
+            cancelled?: boolean | null;
+            /** Crewstart */
+            crewStart?: string | null;
+            /** Date */
+            date?: string | null;
+            /** Departments */
+            departments?: string[] | null;
+            /** End */
+            end?: string | null;
+            /** Groups */
+            groups?: ("everyone" | "cast" | "crew")[] | null;
+            /** Location */
+            location?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Start */
+            start?: string | null;
+            /** Title */
+            title?: string | null;
+            /** Type */
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            /** Userids */
+            userIds?: string[] | null;
+        };
+        /** UpdateCharacterBody */
+        UpdateCharacterBody: {
+            /** Castuserids */
+            castUserIds?: string[] | null;
+            /** Ensemble */
+            ensemble?: boolean | null;
+            /** Name */
+            name?: string | null;
+        };
         /** UpdateMeBody */
         UpdateMeBody: {
             /** Name */
-            name: string;
+            name?: string | null;
+            prefs?: components["schemas"]["NotifyPrefs"] | null;
+        };
+        /** UpdateMemberBody */
+        UpdateMemberBody: {
+            /** Department */
+            department?: string | null;
+            /** Role */
+            role?: ("staff" | "cast" | "crew") | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** UpdateNoticeBody */
+        UpdateNoticeBody: {
+            /** Audience */
+            audience?: ("everyone" | "cast" | "crew") | null;
+            /** Body */
+            body?: string | null;
+            /** Pinned */
+            pinned?: boolean | null;
+            /** Title */
+            title?: string | null;
+        };
+        /** UpdateSceneBody */
+        UpdateSceneBody: {
+            /** Actid */
+            actId?: string | null;
+            /** Eighths */
+            eighths?: number | null;
+            /** Minutesoverride */
+            minutesOverride?: number | null;
+            /** Name */
+            name?: string | null;
+            /** Number */
+            number?: string | null;
+        };
+        /** UpdateShowBody */
+        UpdateShowBody: {
+            /** Address */
+            address?: string | null;
+            /** Conflictdeadline */
+            conflictDeadline?: string | null;
+            /** Enddate */
+            endDate?: string | null;
+            /** Minutesperpage */
+            minutesPerPage?: number | null;
+            /** Name */
+            name?: string | null;
+            /** Offbookdate */
+            offBookDate?: string | null;
+            /** Openingdate */
+            openingDate?: string | null;
+            /** Skippeddates */
+            skippedDates?: string[] | null;
+            /** Slots */
+            slots?: components["schemas"]["SlotBody"][] | null;
+            /** Startdate */
+            startDate?: string | null;
+            /** Techstart */
+            techStart?: string | null;
+            /** Timezone */
+            timezone?: string | null;
+            /** Venue */
+            venue?: string | null;
         };
         /** User */
         User: {
+            /** Calendartoken */
+            calendarToken?: string | null;
             /** Createdat */
             createdAt: string;
             /** Email */
             email: string;
             /** Name */
             name?: string | null;
+            /**
+             * @default {
+             *       "changeEmails": true,
+             *       "emailReminders": true,
+             *       "noticeEmails": true
+             *     }
+             */
+            prefs: components["schemas"]["NotifyPrefs"];
             /** Userid */
             userId: string;
         };
@@ -309,6 +2396,82 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /**
+         * Warning
+         * @description Someone a block or call needs who can't make all of it.
+         */
+        Warning: {
+            /** Arrive */
+            arrive?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "hard" | "soft" | "partial" | "elsewhere";
+            /** Leave */
+            leave?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Part */
+            part?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /** WeeklyBody */
+        WeeklyBody: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+        };
+        /**
+         * WeeklyConflict
+         * @description A usual-week rule, e.g. "never Tuesdays" or "late on Wednesdays". One per weekday.
+         */
+        WeeklyConflict: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
+            /** Weekday */
+            weekday: number;
+        };
+        /** WeeklyItem */
+        WeeklyItem: {
+            /** Arrive */
+            arrive?: string | null;
+            /** Leave */
+            leave?: string | null;
+            /**
+             * Level
+             * @enum {string}
+             */
+            level: "hard" | "soft" | "partial";
+            /** Note */
+            note?: string | null;
+            /** Weekday */
+            weekday: number;
         };
     };
     responses: never;
@@ -403,6 +2566,367 @@ export interface operations {
             };
         };
     };
+    calendar_links_api_me_calendar_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarLinks"];
+                };
+            };
+        };
+    };
+    rotate_calendar_api_me_calendar_rotate_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CalendarLinks"];
+                };
+            };
+        };
+    };
+    my_calls_api_me_calls_get: {
+        parameters: {
+            query?: {
+                showId?: string | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyCall"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    call_ics_api_me_calls__call_id__ics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_my_conflicts_api_me_conflicts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyConflicts"];
+                };
+            };
+        };
+    };
+    save_conflicts_api_me_conflicts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveConflictsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyConflicts"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_date_api_me_conflicts_dates__day__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DateConflict"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_date_api_me_conflicts_dates__day__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_weekly_api_me_conflicts_weekly__weekday__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                weekday: number;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["WeeklyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["WeeklyConflict"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_weekly_api_me_conflicts_weekly__weekday__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                weekday: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_days_api_me_days_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShowDayView"][];
+                };
+            };
+        };
+    };
+    feed_api_public_calendar__token__ics_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    preview_invite_api_public_invites__token__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitePreview"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     get_show_api_shows__show_id__get: {
         parameters: {
             query?: never;
@@ -421,6 +2945,571 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShowView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_show_api_shows__show_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateShowBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_act_api_shows__show_id__acts_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Act"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_act_api_shows__show_id__acts__act_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                act_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_act_api_shows__show_id__acts__act_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                act_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Act"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    archive_show_api_shows__show_id__archive_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    attendance_api_shows__show_id__attendance_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Attendance"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mark_api_shows__show_id__attendance__day___user_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarkBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"] | null;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_breakdown_api_shows__show_id__breakdown_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Breakdown"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_call_api_shows__show_id__calls_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCallBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_call_api_shows__show_id__calls__call_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_call_api_shows__show_id__calls__call_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                call_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCallBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_character_api_shows__show_id__characters_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCharacterBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Character"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_character_api_shows__show_id__characters__char_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_character_api_shows__show_id__characters__char_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateCharacterBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Character"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    check_in_api_shows__show_id__check_in_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CheckInBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckInResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    show_conflicts_api_shows__show_id__conflicts_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberConflicts"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    rotate_api_shows__show_id__door_code_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DoorCode"];
                 };
             };
             /** @description Validation Error */
@@ -469,6 +3558,37 @@ export interface operations {
             };
         };
     };
+    join_show_api_shows__show_id__join_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InviteAccepted"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_members_api_shows__show_id__members_get: {
         parameters: {
             query?: never;
@@ -487,6 +3607,712 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Member"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_member_api_shows__show_id__members__member_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_member_api_shows__show_id__members__member_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateMemberBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Member"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_callboard_api_shows__show_id__notices_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Callboard"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    post_notice_api_shows__show_id__notices_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PostNoticeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notice"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    mark_read_api_shows__show_id__notices_read_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarkReadBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_notice_api_shows__show_id__notices__notice_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                notice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_notice_api_shows__show_id__notices__notice_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                notice_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNoticeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Notice"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remind_api_shows__show_id__remind_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RemindBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Reminded"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    reorder_api_shows__show_id__reorder__kind__post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                kind: "acts" | "scenes" | "characters";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReorderBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Breakdown"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    restore_show_api_shows__show_id__restore_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    running_late_api_shows__show_id__running_late_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RunningLateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_scene_api_shows__show_id__scenes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scene"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_scene_api_shows__show_id__scenes__scene_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_scene_api_shows__show_id__scenes__scene_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Scene"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_to_scene_api_shows__show_id__scenes__scene_id__characters__char_id__put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_from_scene_api_shows__show_id__scenes__scene_id__characters__char_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                scene_id: string;
+                char_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_schedule_api_shows__show_id__schedule_get: {
+        parameters: {
+            query?: {
+                from?: string | null;
+                to?: string | null;
+            };
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScheduleView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    publish_api_shows__show_id__schedule_publish_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PublishBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PublishResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    suggest_api_shows__show_id__schedule_suggestions_get: {
+        parameters: {
+            query: {
+                date: string;
+                from?: string | null;
+                to?: string | null;
+            };
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Suggestions"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_scene_api_shows__show_id__schedule__day__scenes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddSceneBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    tech_calls_api_shows__show_id__tech_calls_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TechCallsBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Call"][];
                 };
             };
             /** @description Validation Error */
@@ -521,6 +4347,200 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Theater"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_theater_api_theaters__theater_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TheaterView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_admin_api_theaters__theater_id__admins_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddAdminBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Admin"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_admin_api_theaters__theater_id__admins__admin_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                admin_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Admin"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_keys_api_theaters__theater_id__api_keys_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiKey"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_key_api_theaters__theater_id__api_keys_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateApiKeyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewApiKey"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_key_api_theaters__theater_id__api_keys__key_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                key_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

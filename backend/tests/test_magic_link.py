@@ -2,7 +2,7 @@ from urllib.parse import parse_qs, urlparse
 
 import pytest
 
-from tests.fakes import FakeMailer, MemoryStore
+from tests.fakes import FakeMailer
 from worklight import magic_link
 from worklight.handlers import auth
 from worklight.magic_link import (
@@ -11,6 +11,7 @@ from worklight.magic_link import (
     redeem_magic_link,
     request_magic_link,
 )
+from worklight.store import DynamoStore
 
 
 class Clock:
@@ -28,7 +29,7 @@ def clock(monkeypatch: pytest.MonkeyPatch) -> Clock:
 
 
 @pytest.fixture
-def deps(store: MemoryStore, mailer: FakeMailer) -> MagicLinkDeps:
+def deps(store: DynamoStore, mailer: FakeMailer) -> MagicLinkDeps:
     return MagicLinkDeps(store=store, mailer=mailer, app_url="https://worklight.test")
 
 
@@ -41,13 +42,13 @@ def code_from_email(mailer: FakeMailer) -> tuple[str, str, str | None]:
 
 class TestMagicLinks:
     def test_emails_a_link_whose_code_signs_in_exactly_once(
-        self, deps: MagicLinkDeps, store: MemoryStore, mailer: FakeMailer
+        self, deps: MagicLinkDeps, store: DynamoStore, mailer: FakeMailer
     ) -> None:
         assert request_magic_link(deps, "Pat@Example.org", "/invite/abc") == "sent"
         email, code, next_path = code_from_email(mailer)
         assert email == "pat@example.org"
         assert next_path == "/invite/abc"
-        assert store.magic_links[email].code_hash != code
+        assert store.get_magic_link(email).code_hash  # type: ignore[union-attr] != code
 
         assert not redeem_magic_link(store, email, "wrong-code-wrong-code-wrong")
         assert redeem_magic_link(store, email, code)
@@ -70,7 +71,7 @@ class TestMagicLinks:
         assert len(mailer.sent) == 2
 
     def test_expires_after_15_minutes(
-        self, deps: MagicLinkDeps, store: MemoryStore, mailer: FakeMailer, clock: Clock
+        self, deps: MagicLinkDeps, store: DynamoStore, mailer: FakeMailer, clock: Clock
     ) -> None:
         request_magic_link(deps, "pat@example.org")
         email, code, _ = code_from_email(mailer)
@@ -78,7 +79,7 @@ class TestMagicLinks:
         assert not redeem_magic_link(store, email, code)
 
     def test_only_the_newest_link_works(
-        self, deps: MagicLinkDeps, store: MemoryStore, mailer: FakeMailer, clock: Clock
+        self, deps: MagicLinkDeps, store: DynamoStore, mailer: FakeMailer, clock: Clock
     ) -> None:
         request_magic_link(deps, "pat@example.org")
         first = code_from_email(mailer)
@@ -118,7 +119,7 @@ class TestDefineAuthChallenge:
 
 class TestChallengeTriggers:
     @pytest.fixture(autouse=True)
-    def _wire(self, monkeypatch: pytest.MonkeyPatch, store: MemoryStore, mailer: FakeMailer) -> None:
+    def _wire(self, monkeypatch: pytest.MonkeyPatch, store: DynamoStore, mailer: FakeMailer) -> None:
         monkeypatch.setattr(auth, "_store", lambda: store)
         monkeypatch.setattr(auth, "SesMailer", lambda _sender: mailer)
         monkeypatch.setattr(auth, "get_app_url", lambda: "https://worklight.test")

@@ -1,0 +1,645 @@
+/* Tech week: tonight's sign-in, the whole week grid, the phone stage door, and the printed sign. */
+
+.tech-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ---- Tonight (web) ---------------------------------------------------------------------------- */
+
+.tech-tonight {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
+}
+.tech-main {
+  flex: 999 1 640px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.tech-count {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.tech-count .progress {
+  flex: 1 1 300px;
+  height: 12px;
+  border-radius: 4px;
+}
+.tech-count strong {
+  font-size: 15px;
+  white-space: nowrap;
+}
+.tech-cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+.tech-col {
+  border-radius: 6px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.tech-col h2 {
+  font-size: 15px;
+  font-weight: 700;
+  padding: 2px 4px;
+}
+.tech-col-waiting {
+  background: #fdf5f1;
+}
+.tech-col-waiting h2 span {
+  color: var(--hard-text);
+}
+.tech-col-waiting .tech-person {
+  border-color: #ebcdbf;
+}
+.tech-col-arrived {
+  background: #f6f0fa;
+}
+.tech-col-arrived h2 span {
+  color: var(--plum-dark);
+}
+.tech-col-arrived .tech-person {
+  border-color: #e4d6ec;
+}
+.tech-col-empty {
+  padding: 8px 4px;
+  font-size: 14px;
+  color: var(--muted);
+}
+.tech-person {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  padding: 10px 12px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tech-person-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.tech-person-text strong {
+  font-size: 14px;
+}
+.tech-person-text span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.tech-person-text .tech-late-note {
+  color: var(--part-text);
+}
+.tech-checkin.btn {
+  min-height: 36px;
+  padding: 0 10px;
+  border-radius: 4px;
+  color: var(--plum-dark);
+  font-size: 12px;
+  font-weight: 700;
+}
+.tech-time {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--plum-dark);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.tech-time.late {
+  color: var(--part-text);
+}
+.tech-time-tag {
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--part-bg);
+  border: 1px solid var(--part-edge);
+}
+
+.tech-sign {
+  flex: 1 1 260px;
+  max-width: 300px;
+  background: var(--surface);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(34, 27, 43, 0.06), 0 4px 16px rgba(109, 59, 142, 0.06);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.tech-sign-qr {
+  border-radius: 4px;
+}
+.tech-sign-title {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+}
+.tech-sign .link-btn {
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ---- Whole week ------------------------------------------------------------------------------- */
+
+.tech-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  font-size: 13px;
+  color: var(--ink-2);
+}
+.tech-legend span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.tech-legend .tech-sq-mini {
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+}
+.tech-grid-wrap {
+  background: var(--surface);
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(34, 27, 43, 0.06), 0 4px 16px rgba(109, 59, 142, 0.06);
+  overflow-x: auto;
+}
+.tech-grid {
+  display: flex;
+  flex-direction: column;
+}
+.tech-grid-row {
+  display: grid;
+  align-items: stretch;
+  border-bottom: 1px solid #f3eff6;
+}
+.tech-grid-row:last-child {
+  border-bottom: none;
+}
+.tech-grid-head {
+  align-items: end;
+  border-bottom: 1px solid var(--rule);
+}
+.tech-grid-person {
+  padding: 6px 12px 6px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+.tech-grid-head .tech-grid-person {
+  padding: 14px 12px 10px 20px;
+}
+.tech-grid-person strong {
+  font-size: 14px;
+}
+.tech-grid-person span {
+  font-size: 12px;
+  color: var(--muted-2);
+}
+.tech-grid-night {
+  padding: 12px 0 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.tech-grid-night span {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.tech-grid-night strong {
+  font-size: 14px;
+}
+.tech-grid-night.tonight span {
+  color: var(--plum);
+}
+.tech-grid-night.tonight,
+.tech-grid-cell.tonight {
+  background: #faf6fc;
+}
+.tech-grid-cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px 0;
+}
+.tech-grid-flag {
+  padding: 6px 20px 6px 4px;
+  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.tech-grid-head .tech-grid-flag {
+  padding: 14px 20px 10px 4px;
+}
+.tech-flag {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hard-text);
+}
+
+.tech-sq {
+  width: 44px;
+  height: 40px;
+  border-radius: 4px;
+  border: 1.5px solid transparent;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.tech-sq:disabled {
+  cursor: default;
+}
+.tech-sq:focus-visible {
+  outline: 2px solid var(--plum-dark);
+  outline-offset: 2px;
+}
+.tech-sq.on_time,
+.tech-sq-mini.on_time {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+.tech-sq.late,
+.tech-sq-mini.late {
+  background: var(--part-bg);
+  border-color: var(--part-edge);
+  color: var(--part-text);
+}
+.tech-sq.absent,
+.tech-sq-mini.absent {
+  background: var(--hard);
+  border-color: var(--hard);
+  color: #fff;
+}
+.tech-sq.none,
+.tech-sq-mini.none {
+  background: var(--surface);
+  border-color: var(--plum-line);
+  border-style: dashed;
+}
+.tech-sq.none:hover:not(:disabled) {
+  border-color: var(--plum);
+}
+.tech-sq-mini {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  flex: none;
+}
+.tech-dots .tech-sq-mini.none {
+  border-style: solid;
+}
+.tech-dots .tech-sq-mini.none.tonight {
+  border-color: var(--plum);
+}
+
+/* ---- Drafts and first-time setup -------------------------------------------------------------- */
+
+.tech-draft {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  padding: 12px 14px;
+  background: var(--soft-bg);
+  border-left: 3px solid var(--soft-edge);
+  border-radius: 4px;
+  font-size: 14px;
+  color: var(--soft-text);
+}
+.tech-draft-text {
+  flex: 1 1 320px;
+}
+.tech-draft-text a {
+  color: var(--soft-text);
+  font-weight: 600;
+}
+.tech-setup-page > * {
+  max-width: 760px;
+}
+.tech-setup {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: stretch;
+}
+.tech-setup > .btn {
+  align-self: flex-start;
+}
+.tech-setup-fields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 140px)) minmax(0, 1fr);
+  gap: 12px;
+}
+
+/* ---- Phone ------------------------------------------------------------------------------------ */
+
+.tech-door {
+  background: var(--stage);
+  color: #fff;
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+.tech-door .caps {
+  color: var(--plum-soft);
+}
+.tech-door-qr {
+  width: 168px;
+  height: 168px;
+  border-radius: 8px;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.tech-door-hint {
+  font-size: 13px;
+  color: var(--stage-text);
+  max-width: 300px;
+}
+.tech-door-count {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1;
+}
+.tech-door-count span {
+  font-size: 18px;
+  color: var(--plum-soft);
+}
+.tech-door-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.btn.tech-door-btn {
+  border-color: #5a5048;
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.btn.tech-door-btn:hover {
+  color: #fff;
+  border-color: var(--plum-soft);
+}
+.btn.tech-door-btn-quiet {
+  border-color: transparent;
+  color: var(--plum-soft);
+  font-weight: 600;
+}
+.tech-mbody {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tech-missing-head {
+  color: var(--hard-text);
+}
+.tech-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.tech-chip {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #ebcdbf;
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+.tech-chip span {
+  font-weight: 600;
+  color: var(--part-text);
+  font-size: 12px;
+}
+.tech-allin {
+  background: var(--plum-tint);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--plum-dark);
+}
+.tech-hint {
+  padding-top: 4px;
+  color: var(--muted-2);
+}
+.tech-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.tech-group-head {
+  padding-top: 6px;
+}
+.tech-group-head.eye {
+  color: var(--soft-text);
+}
+.tech-group-head.rest {
+  color: var(--plum-dark);
+}
+.tech-mrow {
+  text-align: left;
+  background: var(--surface);
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  padding: 10px 12px;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  font: inherit;
+}
+.tech-dots {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  max-width: 140px;
+}
+.tech-sheet-sub {
+  margin-top: -8px;
+}
+.tech-sheet-nights {
+  display: flex;
+  flex-direction: column;
+}
+.tech-sheet-night {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  border-top: 1px solid #eee9e0;
+}
+.tech-sheet-day {
+  width: 64px;
+  flex: none;
+  display: flex;
+  flex-direction: column;
+}
+.tech-sheet-day strong {
+  font-size: 13px;
+  text-transform: capitalize;
+}
+.tech-sheet-day span {
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.tech-sheet-day.tonight strong {
+  color: var(--plum);
+}
+.tech-sheet-opts {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+.tech-opt {
+  min-height: 44px;
+  border-radius: 4px;
+  border: 1px solid var(--rule-input);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 12px;
+  font-weight: 700;
+}
+.tech-opt.on_time[aria-pressed="true"] {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+.tech-opt.late[aria-pressed="true"] {
+  background: var(--part-bg);
+  border-color: var(--part-edge);
+  color: var(--part-text);
+}
+.tech-opt.absent[aria-pressed="true"] {
+  background: var(--hard);
+  border-color: var(--hard);
+  color: #fff;
+}
+
+@media (max-width: 767px) {
+  .tech-setup-page {
+    padding: 20px 16px 32px;
+  }
+  .tech-setup-page .title {
+    font-size: 30px;
+  }
+  .tech-setup-fields {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .tech-setup-where {
+    grid-column: 1 / -1;
+  }
+  .tech-mbody .tech-draft {
+    font-size: 13px;
+  }
+}
+
+/* ---- The printed sign ------------------------------------------------------------------------- */
+
+.tech-print {
+  display: none;
+}
+@media print {
+  @page {
+    margin: 0.6in;
+  }
+  .topbar,
+  .phone-top,
+  .tabs,
+  .archived-bar,
+  .toast,
+  .tech-screen {
+    display: none !important;
+  }
+  .has-tabs {
+    padding: 0 !important;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  .tech-print {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 18px;
+    padding-top: 0.3in;
+    color: #000;
+  }
+  .tech-print-show {
+    font-family: var(--cond);
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .tech-print h1 {
+    font-family: var(--serif);
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1.05;
+  }
+  .tech-print svg {
+    width: 5in;
+    height: 5in;
+  }
+  .tech-print p {
+    font-size: 20px;
+    max-width: 6in;
+  }
+  .tech-print .tech-print-small {
+    font-size: 15px;
+    color: #444;
+  }
+}
+
+/* Dialogs opened from the centered sign card or the dark phone panel. */
+.tech-screen .dialog {
+  text-align: left;
+  color: var(--ink);
+}

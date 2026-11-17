@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { finishGoogleSignIn } from "../auth";
 import { navigate } from "../router";
+import { AuthStatus } from "./MagicLink";
 
 export function AuthCallback() {
   const [error, setError] = useState<string>();
@@ -14,16 +15,5 @@ export function AuthCallback() {
       .catch((err: Error) => setError(err.message));
   }, []);
 
-  return (
-    <main className="page narrow">
-      {error ? (
-        <>
-          <p className="error">{error}</p>
-          <a href="/">Back to sign in</a>
-        </>
-      ) : (
-        <p>Signing you in...</p>
-      )}
-    </main>
-  );
+  return <AuthStatus error={error} />;
 }

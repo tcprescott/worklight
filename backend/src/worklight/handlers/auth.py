@@ -10,6 +10,10 @@ so every sign-in starts with a no-op challenge:
   Redeem the link (any browser or device):
     InitiateAuth(CUSTOM_AUTH)                      -> challenge 1, nothing sent
     Respond(code, { mode: "redeem" })              -> verify checks the code, tokens issued
+
+  Open an invite link (one tap, signs in the invited address):
+    InitiateAuth(CUSTOM_AUTH)                      -> challenge 1, nothing sent
+    Respond(token, { mode: "invite" })             -> verify checks the invite is live, tokens issued
 """
 
 from functools import cache
@@ -18,6 +22,7 @@ from typing import Any
 from worklight.config import get_app_url, require_env
 from worklight.magic_link import MagicLinkDeps, redeem_magic_link, request_magic_link
 from worklight.mailer import SesMailer
+from worklight.services.shows import invite_sign_in_ok
 from worklight.store import DynamoStore
 
 Event = dict[str, Any]
@@ -76,12 +81,13 @@ def verify_auth_challenge(event: Event, _context: Any) -> Event:
     metadata = request.get("clientMetadata") or {}
     email = request.get("userAttributes", {}).get("email")
     answer = request.get("challengeAnswer")
-    correct = (
-        metadata.get("mode") == "redeem"
-        and bool(email)
-        and isinstance(answer, str)
-        and len(answer) > 20
-        and redeem_magic_link(_store(), email, answer)
-    )
+    mode = metadata.get("mode")
+    correct = False
+    if email and isinstance(answer, str) and len(answer) > 20:
+        if mode == "redeem":
+            correct = redeem_magic_link(_store(), email, answer)
+        elif mode == "invite":
+            # The invite stays usable until it's accepted, like a long-lived magic link for one address.
+            correct = invite_sign_in_ok(_store(), email, answer)
     event.setdefault("response", {})["answerCorrect"] = correct
     return event

@@ -1,0 +1,1366 @@
+/* Actor-facing pages: phone-first, centered at 480px on wider screens. Tokens live in styles.css. */
+
+/* ---- Sign-in, join, auth callbacks ------------------------------------------------------------ */
+
+.actor-auth {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding: 48px 24px calc(32px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.actor-auth .wordmark {
+  font-size: 24px;
+  align-self: flex-start;
+}
+.actor-auth .wordmark img {
+  width: 31px;
+  height: 31px;
+}
+.actor-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.actor-auth .field input {
+  min-height: 52px;
+  font-size: 16px;
+}
+.actor-invite {
+  background: var(--stage);
+  color: #fff;
+  border-radius: 8px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+.actor-invite .caps {
+  color: var(--plum-soft);
+}
+.actor-invite-show {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.actor-invite-by {
+  font-size: 14px;
+  color: var(--stage-text);
+}
+.actor-part {
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: #fff;
+  color: var(--plum-dark);
+  font-size: 15px;
+  font-weight: 700;
+}
+.actor-btn-xl {
+  min-height: 54px;
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+}
+.actor-or {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--muted-2);
+}
+.actor-or::before,
+.actor-or::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+.actor-foot {
+  margin-top: auto;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--muted-2);
+  text-align: center;
+}
+.actor-center {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+.actor-center p {
+  max-width: 320px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.actor-center p strong {
+  color: var(--ink);
+}
+.actor-medallion {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--plum-tint);
+  color: var(--plum);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.actor-medallion-sm {
+  width: 72px;
+  height: 72px;
+}
+.actor-underline {
+  min-height: 44px;
+  padding: 0 12px;
+  border: none;
+  background: transparent;
+  color: var(--plum);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+/* ---- Join ------------------------------------------------------------------------------------- */
+
+.actor-join {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.actor-join-head {
+  background: var(--stage);
+  color: #fff;
+  padding: 64px 24px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actor-join-head .caps {
+  color: var(--plum-soft);
+}
+.actor-join-head h1 {
+  font-family: var(--serif);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.actor-join-head p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--stage-text);
+}
+.actor-join-head strong {
+  color: #fff;
+}
+.actor-join-body {
+  flex: 1;
+  padding: 24px 24px calc(24px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.actor-join-body > p {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.actor-fact {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.actor-fact strong {
+  font-size: 15px;
+}
+.actor-fact span:last-child:not(.caps) {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-push {
+  margin-top: auto;
+}
+.actor-prefs {
+  padding: 56px 24px calc(32px + var(--safe-bottom));
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.actor-pref {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 64px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  cursor: pointer;
+}
+.actor-pref.on {
+  border-color: var(--plum-line);
+}
+.actor-pref input {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--plum);
+  flex: none;
+}
+.actor-pref-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.actor-pref-text strong {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.actor-pref-text span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- Shared phone pieces --------------------------------------------------------------------- */
+
+.actor-head {
+  padding: 28px 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid var(--rule);
+}
+.actor-head h1 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.actor-head .lede {
+  margin-top: 4px;
+  line-height: 1.45;
+}
+.actor-head .progress {
+  margin-top: 8px;
+  height: 8px;
+  border-radius: 4px;
+}
+.actor-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 36px;
+}
+.actor-body {
+  padding: 8px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actor-week {
+  padding: 12px 4px 0;
+}
+.actor-show-caps {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+
+/* Three-way answer buttons: Fine/Late/Never, I'm in/Rather not/Can't. */
+.actor-choices {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.actor-choice {
+  min-height: 44px;
+  padding: 0 4px;
+  border-radius: 6px;
+  border: 1px solid var(--rule-input);
+  background: var(--surface);
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 700;
+}
+.actor-choice:hover {
+  border-color: var(--muted-2);
+}
+.actor-choice[aria-pressed="true"].in {
+  background: var(--plum);
+  border-color: var(--plum);
+  color: #fff;
+}
+.actor-choice[aria-pressed="true"].late {
+  background: var(--part-bg);
+  border-color: var(--part-edge);
+  color: var(--part-text);
+}
+.actor-choice[aria-pressed="true"].soft {
+  background: var(--soft-bg);
+  border-color: var(--soft-edge);
+  color: var(--soft-text);
+}
+.actor-choice[aria-pressed="true"].hard {
+  background: var(--hard);
+  border-color: var(--hard);
+  color: #fff;
+}
+.actor-choice.usual[aria-pressed="true"] {
+  opacity: 0.85;
+}
+.actor-time {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--part-text);
+}
+.actor-time input {
+  height: 40px;
+  padding: 0 8px;
+  border-radius: 4px;
+  border: 1px solid var(--part-edge);
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--surface);
+}
+.actor-times {
+  display: flex;
+  align-items: center;
+  gap: 10px 14px;
+  flex-wrap: wrap;
+}
+
+/* Level tags (summary rows, one-off dates). */
+.actor-level {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.actor-level.hard {
+  background: var(--hard);
+  border-color: var(--hard);
+  color: #fff;
+}
+.actor-level.soft {
+  background: var(--soft-bg);
+  border-color: var(--soft-edge);
+  color: var(--soft-text);
+}
+.actor-level.late {
+  background: var(--part-bg);
+  border-color: var(--part-edge);
+  color: var(--part-text);
+}
+button.actor-level {
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+/* Sticky action bar above the bottom tabs (or at the very bottom without tabs). */
+.actor-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  margin-top: auto;
+  padding: 12px 16px calc(16px + var(--safe-bottom));
+  background: var(--surface);
+  border-top: 1px solid var(--rule);
+  display: flex;
+  gap: 10px;
+}
+.has-tabs .actor-footer {
+  bottom: calc(67px + var(--safe-bottom));
+  padding: 10px 16px;
+}
+.actor-footer .btn-primary {
+  flex: 1;
+}
+.actor-footer .btn-primary:disabled {
+  background: var(--plum-tint);
+  color: var(--plum-dark);
+  opacity: 1;
+}
+
+/* ---- Guided setup ---------------------------------------------------------------------------- */
+
+.actor-setup {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.actor-steps-top {
+  padding: 28px 20px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.actor-steps-top .kicker {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.actor-step-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted-2);
+  white-space: nowrap;
+}
+.actor-bars {
+  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.actor-bars span {
+  height: 6px;
+  border-radius: 3px;
+  background: #dcd5ca;
+}
+.actor-bars span.on {
+  background: var(--plum);
+}
+.actor-step {
+  flex: 1;
+  padding: 24px 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.actor-step-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.actor-step-head h1 {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.actor-step-head p {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.actor-daycard {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actor-daycard-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+.actor-daycard-top strong {
+  font-size: 16px;
+}
+.actor-daycard-top span {
+  font-size: 13px;
+  color: var(--muted-2);
+  text-align: right;
+}
+.actor-oneoff {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 12px 12px 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.actor-oneoff-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.actor-oneoff-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.actor-oneoff-main strong {
+  font-size: 15px;
+}
+.actor-icon-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--muted-2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.actor-icon-btn:hover {
+  background: var(--sand-2);
+}
+.actor-add {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+.actor-add .field {
+  flex: 1;
+  font-size: 13px;
+}
+.actor-add .btn {
+  min-height: 48px;
+}
+.actor-summary {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+.actor-summary > div {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 15px;
+  font-weight: 600;
+}
+.actor-summary > div + div {
+  border-top: 1px solid #f3eff6;
+}
+.actor-summary > p {
+  padding: 16px;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+/* ---- My conflicts ---------------------------------------------------------------------------- */
+
+.actor-date {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actor-date.blank {
+  border-color: var(--plum-line);
+}
+.actor-date-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.actor-date-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.actor-date-info strong {
+  font-size: 15px;
+}
+.actor-date-info .what {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-warn {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--sand-2);
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.actor-warn strong {
+  color: var(--ink);
+}
+.actor-usual {
+  font-size: 12.5px;
+  color: var(--muted-2);
+}
+.actor-date-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.actor-date-foot .link-btn {
+  padding: 0 4px;
+}
+.actor-inline-error {
+  font-size: 13px;
+  color: var(--hard-text);
+}
+
+/* ---- Show page ------------------------------------------------------------------------------- */
+
+.actor-banner {
+  background: var(--stage);
+  color: #fff;
+  padding: 32px 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.actor-banner .caps {
+  color: var(--plum-soft);
+}
+.actor-banner h1 {
+  font-family: var(--serif);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+.actor-banner .sub {
+  font-size: 14px;
+  color: var(--stage-text);
+}
+.actor-banner .avatar {
+  background: #3a322d;
+  color: #fff;
+}
+.actor-next {
+  margin-top: 12px;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.actor-next-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+.actor-next-text .caps {
+  color: var(--plum);
+}
+.actor-next-text strong {
+  font-size: 15px;
+}
+.actor-next-text span:last-child {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-section-head {
+  padding: 18px 16px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.actor-section-head h2 {
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+}
+.actor-section {
+  padding: 0 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.actor-todo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--plum-line);
+  border-left: 3px solid var(--plum);
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.actor-todo:hover {
+  color: var(--ink);
+  border-color: var(--plum);
+}
+.actor-todo-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.actor-todo-text strong {
+  font-size: 15px;
+}
+.actor-todo-text span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-todo svg {
+  color: var(--plum);
+  flex: none;
+}
+.actor-empty {
+  padding: 22px 18px;
+  border: 1px dashed var(--rule-input);
+  border-radius: 8px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.actor-empty strong {
+  color: var(--ink);
+  font-size: 15px;
+}
+
+/* ---- My calls -------------------------------------------------------------------------------- */
+
+.actor-agenda {
+  margin: 0 16px 20px;
+  background: var(--surface);
+  border-top: 2px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+}
+.actor-agenda-week {
+  padding: 14px 12px 6px;
+  background: var(--paper);
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted-2);
+  border-bottom: 1px solid var(--rule);
+}
+.actor-agenda-row {
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 9px 12px 9px 15px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 13px;
+  color: var(--muted-2);
+}
+.actor-agenda-row .cond {
+  font-size: 15px;
+  color: var(--muted-2);
+}
+.actor-archived-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.actor-archived-row:hover {
+  color: var(--ink);
+  background: var(--sand-2);
+}
+.actor-archived-row strong {
+  display: block;
+  font-size: 15px;
+}
+.actor-archived-row span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* ---- Account and My shows -------------------------------------------------------------------- */
+
+.actor-plain {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 32px 20px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+@media (max-width: 767px) {
+  .actor-plain {
+    padding: 24px 16px 40px;
+  }
+}
+.actor-show-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.actor-show-row:hover {
+  color: var(--ink);
+  background: var(--sand-2);
+}
+.actor-show-row .grow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.actor-show-row .name {
+  font-family: var(--serif);
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.actor-show-row .meta {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-show-row svg {
+  color: var(--muted-2);
+  flex: none;
+}
+.actor-details summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+}
+.actor-details summary::-webkit-details-marker {
+  display: none;
+}
+.actor-details summary::before {
+  content: "▸";
+  color: var(--muted-2);
+  font-size: 12px;
+}
+.actor-details[open] summary::before {
+  content: "▾";
+}
+.actor-details > .list {
+  margin-top: 6px;
+}
+.actor-readonly {
+  min-height: 48px;
+  padding: 0 14px;
+  border-radius: 6px;
+  border: 1px solid var(--rule);
+  background: var(--sand-2);
+  display: flex;
+  align-items: center;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.actor-save-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ---- My calls: tonight card and call rows (phase 3) ------------------------------------------- */
+
+.actor-tonight {
+  background: var(--stage);
+  color: #fff;
+  padding: 32px 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.actor-tonight .caps {
+  color: var(--plum-soft);
+}
+.actor-tonight .avatar {
+  background: #3a322d;
+  color: #fff;
+}
+.actor-tonight-time {
+  font-family: var(--cond);
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+.actor-tonight-what {
+  font-size: 16px;
+  color: var(--stage-text);
+}
+.actor-tonight-place {
+  font-size: 14px;
+  color: var(--plum-soft);
+}
+.actor-tonight-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+.actor-tonight-actions.one {
+  grid-template-columns: minmax(0, 1fr);
+}
+.btn.actor-tonight-dir {
+  min-height: 48px;
+  border: none;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--stage);
+  font-size: 15px;
+  font-weight: 700;
+}
+.btn.actor-tonight-dir:hover {
+  color: var(--stage);
+  background: var(--sand-2);
+}
+.btn.actor-tonight-late {
+  min-height: 48px;
+  border-radius: 6px;
+  border: 1px solid #9b74b5;
+  background: transparent;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+.btn.actor-tonight-late:hover {
+  color: #fff;
+  border-color: var(--plum-soft);
+}
+.actor-tonight-told {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #4a2e5e;
+  font-size: 14px;
+}
+.actor-late-opts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.actor-late-opt {
+  min-height: 52px;
+  border-radius: 6px;
+  border: 1px solid var(--rule-input);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 700;
+}
+.actor-late-opt[aria-pressed="true"] {
+  border-color: var(--plum);
+  background: var(--plum-tint);
+  color: var(--plum-dark);
+  box-shadow: inset 0 0 0 1px var(--plum);
+}
+.actor-calls-head {
+  padding-bottom: 4px;
+}
+.actor-cal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.actor-cal .btn {
+  min-height: 40px;
+}
+.actor-cal span {
+  font-size: 11px;
+  color: var(--muted-2);
+}
+.actor-call {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--rule);
+  border-left: 3px solid var(--plum);
+}
+.actor-call .datemark {
+  width: auto;
+}
+.actor-call-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.actor-call-time {
+  font-family: var(--cond);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.actor-call-what {
+  font-size: 14px;
+}
+.actor-call-place {
+  font-size: 13px;
+  color: var(--muted);
+}
+.actor-call.cancelled {
+  border-left-color: var(--disabled);
+}
+.actor-call.cancelled .datemark .wd {
+  color: var(--muted-2);
+}
+.actor-call.cancelled .datemark .n,
+.actor-call.cancelled .actor-call-time,
+.actor-call.cancelled .actor-call-what {
+  text-decoration: line-through;
+  color: var(--muted-2);
+}
+.actor-call-cancel {
+  align-self: flex-start;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--hard-text);
+}
+
+/* ---- My conflicts: nights already decided by a call (phase 3) --------------------------------- */
+
+.actor-date.locked {
+  background: var(--surface);
+}
+.actor-locked {
+  background: var(--sand-2);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  line-height: 1.4;
+}
+.actor-locked strong {
+  color: var(--ink);
+}
+.actor-date.called {
+  box-shadow: inset 3px 0 0 var(--plum);
+}
+.actor-called-tag {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--plum);
+}
+
+/* ---- Stage door check-in (phase 3) ------------------------------------------------------------ */
+
+.door {
+  min-height: 100dvh;
+  background: var(--stage);
+  color: #fff;
+  padding: 48px 24px calc(40px + var(--safe-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+}
+.door .caps {
+  color: var(--plum-soft);
+}
+.door-mark {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--plum);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0 4px;
+}
+.door-mark svg {
+  width: 48px;
+  height: 48px;
+}
+.door-late .door-mark {
+  background: var(--part-bg);
+  color: var(--part-text);
+}
+.door h1 {
+  font-family: var(--serif);
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 340px;
+}
+.door-time {
+  font-family: var(--cond);
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 0.95;
+}
+.door p {
+  max-width: 320px;
+  font-size: 15px;
+  color: var(--stage-text);
+  line-height: 1.5;
+}
+.btn.door-btn {
+  margin-top: 12px;
+  min-width: 220px;
+  border: none;
+  background: #fff;
+  color: var(--stage);
+  font-weight: 700;
+}
+.btn.door-btn:hover {
+  color: var(--stage);
+  background: var(--sand-2);
+}
+.door-wait {
+  flex: 1;
+  padding: 64px 24px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 16px;
+}
+.door-wait h1 {
+  font-family: var(--serif);
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1.15;
+}
+.door-wait .form-error {
+  max-width: 340px;
+}
+.door-wait-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+}
+/* The running-late sheet opens from inside the dark card. */
+.actor-tonight .sheet {
+  color: var(--ink);
+}
+
+/* ---- Announcements (Show page) ---------------------------------------------------------------- */
+
+.actor-unread-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--plum);
+}
+.actor-notice {
+  text-align: left;
+  background: var(--surface);
+  border-radius: 8px;
+  border: 1px solid var(--rule);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--ink);
+  font: inherit;
+  width: 100%;
+}
+.actor-notice.unread {
+  border-color: var(--plum-line);
+}
+.actor-notice-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.actor-notice-top strong {
+  font-size: 15px;
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.actor-notice-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 4px;
+  background: var(--plum);
+  flex: none;
+}
+.actor-notice-when,
+.actor-notice-who {
+  font-size: 12px;
+  color: var(--muted-2);
+  flex: none;
+}
+.actor-notice-body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ink-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Calendar links (My calls sheet, Account, Join) ------------------------------------------- */
+
+.actor-cal-btn {
+  min-height: 40px;
+}
+.actor-call {
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+}
+.actor-call-add {
+  align-self: start;
+  width: 40px;
+  height: 40px;
+  margin: -6px -6px 0 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted-2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.actor-call-add:hover {
+  color: var(--plum);
+  background: var(--plum-tint);
+}
+.actor-tonight-add {
+  align-self: flex-start;
+  margin-top: 10px;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  color: var(--plum-soft);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.cal-links {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cal-copy {
+  display: flex;
+  gap: 8px;
+}
+.cal-copy input {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cal-note {
+  margin: 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.cal-reset {
+  padding: 0;
+  min-height: 0;
+}
+.cal-confirm-title {
+  font-size: 16px;
+}
+.cal-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---- Account: notifications ------------------------------------------------------------------- */
+
+.acct-prefs {
+  display: flex;
+  flex-direction: column;
+}
+.acct-pref {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 60px;
+  padding: 10px 0;
+  border-top: 1px solid var(--rule);
+  cursor: pointer;
+}
+.acct-pref:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.acct-pref > span {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.acct-pref strong {
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.acct-pref > span > span {
+  font-size: 13px;
+  color: var(--muted);
+}
+.acct-pref input {
+  width: 24px;
+  height: 24px;
+  accent-color: var(--plum);
+  flex: none;
+}
+.acct-pref.off {
+  cursor: default;
+}
+.acct-pref.off strong {
+  color: var(--muted);
+}
+.actor-pref.off {
+  cursor: default;
+  background: var(--sand-2);
+}
+.actor-pref.off strong {
+  color: var(--muted);
+}

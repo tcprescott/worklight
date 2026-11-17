@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { redeemMagicLink } from "../auth";
 import { navigate } from "../router";
+import { Wordmark } from "../shell";
+import "./actor/actor.css";
 
 const safeNext = (next: string | null) => (next && next.startsWith("/") && !next.startsWith("//") ? next : "/");
 
@@ -24,17 +26,27 @@ export function MagicLink() {
       .catch((err: Error) => setError(err.message));
   }, []);
 
+  return <AuthStatus error={error} />;
+}
+
+/** The brief screen between tapping a sign-in link and landing in the app. */
+export function AuthStatus(props: { error?: string }) {
   return (
-    <main className="page narrow">
-      {error ? (
-        <>
-          <h1>Couldn't sign you in</h1>
-          <p className="error">{error}</p>
-          <a href="/">Back to sign in</a>
-        </>
-      ) : (
-        <p>Signing you in...</p>
-      )}
+    <main className="actor-auth">
+      <Wordmark />
+      <div className="actor-center">
+        {props.error ? (
+          <>
+            <h1 className="title-md">Couldn't sign you in</h1>
+            <p>{props.error}</p>
+            <a className="btn btn-primary actor-btn-xl" href="/sign-in" style={{ maxWidth: 320 }}>
+              Back to sign in
+            </a>
+          </>
+        ) : (
+          <p role="status">Signing you in...</p>
+        )}
+      </div>
     </main>
   );
 }

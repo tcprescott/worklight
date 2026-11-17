@@ -5,6 +5,8 @@ export interface AppConfig {
   /** e.g. https://worklight.auth.us-east-1.amazoncognito.com, or null when Google sign-in is off. */
   hostedUiUrl: string | null;
   googleEnabled: boolean;
+  /** Local dev server only (dev/devserver.py): sign-in is simulated, no Cognito. */
+  devAuth?: boolean;
 }
 
 let config: AppConfig | undefined;

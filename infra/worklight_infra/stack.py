@@ -18,6 +18,8 @@ from aws_cdk import aws_cloudfront as cloudfront
 from aws_cdk import aws_cloudfront_origins as origins
 from aws_cdk import aws_cognito as cognito
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_events as events
+from aws_cdk import aws_events_targets as targets
 from aws_cdk import aws_iam as iam
 from aws_cdk import aws_lambda as lambda_
 from aws_cdk import aws_logs as logs
@@ -93,6 +95,27 @@ class WorklightStack(Stack):
 
         http_api = apigw.HttpApi(self, "Api", create_default_stage=True)
 
+        # Client-side routes such as /join/abc load the app shell. Done per request on the site's behavior
+        # rather than with distribution-wide error pages, which would turn API 403s and 404s into the app.
+        spa_routes = cloudfront.Function(
+            self,
+            "SpaRoutes",
+            runtime=cloudfront.FunctionRuntime.JS_2_0,
+            code=cloudfront.FunctionCode.from_inline(
+                "function handler(event) {\n"
+                "  var request = event.request;\n"
+                "  if (request.uri.indexOf('.') === -1) request.uri = '/index.html';\n"
+                "  return request;\n"
+                "}\n"
+            ),
+        )
+        api_behavior = cloudfront.BehaviorOptions(
+            origin=origins.HttpOrigin(f"{http_api.api_id}.execute-api.{self.region}.{self.url_suffix}"),
+            viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
+            allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
+            cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
+            origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
+        )
         distribution = cloudfront.Distribution(
             self,
             "Site",
@@ -100,31 +123,20 @@ class WorklightStack(Stack):
             price_class=cloudfront.PriceClass.PRICE_CLASS_100,
             default_behavior=cloudfront.BehaviorOptions(
                 origin=origins.S3BucketOrigin.with_origin_access_control(site_bucket),
+                function_associations=[
+                    cloudfront.FunctionAssociation(
+                        function=spa_routes, event_type=cloudfront.FunctionEventType.VIEWER_REQUEST
+                    )
+                ],
                 viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
                 cache_policy=cloudfront.CachePolicy.CACHING_OPTIMIZED,
             ),
             additional_behaviors={
                 # Same origin as the site, so the browser needs no CORS.
-                "/api/*": cloudfront.BehaviorOptions(
-                    origin=origins.HttpOrigin(
-                        f"{http_api.api_id}.execute-api.{self.region}.{self.url_suffix}"
-                    ),
-                    viewer_protocol_policy=cloudfront.ViewerProtocolPolicy.HTTPS_ONLY,
-                    allowed_methods=cloudfront.AllowedMethods.ALLOW_ALL,
-                    cache_policy=cloudfront.CachePolicy.CACHING_DISABLED,
-                    origin_request_policy=cloudfront.OriginRequestPolicy.ALL_VIEWER_EXCEPT_HOST_HEADER,
-                ),
+                "/api/*": api_behavior,
+                # The MCP endpoint lives at the root so assistants can be given https://<site>/mcp.
+                "/mcp": api_behavior,
             },
-            # Client-side routes such as /invite/abc load the app shell.
-            error_responses=[
-                cloudfront.ErrorResponse(
-                    http_status=status,
-                    response_http_status=200,
-                    response_page_path="/index.html",
-                    ttl=Duration.minutes(5),
-                )
-                for status in (403, 404)
-            ],
         )
 
         app_url = s.app_url or f"https://{distribution.distribution_domain_name}"
@@ -147,7 +159,9 @@ class WorklightStack(Stack):
             "APP_URL_PARAM": app_url_param.parameter_name,
         }
 
-        def fn(construct_id: str, handler: str, *, sends_email: bool, memory: int = 256) -> lambda_.Function:
+        def fn(
+            construct_id: str, handler: str, *, sends_email: bool, memory: int = 256, timeout: int = 10
+        ) -> lambda_.Function:
             f = lambda_.Function(
                 self,
                 construct_id,
@@ -156,7 +170,7 @@ class WorklightStack(Stack):
                 runtime=lambda_.Runtime.PYTHON_3_13,
                 architecture=lambda_.Architecture.ARM_64,
                 memory_size=memory,
-                timeout=Duration.seconds(10),
+                timeout=Duration.seconds(timeout),
                 environment=shared_env,
                 log_group=logs.LogGroup(
                     self,
@@ -195,6 +209,15 @@ class WorklightStack(Stack):
         define_challenge = fn("DefineAuthChallengeFunction", "auth.define_auth_challenge", sends_email=False)
         create_challenge = fn("CreateAuthChallengeFunction", "auth.create_auth_challenge", sends_email=True)
         verify_challenge = fn("VerifyAuthChallengeFunction", "auth.verify_auth_challenge", sends_email=False)
+
+        # Hourly: the day-before call reminders. One Scan of shows plus a Query per show with calls tomorrow.
+        reminders_fn = fn("RemindersFunction", "jobs.reminders", sends_email=True, timeout=120)
+        events.Rule(
+            self,
+            "HourlyReminders",
+            schedule=events.Schedule.rate(Duration.hours(1)),
+            targets=[targets.LambdaFunction(reminders_fn, retry_attempts=0)],
+        )
 
         # ---- Auth (Cognito) ---------------------------------------------------------------------
 
@@ -284,6 +307,30 @@ class WorklightStack(Stack):
             ],
             integration=integrations.HttpLambdaIntegration("ApiIntegration", api_fn),
             authorizer=authorizer,
+        )
+        # Public reads that work before sign-in, such as what an invite link is for. The more specific
+        # route wins over /api/{proxy+}; the app itself never trusts a caller on these paths.
+        http_api.add_routes(
+            path="/api/public/{proxy+}",
+            methods=[apigw.HttpMethod.GET],
+            integration=integrations.HttpLambdaIntegration("PublicApiIntegration", api_fn),
+        )
+        # The public APIs sign in with an API key, which the app checks itself (by its hash, with a
+        # per-key rate limit), so API Gateway's Cognito authorizer stays off these routes.
+        key_integration = integrations.HttpLambdaIntegration("KeyApiIntegration", api_fn)
+        for key_path, key_methods in (
+            ("/api/v1/{proxy+}", [apigw.HttpMethod.ANY]),
+            ("/api/graphql", [apigw.HttpMethod.POST]),
+            ("/mcp", [apigw.HttpMethod.POST, apigw.HttpMethod.GET, apigw.HttpMethod.DELETE]),
+        ):
+            http_api.add_routes(path=key_path, methods=key_methods, integration=key_integration)
+        # Throttle every route so a runaway client can't run up the bill.
+        stage = http_api.default_stage
+        assert stage is not None
+        cfn_stage = stage.node.default_child
+        assert isinstance(cfn_stage, apigw.CfnStage)
+        cfn_stage.default_route_settings = apigw.CfnStage.RouteSettingsProperty(
+            throttling_burst_limit=100, throttling_rate_limit=50
         )
 
         # ---- Email (SES) ------------------------------------------------------------------------
