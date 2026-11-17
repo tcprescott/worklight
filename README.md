@@ -83,10 +83,38 @@ Docker isn't needed.
    | `googleClientSecretName` | for Google | Secrets Manager secret holding the Google client secret (about $0.40/month) |
 
 4. **Deploy:** build the web app (`cd web && npm run build`), then from `infra/` run
-   `npx aws-cdk@2.1146.1 deploy`. The site URL is in the `SiteUrl` output.
+   `npx aws-cdk@2.1146.1 deploy Worklight-staging`. The site URL is in the `SiteUrl` output.
+
+Each environment is its own stack, named by the `stage` context value (default `staging`). A production stack later
+is `-c stage=production`, deployed beside staging in the same or another account.
 
 For Google sign-in, add `https://<cognitoDomainPrefix>.auth.<region>.amazoncognito.com/oauth2/idpresponse` as an
 authorized redirect URI in the Google Cloud console.
+
+### Deploying from GitHub
+
+The **Deploy** workflow (Actions tab, "Run workflow") tests, builds and deploys to the environment you pick. It signs
+in to AWS through OIDC, so no AWS keys are stored in GitHub. One-time setup per environment:
+
+1. Bootstrap CDK in the account (step 1 above).
+2. From `infra/`, with your own AWS credentials, create the role the workflow assumes:
+   `npx aws-cdk@2.1146.1 deploy WorklightGithubDeploy-staging -c fromEmail=you@example.org`. If the account already has
+   a GitHub OIDC provider (from another project, or from staging when adding production), pass its ARN with
+   `-c githubOidcProviderArn=...`. Copy the `DeployRoleArn` output.
+3. In GitHub, Settings > Environments, create an environment named `staging` and add these **variables**:
+
+   | Variable | Required | Same as context key |
+   | --- | --- | --- |
+   | `AWS_DEPLOY_ROLE_ARN` | yes | the `DeployRoleArn` output |
+   | `AWS_REGION` | no | defaults to `us-east-1` |
+   | `FROM_EMAIL` | yes | `fromEmail` |
+   | `SES_DOMAIN`, `APP_URL`, `ALERT_EMAIL`, `MONTHLY_BUDGET_USD` | no | `sesDomain`, `appUrl`, `alertEmail`, `monthlyBudgetUsd` |
+   | `COGNITO_DOMAIN_PREFIX`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET_NAME` | for Google | as above |
+
+   Only runs in that GitHub environment can assume its role. Add required reviewers to the environment if you want
+   each deploy approved.
+
+To add production: repeat these steps with `production`, then add `production` to the workflow's environment options.
 
 ## Roadmap
 

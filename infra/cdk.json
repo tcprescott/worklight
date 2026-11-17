@@ -2,6 +2,7 @@
   "app": "uv run --frozen python app.py",
   "watch": { "include": ["app.py", "worklight_infra/**", "../backend/src/**"] },
   "context": {
+    "stage": "staging",
     "fromEmail": "",
     "sesDomain": "",
     "appUrl": "",
@@ -9,6 +10,8 @@
     "googleClientId": "",
     "googleClientSecretName": "",
     "alertEmail": "",
-    "monthlyBudgetUsd": 5
+    "monthlyBudgetUsd": 5,
+    "githubRepo": "tcprescott/worklight",
+    "githubOidcProviderArn": ""
   }
 }

@@ -3,6 +3,7 @@ from pathlib import Path
 
 import aws_cdk as cdk
 
+from worklight_infra.github import GithubDeployStack
 from worklight_infra.stack import GoogleSignIn, Settings, WorklightStack
 
 app = cdk.App()
@@ -21,13 +22,18 @@ if not from_email:
 
 google_client_id, google_secret = ctx("googleClientId"), ctx("googleClientSecretName")
 
+env = cdk.Environment(
+    account=os.environ.get("CDK_DEFAULT_ACCOUNT"),
+    region=os.environ.get("CDK_DEFAULT_REGION", "us-east-1"),
+)
+
+# Each environment is its own stack: Worklight-staging now, Worklight-production when it's ready.
+stage = ctx("stage") or "staging"
+
 WorklightStack(
     app,
-    "Worklight",
-    env=cdk.Environment(
-        account=os.environ.get("CDK_DEFAULT_ACCOUNT"),
-        region=os.environ.get("CDK_DEFAULT_REGION", "us-east-1"),
-    ),
+    f"Worklight-{stage}",
+    env=env,
     settings=Settings(
         from_email=from_email,
         ses_domain=ctx("sesDomain"),
@@ -38,6 +44,16 @@ WorklightStack(
         monthly_budget_usd=float(app.node.try_get_context("monthlyBudgetUsd") or 5),
         web_dist_path=Path(__file__).resolve().parent.parent / "web" / "dist",
     ),
+)
+
+# One-time per environment: the role the Deploy workflow assumes (see README, "Deploying from GitHub").
+GithubDeployStack(
+    app,
+    f"WorklightGithubDeploy-{stage}",
+    env=env,
+    environment=stage,
+    repo=ctx("githubRepo") or "tcprescott/worklight",
+    existing_provider_arn=ctx("githubOidcProviderArn"),
 )
 
 app.synth()
