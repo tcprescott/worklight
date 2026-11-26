@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from worklight import clock
 from worklight.ids import new_id, now_iso
 from worklight.mailer import admin_added_email
 from worklight.models import Admin, Member, Model, ShowSummary, Theater, TheaterView, User
@@ -54,6 +55,7 @@ def get_theater(ctx: Ctx, user: User, theater_id: str) -> TheaterView:
     staff_ids = {m.user_id for ms in members_by_show.values() for m in ms if m.role == "staff"}
     users = {u.user_id: u for u in ctx.store.get_users(staff_ids)}
     summaries = []
+    today = clock.today().isoformat()
     for show in shows:
         members = members_by_show[show.show_id]
         staff = [
@@ -77,6 +79,11 @@ def get_theater(ctx: Ctx, user: User, theater_id: str) -> TheaterView:
                 cast_count=sum(m.role == "cast" for m in members),
                 crew_count=sum(m.role == "crew" for m in members),
                 waiting_count=sum(m.role != "staff" and not m.conflicts_submitted_at for m in members),
+                unseen_reports=sum(
+                    1
+                    for c in ctx.store.list_checkins(show.show_id)
+                    if c.report and not c.seen_by and c.date >= today
+                ),
             )
         )
     return TheaterView(theater=theater, admins=_admins(ctx, theater_id), shows=summaries)

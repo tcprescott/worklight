@@ -1,6 +1,58 @@
 {
   "components": {
     "schemas": {
+      "AbsenceBody": {
+        "properties": {
+          "dates": {
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 60,
+            "minItems": 1,
+            "title": "Dates",
+            "type": "array"
+          },
+          "kind": {
+            "enum": [
+              "absent",
+              "late",
+              "leave_early"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 300,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "time": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Time"
+          }
+        },
+        "required": [
+          "dates",
+          "kind"
+        ],
+        "title": "AbsenceBody",
+        "type": "object"
+      },
       "Act": {
         "properties": {
           "actId": {
@@ -238,10 +290,6 @@
             "title": "Checkins",
             "type": "array"
           },
-          "doorCode": {
-            "title": "Doorcode",
-            "type": "string"
-          },
           "nights": {
             "items": {
               "$ref": "#/components/schemas/AttendanceNight"
@@ -256,6 +304,18 @@
             "title": "People",
             "type": "array"
           },
+          "seenNames": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "default": {},
+            "title": "Seennames",
+            "type": "object"
+          },
+          "today": {
+            "title": "Today",
+            "type": "string"
+          },
           "tonight": {
             "anyOf": [
               {
@@ -266,58 +326,58 @@
               }
             ],
             "title": "Tonight"
+          },
+          "venueSet": {
+            "default": false,
+            "title": "Venueset",
+            "type": "boolean"
           }
         },
         "required": [
           "nights",
           "people",
           "checkins",
-          "doorCode"
+          "today"
         ],
         "title": "Attendance",
         "type": "object"
       },
       "AttendanceNight": {
+        "description": "One day with calls on it. Attendance is kept per person per day.",
         "properties": {
-          "callId": {
-            "title": "Callid",
-            "type": "string"
+          "called": {
+            "items": {
+              "$ref": "#/components/schemas/CalledPerson"
+            },
+            "title": "Called",
+            "type": "array"
           },
-          "crewStart": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Crewstart"
+          "calls": {
+            "items": {
+              "$ref": "#/components/schemas/NightCall"
+            },
+            "title": "Calls",
+            "type": "array"
           },
           "date": {
             "title": "Date",
             "type": "string"
           },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
           "start": {
             "title": "Start",
             "type": "string"
-          },
-          "title": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Title"
           }
         },
         "required": [
           "date",
-          "callId",
-          "start"
+          "start",
+          "end",
+          "calls",
+          "called"
         ],
         "title": "AttendanceNight",
         "type": "object"
@@ -1102,6 +1162,29 @@
         "title": "Callboard",
         "type": "object"
       },
+      "CalledPerson": {
+        "properties": {
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "start",
+          "end"
+        ],
+        "title": "CalledPerson",
+        "type": "object"
+      },
       "Character": {
         "properties": {
           "castUserIds": {
@@ -1144,7 +1227,7 @@
         "type": "object"
       },
       "CheckIn": {
-        "description": "One person on one tech or performance night (or a rehearsal they said they'd be late to).",
+        "description": "One person on one day they're called: what they told us ahead of time, and whether they came.",
         "properties": {
           "arrivedAt": {
             "anyOf": [
@@ -1166,6 +1249,21 @@
             "title": "Date",
             "type": "string"
           },
+          "location": {
+            "anyOf": [
+              {
+                "enum": [
+                  "confirmed",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
           "note": {
             "anyOf": [
               {
@@ -1177,16 +1275,65 @@
             ],
             "title": "Note"
           },
-          "runningLateMinutes": {
+          "report": {
             "anyOf": [
               {
-                "type": "integer"
+                "enum": [
+                  "absent",
+                  "late",
+                  "leave_early"
+                ],
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Runninglateminutes"
+            "title": "Report"
+          },
+          "reportTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reporttime"
+          },
+          "reportedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reportedat"
+          },
+          "seenAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seenat"
+          },
+          "seenBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seenby"
           },
           "showId": {
             "title": "Showid",
@@ -1228,31 +1375,53 @@
       },
       "CheckInBody": {
         "properties": {
-          "code": {
-            "maxLength": 64,
-            "minLength": 1,
-            "title": "Code",
-            "type": "string"
+          "accuracy": {
+            "anyOf": [
+              {
+                "minimum": 0.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Accuracy"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "maximum": 90.0,
+                "minimum": -90.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "lng": {
+            "anyOf": [
+              {
+                "maximum": 180.0,
+                "minimum": -180.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lng"
           }
         },
-        "required": [
-          "code"
-        ],
         "title": "CheckInBody",
         "type": "object"
       },
       "CheckInResult": {
         "properties": {
           "callStart": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Callstart"
+            "title": "Callstart",
+            "type": "string"
           },
           "checkin": {
             "$ref": "#/components/schemas/CheckIn"
@@ -1264,7 +1433,8 @@
           }
         },
         "required": [
-          "checkin"
+          "checkin",
+          "callStart"
         ],
         "title": "CheckInResult",
         "type": "object"
@@ -2002,19 +2172,6 @@
         "title": "DateItem",
         "type": "object"
       },
-      "DoorCode": {
-        "properties": {
-          "doorCode": {
-            "title": "Doorcode",
-            "type": "string"
-          }
-        },
-        "required": [
-          "doorCode"
-        ],
-        "title": "DoorCode",
-        "type": "object"
-      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2332,6 +2489,37 @@
         "title": "MemberConflicts",
         "type": "object"
       },
+      "MyAttendance": {
+        "properties": {
+          "checkInEarlyMinutes": {
+            "default": 30,
+            "title": "Checkinearlyminutes",
+            "type": "integer"
+          },
+          "checkins": {
+            "items": {
+              "$ref": "#/components/schemas/MyCheckIn"
+            },
+            "title": "Checkins",
+            "type": "array"
+          },
+          "today": {
+            "title": "Today",
+            "type": "string"
+          },
+          "venueSet": {
+            "default": false,
+            "title": "Venueset",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "checkins",
+          "today"
+        ],
+        "title": "MyAttendance",
+        "type": "object"
+      },
       "MyCall": {
         "properties": {
           "address": {
@@ -2480,6 +2668,122 @@
         "title": "MyCall",
         "type": "object"
       },
+      "MyCheckIn": {
+        "description": "What someone told us about one of their days, and whether staff saw it, for My calls.",
+        "properties": {
+          "arrivedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Arrivedat"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "enum": [
+                  "confirmed",
+                  "unknown"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "enum": [
+                  "absent",
+                  "late",
+                  "leave_early"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Report"
+          },
+          "reportTime": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reporttime"
+          },
+          "seenAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seenat"
+          },
+          "seenByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seenbyname"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "on_time",
+                  "late",
+                  "absent"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "required": [
+          "date"
+        ],
+        "title": "MyCheckIn",
+        "type": "object"
+      },
       "MyConflicts": {
         "properties": {
           "dates": {
@@ -2595,6 +2899,40 @@
           "secret"
         ],
         "title": "NewApiKey",
+        "type": "object"
+      },
+      "NightCall": {
+        "properties": {
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "callId",
+          "type",
+          "start"
+        ],
+        "title": "NightCall",
         "type": "object"
       },
       "Notice": {
@@ -2956,45 +3294,6 @@
         "title": "ReorderBody",
         "type": "object"
       },
-      "RunningLateBody": {
-        "properties": {
-          "date": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Date"
-          },
-          "minutes": {
-            "maximum": 240.0,
-            "minimum": 5.0,
-            "title": "Minutes",
-            "type": "integer"
-          },
-          "note": {
-            "anyOf": [
-              {
-                "maxLength": 200,
-                "minLength": 1,
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Note"
-          }
-        },
-        "required": [
-          "minutes"
-        ],
-        "title": "RunningLateBody",
-        "type": "object"
-      },
       "SaveConflictsBody": {
         "description": "Saves several answers at once, as the guided setup does at the end.",
         "properties": {
@@ -3285,17 +3584,6 @@
             "title": "Createdat",
             "type": "string"
           },
-          "doorCode": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Doorcode"
-          },
           "endDate": {
             "title": "Enddate",
             "type": "string"
@@ -3393,6 +3681,28 @@
               }
             ],
             "title": "Venue"
+          },
+          "venueLat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venuelat"
+          },
+          "venueLng": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Venuelng"
           }
         },
         "required": [
@@ -3497,6 +3807,11 @@
             },
             "title": "Staff",
             "type": "array"
+          },
+          "unseenReports": {
+            "default": 0,
+            "title": "Unseenreports",
+            "type": "integer"
           },
           "waitingCount": {
             "title": "Waitingcount",
@@ -4511,6 +4826,28 @@
         "title": "ValidationError",
         "type": "object"
       },
+      "VenueLocationBody": {
+        "properties": {
+          "lat": {
+            "maximum": 90.0,
+            "minimum": -90.0,
+            "title": "Lat",
+            "type": "number"
+          },
+          "lng": {
+            "maximum": 180.0,
+            "minimum": -180.0,
+            "title": "Lng",
+            "type": "number"
+          }
+        },
+        "required": [
+          "lat",
+          "lng"
+        ],
+        "title": "VenueLocationBody",
+        "type": "object"
+      },
       "Warning": {
         "description": "Someone a block or call needs who can't make all of it.",
         "properties": {
@@ -5387,6 +5724,100 @@
         "summary": "Update Show"
       }
     },
+    "/api/shows/{show_id}/absences": {
+      "post": {
+        "operationId": "report_absence_api_shows__show_id__absences_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AbsenceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/CheckIn"
+                  },
+                  "title": "Response Report Absence Api Shows  Show Id  Absences Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Report Absence"
+      }
+    },
+    "/api/shows/{show_id}/absences/{day}": {
+      "delete": {
+        "operationId": "take_back_api_shows__show_id__absences__day__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Take Back"
+      }
+    },
     "/api/shows/{show_id}/acts": {
       "post": {
         "operationId": "create_act_api_shows__show_id__acts_post",
@@ -5684,6 +6115,63 @@
           }
         },
         "summary": "Mark"
+      }
+    },
+    "/api/shows/{show_id}/attendance/{day}/{user_id}/seen": {
+      "post": {
+        "operationId": "seen_api_shows__show_id__attendance__day___user_id__seen_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "day",
+            "required": true,
+            "schema": {
+              "title": "Day",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckIn"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Seen"
       }
     },
     "/api/shows/{show_id}/breakdown": {
@@ -6109,45 +6597,6 @@
         "summary": "Show Conflicts"
       }
     },
-    "/api/shows/{show_id}/door-code": {
-      "post": {
-        "operationId": "rotate_api_shows__show_id__door_code_post",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "show_id",
-            "required": true,
-            "schema": {
-              "title": "Show Id",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DoorCode"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Rotate"
-      }
-    },
     "/api/shows/{show_id}/invites": {
       "post": {
         "operationId": "create_invite_api_shows__show_id__invites_post",
@@ -6374,6 +6823,45 @@
           }
         },
         "summary": "Update Member"
+      }
+    },
+    "/api/shows/{show_id}/my-attendance": {
+      "get": {
+        "operationId": "my_attendance_api_shows__show_id__my_attendance_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyAttendance"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Attendance"
       }
     },
     "/api/shows/{show_id}/notices": {
@@ -6750,55 +7238,6 @@
           }
         },
         "summary": "Restore Show"
-      }
-    },
-    "/api/shows/{show_id}/running-late": {
-      "post": {
-        "operationId": "running_late_api_shows__show_id__running_late_post",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "show_id",
-            "required": true,
-            "schema": {
-              "title": "Show Id",
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RunningLateBody"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CheckIn"
-                }
-              }
-            },
-            "description": "Successful Response"
-          },
-          "422": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            },
-            "description": "Validation Error"
-          }
-        },
-        "summary": "Running Late"
       }
     },
     "/api/shows/{show_id}/scenes": {
@@ -7354,6 +7793,78 @@
           }
         },
         "summary": "Tech Calls"
+      }
+    },
+    "/api/shows/{show_id}/venue-location": {
+      "delete": {
+        "operationId": "clear_venue_api_shows__show_id__venue_location_delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Clear Venue"
+      },
+      "put": {
+        "operationId": "set_venue_api_shows__show_id__venue_location_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VenueLocationBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Set Venue"
       }
     },
     "/api/theaters": {

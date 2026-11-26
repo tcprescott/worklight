@@ -230,6 +230,40 @@ export interface paths {
         patch: operations["update_show_api_shows__show_id__patch"];
         trace?: never;
     };
+    "/api/shows/{show_id}/absences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Report Absence */
+        post: operations["report_absence_api_shows__show_id__absences_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/absences/{day}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Take Back */
+        delete: operations["take_back_api_shows__show_id__absences__day__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/acts": {
         parameters: {
             query?: never;
@@ -310,6 +344,23 @@ export interface paths {
         /** Mark */
         put: operations["mark_api_shows__show_id__attendance__day___user_id__put"];
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/attendance/{day}/{user_id}/seen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Seen */
+        post: operations["seen_api_shows__show_id__attendance__day___user_id__seen_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -437,23 +488,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/shows/{show_id}/door-code": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Rotate */
-        post: operations["rotate_api_shows__show_id__door_code_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/shows/{show_id}/invites": {
         parameters: {
             query?: never;
@@ -521,6 +555,23 @@ export interface paths {
         head?: never;
         /** Update Member */
         patch: operations["update_member_api_shows__show_id__members__member_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/my-attendance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Attendance */
+        get: operations["my_attendance_api_shows__show_id__my_attendance_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/shows/{show_id}/notices": {
@@ -621,23 +672,6 @@ export interface paths {
         put?: never;
         /** Restore Show */
         post: operations["restore_show_api_shows__show_id__restore_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/shows/{show_id}/running-late": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Running Late */
-        post: operations["running_late_api_shows__show_id__running_late_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -782,6 +816,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/venue-location": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Set Venue */
+        put: operations["set_venue_api_shows__show_id__venue_location_put"];
+        post?: never;
+        /** Clear Venue */
+        delete: operations["clear_venue_api_shows__show_id__venue_location_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/theaters": {
         parameters: {
             query?: never;
@@ -906,6 +958,20 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** AbsenceBody */
+        AbsenceBody: {
+            /** Dates */
+            dates: string[];
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "absent" | "late" | "leave_early";
+            /** Note */
+            note?: string | null;
+            /** Time */
+            time?: string | null;
+        };
         /** Act */
         Act: {
             /** Actid */
@@ -988,27 +1054,42 @@ export interface components {
         Attendance: {
             /** Checkins */
             checkins: components["schemas"]["CheckIn"][];
-            /** Doorcode */
-            doorCode: string;
             /** Nights */
             nights: components["schemas"]["AttendanceNight"][];
             /** People */
             people: components["schemas"]["AttendancePerson"][];
+            /**
+             * Seennames
+             * @default {}
+             */
+            seenNames: {
+                [key: string]: string;
+            };
+            /** Today */
+            today: string;
             /** Tonight */
             tonight?: string | null;
+            /**
+             * Venueset
+             * @default false
+             */
+            venueSet: boolean;
         };
-        /** AttendanceNight */
+        /**
+         * AttendanceNight
+         * @description One day with calls on it. Attendance is kept per person per day.
+         */
         AttendanceNight: {
-            /** Callid */
-            callId: string;
-            /** Crewstart */
-            crewStart?: string | null;
+            /** Called */
+            called: components["schemas"]["CalledPerson"][];
+            /** Calls */
+            calls: components["schemas"]["NightCall"][];
             /** Date */
             date: string;
+            /** End */
+            end: string;
             /** Start */
             start: string;
-            /** Title */
-            title?: string | null;
         };
         /** AttendancePerson */
         AttendancePerson: {
@@ -1303,6 +1384,15 @@ export interface components {
             /** Unread */
             unread: number;
         };
+        /** CalledPerson */
+        CalledPerson: {
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Userid */
+            userId: string;
+        };
         /** Character */
         Character: {
             /**
@@ -1326,7 +1416,7 @@ export interface components {
         };
         /**
          * CheckIn
-         * @description One person on one tech or performance night (or a rehearsal they said they'd be late to).
+         * @description One person on one day they're called: what they told us ahead of time, and whether they came.
          */
         CheckIn: {
             /** Arrivedat */
@@ -1338,10 +1428,20 @@ export interface components {
             bySelf: boolean;
             /** Date */
             date: string;
+            /** Location */
+            location?: ("confirmed" | "unknown") | null;
             /** Note */
             note?: string | null;
-            /** Runninglateminutes */
-            runningLateMinutes?: number | null;
+            /** Report */
+            report?: ("absent" | "late" | "leave_early") | null;
+            /** Reporttime */
+            reportTime?: string | null;
+            /** Reportedat */
+            reportedAt?: string | null;
+            /** Seenat */
+            seenAt?: string | null;
+            /** Seenby */
+            seenBy?: string | null;
             /** Showid */
             showId: string;
             /** Status */
@@ -1353,13 +1453,17 @@ export interface components {
         };
         /** CheckInBody */
         CheckInBody: {
-            /** Code */
-            code: string;
+            /** Accuracy */
+            accuracy?: number | null;
+            /** Lat */
+            lat?: number | null;
+            /** Lng */
+            lng?: number | null;
         };
         /** CheckInResult */
         CheckInResult: {
             /** Callstart */
-            callStart?: string | null;
+            callStart: string;
             checkin: components["schemas"]["CheckIn"];
             /**
              * Minuteslate
@@ -1556,11 +1660,6 @@ export interface components {
             /** Note */
             note?: string | null;
         };
-        /** DoorCode */
-        DoorCode: {
-            /** Doorcode */
-            doorCode: string;
-        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -1668,6 +1767,23 @@ export interface components {
             /** Weekly */
             weekly: components["schemas"]["WeeklyConflict"][];
         };
+        /** MyAttendance */
+        MyAttendance: {
+            /**
+             * Checkinearlyminutes
+             * @default 30
+             */
+            checkInEarlyMinutes: number;
+            /** Checkins */
+            checkins: components["schemas"]["MyCheckIn"][];
+            /** Today */
+            today: string;
+            /**
+             * Venueset
+             * @default false
+             */
+            venueSet: boolean;
+        };
         /** MyCall */
         MyCall: {
             /** Address */
@@ -1724,6 +1840,30 @@ export interface components {
              */
             type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
         };
+        /**
+         * MyCheckIn
+         * @description What someone told us about one of their days, and whether staff saw it, for My calls.
+         */
+        MyCheckIn: {
+            /** Arrivedat */
+            arrivedAt?: string | null;
+            /** Date */
+            date: string;
+            /** Location */
+            location?: ("confirmed" | "unknown") | null;
+            /** Note */
+            note?: string | null;
+            /** Report */
+            report?: ("absent" | "late" | "leave_early") | null;
+            /** Reporttime */
+            reportTime?: string | null;
+            /** Seenat */
+            seenAt?: string | null;
+            /** Seenbyname */
+            seenByName?: string | null;
+            /** Status */
+            status?: ("on_time" | "late" | "absent") | null;
+        };
         /** MyConflicts */
         MyConflicts: {
             /** Dates */
@@ -1766,6 +1906,17 @@ export interface components {
             key: components["schemas"]["ApiKey"];
             /** Secret */
             secret: string;
+        };
+        /** NightCall */
+        NightCall: {
+            /** Callid */
+            callId: string;
+            /** Start */
+            start: string;
+            /** Title */
+            title?: string | null;
+            /** Type */
+            type: string;
         };
         /** Notice */
         Notice: {
@@ -1932,15 +2083,6 @@ export interface components {
             /** Ids */
             ids: string[];
         };
-        /** RunningLateBody */
-        RunningLateBody: {
-            /** Date */
-            date?: string | null;
-            /** Minutes */
-            minutes: number;
-            /** Note */
-            note?: string | null;
-        };
         /**
          * SaveConflictsBody
          * @description Saves several answers at once, as the guided setup does at the end.
@@ -2062,8 +2204,6 @@ export interface components {
             conflictDeadline?: string | null;
             /** Createdat */
             createdAt: string;
-            /** Doorcode */
-            doorCode?: string | null;
             /** Enddate */
             endDate: string;
             /**
@@ -2105,6 +2245,10 @@ export interface components {
             timezone: string;
             /** Venue */
             venue?: string | null;
+            /** Venuelat */
+            venueLat?: number | null;
+            /** Venuelng */
+            venueLng?: number | null;
         };
         /** ShowDayView */
         ShowDayView: {
@@ -2143,6 +2287,11 @@ export interface components {
             show: components["schemas"]["Show"];
             /** Staff */
             staff: components["schemas"]["Member"][];
+            /**
+             * Unseenreports
+             * @default 0
+             */
+            unseenReports: number;
             /** Waitingcount */
             waitingCount: number;
         };
@@ -2396,6 +2545,13 @@ export interface components {
             msg: string;
             /** Error Type */
             type: string;
+        };
+        /** VenueLocationBody */
+        VenueLocationBody: {
+            /** Lat */
+            lat: number;
+            /** Lng */
+            lng: number;
         };
         /**
          * Warning
@@ -2993,6 +3149,71 @@ export interface operations {
             };
         };
     };
+    report_absence_api_shows__show_id__absences_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AbsenceBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    take_back_api_shows__show_id__absences__day__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_act_api_shows__show_id__acts_post: {
         parameters: {
             query?: never;
@@ -3180,6 +3401,39 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CheckIn"] | null;
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    seen_api_shows__show_id__attendance__day___user_id__seen_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                day: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CheckIn"];
                 };
             };
             /** @description Validation Error */
@@ -3492,37 +3746,6 @@ export interface operations {
             };
         };
     };
-    rotate_api_shows__show_id__door_code_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                show_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DoorCode"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     create_invite_api_shows__show_id__invites_post: {
         parameters: {
             query?: never;
@@ -3673,6 +3896,37 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Member"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_attendance_api_shows__show_id__my_attendance_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyAttendance"];
                 };
             };
             /** @description Validation Error */
@@ -3940,41 +4194,6 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Show"];
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    running_late_api_shows__show_id__running_late_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                show_id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RunningLateBody"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CheckIn"];
                 };
             };
             /** @description Validation Error */
@@ -4314,6 +4533,68 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["Call"][];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    set_venue_api_shows__show_id__venue_location_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VenueLocationBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    clear_venue_api_shows__show_id__venue_location_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {
