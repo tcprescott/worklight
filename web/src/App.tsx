@@ -11,6 +11,7 @@ import { AuthCallback } from "./pages/AuthCallback";
 import { Breakdown } from "./pages/director/Breakdown";
 import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
+import { Safety } from "./pages/director/Safety";
 import { Schedule } from "./pages/director/Schedule";
 import { CallboardPage } from "./pages/director/Callboard";
 import { TechWeek } from "./pages/director/TechWeek";
@@ -120,6 +121,8 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
     case "people":
       return staff ? <People {...pageProps} /> : <NotForYou />;
+    case "safety":
+      return staff ? <Safety {...pageProps} /> : <NotForYou />;
     case "settings":
       return staff ? <ShowSettings {...pageProps} /> : <NotForYou />;
     default:

@@ -54,6 +54,11 @@ import type {
   User,
   WeeklyBody,
   WeeklyConflict,
+  SafetyInfo,
+  SafetyBody,
+  SafetyAccessView,
+  ShowSafetyPage,
+  MemberMedical,
 } from "./types";
 import { getIdToken } from "./auth";
 
@@ -109,6 +114,12 @@ export const api = {
   removePushDevice: (deviceId: string) => request<void>("DELETE", `/me/push/devices/${e(deviceId)}`),
   testPush: (deviceId?: string) => request<{ sent: number }>("POST", "/me/push/test", { deviceId }),
 
+  // Safety info: the person's own, and who has looked at it
+  mySafety: () => request<SafetyInfo>("GET", "/me/safety"),
+  saveMySafety: (body: SafetyBody) => request<SafetyInfo>("PUT", "/me/safety", body),
+  deleteMySafety: () => request<void>("DELETE", "/me/safety"),
+  mySafetyViews: () => request<SafetyAccessView[]>("GET", "/me/safety/views"),
+
   // Company
   createTheater: (name: string, title?: string) => request<Theater>("POST", "/theaters", { name, title }),
   theater: (theaterId: string) => request<TheaterView>("GET", `/theaters/${e(theaterId)}`),
@@ -133,6 +144,9 @@ export const api = {
 
   // People
   members: (showId: string) => request<Member[]>("GET", `${show(showId)}/members`),
+  showSafety: (showId: string) => request<ShowSafetyPage>("GET", `${show(showId)}/safety`),
+  memberMedical: (showId: string, userId: string) =>
+    request<MemberMedical>("GET", `${show(showId)}/safety/${e(userId)}/medical`),
   updateMember: (showId: string, userId: string, input: UpdateMemberBody) =>
     request<Member>("PATCH", `${show(showId)}/members/${e(userId)}`, input),
   removeMember: (showId: string, userId: string) => request<void>("DELETE", `${show(showId)}/members/${e(userId)}`),

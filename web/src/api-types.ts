@@ -246,6 +246,42 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/safety": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Mine */
+        get: operations["get_mine_api_me_safety_get"];
+        /** Put Mine */
+        put: operations["put_mine_api_me_safety_put"];
+        post?: never;
+        /** Delete Mine */
+        delete: operations["delete_mine_api_me_safety_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/safety/views": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Views */
+        get: operations["my_views_api_me_safety_views_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/public/calendar/{token}.ics": {
         parameters: {
             query?: never;
@@ -712,6 +748,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/safety": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Show Safety */
+        get: operations["show_safety_api_shows__show_id__safety_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/safety/{member_id}/medical": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Member Medical */
+        get: operations["member_medical_api_shows__show_id__safety__member_id__medical_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/scenes": {
         parameters: {
             query?: never;
@@ -1068,6 +1138,16 @@ export interface components {
             sceneId: string;
             /** Showid */
             showId: string;
+        };
+        /**
+         * ApprovedPickup
+         * @description An adult a minor may leave rehearsal with.
+         */
+        ApprovedPickup: {
+            /** Name */
+            name: string;
+            /** Note */
+            note?: string | null;
         };
         /** Attendance */
         Attendance: {
@@ -1452,6 +1532,22 @@ export interface components {
              */
             minutesLate: number;
         };
+        /** ContactBody */
+        ContactBody: {
+            /** Altphone */
+            altPhone?: string | null;
+            /**
+             * Guardian
+             * @default false
+             */
+            guardian: boolean;
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Relationship */
+            relationship?: string | null;
+        };
         /** CreateApiKeyBody */
         CreateApiKeyBody: {
             /** Name */
@@ -1646,6 +1742,22 @@ export interface components {
             /** Doorcode */
             doorCode: string;
         };
+        /** EmergencyContact */
+        EmergencyContact: {
+            /** Altphone */
+            altPhone?: string | null;
+            /**
+             * Guardian
+             * @default false
+             */
+            guardian: boolean;
+            /** Name */
+            name: string;
+            /** Phone */
+            phone: string;
+            /** Relationship */
+            relationship?: string | null;
+        };
         /** HTTPValidationError */
         HTTPValidationError: {
             /** Detail */
@@ -1719,6 +1831,28 @@ export interface components {
             theaters: components["schemas"]["MyTheater"][];
             user: components["schemas"]["User"];
         };
+        /** MedicalBody */
+        MedicalBody: {
+            /** Allergies */
+            allergies?: string | null;
+            /** Conditions */
+            conditions?: string | null;
+            /** Medications */
+            medications?: string | null;
+            /** Other */
+            other?: string | null;
+        };
+        /** MedicalNotes */
+        MedicalNotes: {
+            /** Allergies */
+            allergies?: string | null;
+            /** Conditions */
+            conditions?: string | null;
+            /** Medications */
+            medications?: string | null;
+            /** Other */
+            other?: string | null;
+        };
         /** Member */
         Member: {
             /** Conflictssubmittedat */
@@ -1727,6 +1861,8 @@ export interface components {
             department?: string | null;
             /** Email */
             email?: string | null;
+            /** Medicalaccess */
+            medicalAccess?: boolean | null;
             /** Name */
             name?: string | null;
             /**
@@ -1752,6 +1888,51 @@ export interface components {
             userId: string;
             /** Weekly */
             weekly: components["schemas"]["WeeklyConflict"][];
+        };
+        /** MemberMedical */
+        MemberMedical: {
+            medical?: components["schemas"]["MedicalNotes"] | null;
+            /** Name */
+            name?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /**
+         * MemberSafety
+         * @description A row on a show's Safety page. Medical notes are fetched one person at a time.
+         */
+        MemberSafety: {
+            /**
+             * Contacts
+             * @default []
+             */
+            contacts: components["schemas"]["EmergencyContact"][];
+            /**
+             * Hasmedical
+             * @default false
+             */
+            hasMedical: boolean;
+            /**
+             * Minor
+             * @default false
+             */
+            minor: boolean;
+            /** Name */
+            name?: string | null;
+            /**
+             * Pickups
+             * @default []
+             */
+            pickups: components["schemas"]["ApprovedPickup"][];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Title */
+            title?: string | null;
+            /** Userid */
+            userId: string;
         };
         /** MyCall */
         MyCall: {
@@ -1959,6 +2140,13 @@ export interface components {
              */
             pushReminders: boolean;
         };
+        /** PickupBody */
+        PickupBody: {
+            /** Name */
+            name: string;
+            /** Note */
+            note?: string | null;
+        };
         /** PostNoticeBody */
         PostNoticeBody: {
             /**
@@ -2063,6 +2251,64 @@ export interface components {
             minutes: number;
             /** Note */
             note?: string | null;
+        };
+        /** SafetyAccessView */
+        SafetyAccessView: {
+            /** At */
+            at: string;
+            /** Showname */
+            showName: string;
+            /**
+             * View
+             * @enum {string}
+             */
+            view: "contacts" | "medical";
+            /** Viewername */
+            viewerName?: string | null;
+            /** Viewertitle */
+            viewerTitle?: string | null;
+        };
+        /** SafetyBody */
+        SafetyBody: {
+            /**
+             * Contacts
+             * @default []
+             */
+            contacts: components["schemas"]["ContactBody"][];
+            medical?: components["schemas"]["MedicalBody"] | null;
+            /**
+             * Minor
+             * @default false
+             */
+            minor: boolean;
+            /**
+             * Pickups
+             * @default []
+             */
+            pickups: components["schemas"]["PickupBody"][];
+        };
+        /** SafetyInfo */
+        SafetyInfo: {
+            /**
+             * Contacts
+             * @default []
+             */
+            contacts: components["schemas"]["EmergencyContact"][];
+            medical?: components["schemas"]["MedicalNotes"] | null;
+            /**
+             * Minor
+             * @default false
+             */
+            minor: boolean;
+            /**
+             * Pickups
+             * @default []
+             */
+            pickups: components["schemas"]["ApprovedPickup"][];
+            /** Updatedat */
+            updatedAt: string;
+            /** Userid */
+            userId: string;
         };
         /**
          * SaveConflictsBody
@@ -2257,6 +2503,20 @@ export interface components {
             /** Start */
             start?: string | null;
         };
+        /** ShowSafetyPage */
+        ShowSafetyPage: {
+            /** Medicalaccess */
+            medicalAccess: boolean;
+            /** Members */
+            members: components["schemas"]["MemberSafety"][];
+            /**
+             * Tonight
+             * @default []
+             */
+            tonight: components["schemas"]["TonightPickup"][];
+            /** Tonightdate */
+            tonightDate: string;
+        };
         /** ShowSummary */
         ShowSummary: {
             /** Castcount */
@@ -2388,6 +2648,13 @@ export interface components {
              */
             warnings: components["schemas"]["Warning"][];
         };
+        /** TonightPickup */
+        TonightPickup: {
+            /** Ends */
+            ends: string;
+            /** Userid */
+            userId: string;
+        };
         /** UpdateCallBody */
         UpdateCallBody: {
             /** Blocks */
@@ -2438,6 +2705,8 @@ export interface components {
         UpdateMemberBody: {
             /** Department */
             department?: string | null;
+            /** Medicalaccess */
+            medicalAccess?: boolean | null;
             /** Role */
             role?: ("staff" | "cast" | "crew") | null;
             /** Title */
@@ -3121,6 +3390,97 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_mine_api_me_safety_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SafetyInfo"];
+                };
+            };
+        };
+    };
+    put_mine_api_me_safety_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SafetyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SafetyInfo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_mine_api_me_safety_delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    my_views_api_me_safety_views_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SafetyAccessView"][];
                 };
             };
         };
@@ -4233,6 +4593,69 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CheckIn"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    show_safety_api_shows__show_id__safety_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ShowSafetyPage"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    member_medical_api_shows__show_id__safety__member_id__medical_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                member_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MemberMedical"];
                 };
             };
             /** @description Validation Error */

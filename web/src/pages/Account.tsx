@@ -6,6 +6,7 @@ import { FormError, useToast } from "../ui";
 import type { NotifyPrefs, PushDevice } from "../types";
 import { pushSupport, thisDeviceId, turnOffPush, turnOnPush } from "../lib/push";
 import { CalendarLinks } from "./actor/CalendarLinks";
+import { SafetyCard } from "./SafetyCard";
 import "./actor/actor.css";
 
 export function Account() {
@@ -62,6 +63,7 @@ export function Account() {
             </span>
           </div>
         </div>
+        <SafetyCard onSaved={showToast} />
         <Notifications onSaved={showToast} />
         <div className="card stack">
           <div className="stack-sm">

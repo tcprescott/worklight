@@ -1,0 +1,72 @@
+.sf-page {
+  max-width: 820px;
+}
+.sf-views {
+  flex-wrap: wrap;
+}
+.sf-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: default;
+}
+.sf-row[role="button"] {
+  cursor: pointer;
+}
+.sf-row[role="button"]:hover {
+  background: var(--sand-2);
+}
+.sf-gap {
+  gap: 2px;
+}
+.sf-name {
+  gap: 6px;
+}
+.sf-call {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.sf-tag-med {
+  background: var(--hard-bg);
+  color: var(--hard-text);
+}
+.sf-contact {
+  padding: 8px 0;
+  border-top: 1px solid var(--rule);
+}
+.sf-locked {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--sand-2);
+  color: var(--ink-2);
+  font-size: 13.5px;
+}
+.sf-medical {
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: var(--hard-bg);
+  color: var(--hard-text);
+  font-size: 14px;
+}
+.safety-banner {
+  background: var(--soft-bg);
+  color: var(--soft-text);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.safety-banner .row {
+  gap: 12px;
+}
+.safety-contact {
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule);
+}
+.safety-view {
+  padding: 8px 12px;
+}

@@ -10,6 +10,7 @@ import { DateMark, Icon } from "../../ui";
 import { useAsync } from "../../useAsync";
 import { callWhat, KIND_LABEL, useDirector } from "./actorLib";
 import { AUDIENCE_LABEL, excerpt, postedWhen } from "../callboardLib";
+import { SafetyNudge } from "../SafetyCard";
 import "./actor.css";
 
 function opensLine(opening: string | null | undefined, start: string, end: string): string {
@@ -91,6 +92,8 @@ export function ShowHome(props: ShowPageProps) {
           </div>
         )}
       </header>
+
+      {!archived && <SafetyNudge />}
 
       {archived && (
         <div className="actor-section" style={{ paddingTop: 18 }}>

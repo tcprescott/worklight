@@ -82,3 +82,13 @@ export type ApiKey = Schemas["ApiKey"];
 export type ApiKeyScope = ApiKey["scope"];
 export type CreateApiKeyBody = Schemas["CreateApiKeyBody"];
 export type NewApiKey = Schemas["NewApiKey"];
+
+export type SafetyInfo = Schemas["SafetyInfo"];
+export type SafetyBody = Schemas["SafetyBody"];
+export type EmergencyContact = Schemas["EmergencyContact"];
+export type ApprovedPickup = Schemas["ApprovedPickup"];
+export type MedicalNotes = Schemas["MedicalNotes"];
+export type SafetyAccessView = Schemas["SafetyAccessView"];
+export type ShowSafetyPage = Schemas["ShowSafetyPage"];
+export type MemberSafety = Schemas["MemberSafety"];
+export type MemberMedical = Schemas["MemberMedical"];

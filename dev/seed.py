@@ -7,13 +7,17 @@ from worklight.ids import now_iso
 from worklight.models import (
     Act,
     Appearance,
+    ApprovedPickup,
     Character,
     CheckIn,
     DateConflict,
+    EmergencyContact,
+    MedicalNotes,
     Membership,
     Notice,
     NoticeRead,
     RehearsalSlot,
+    SafetyInfo,
     Scene,
     Show,
     Theater,
@@ -169,6 +173,7 @@ def seed(ctx: Ctx) -> None:
             title="Director",
             department="Production",
             joined_at=now,
+            medical_access=True,
         ),
     )
 
@@ -213,10 +218,12 @@ def seed(ctx: Ctx) -> None:
                 invited_at=now,
                 joined_at=None if status == "invited" else now,
                 conflicts_submitted_at=now if status == "ready" else None,
+                medical_access=name == "Priya Nair",
             )
         )
     for c in chars.values():
         store.put_character(c)
+    seed_safety(ctx, users)
 
     def date(user: str, day: str, level: str, arrive: str | None = None, leave: str | None = None) -> None:
         store.put_date_conflict(
@@ -450,3 +457,45 @@ def seed_callboard(ctx: Ctx, director: User, users: dict[str, User]) -> None:
                     show_id="midsummer", notice_id=notice_id, user_id=users[name].user_id, at=now_iso()
                 )
             )
+
+
+def seed_safety(ctx: Ctx, users: dict[str, User]) -> None:
+    """Emergency contacts for most of the company. Maya has none, so she sees the reminder on show home."""
+    if ctx.safety is None:
+        return
+    now = now_iso()
+
+    def contact(name: str, rel: str, phone: str, guardian: bool = False) -> EmergencyContact:
+        return EmergencyContact(name=name, relationship=rel, phone=phone, guardian=guardian)
+
+    infos = {
+        "Nao Sato": SafetyInfo(
+            user_id="",
+            minor=True,
+            contacts=[
+                contact("Keiko Sato", "Mother", "555-0142", True),
+                contact("Ren Sato", "Father", "555-0143", True),
+            ],
+            pickups=[ApprovedPickup(name="Grace Lin", note="Neighbor, silver minivan")],
+            medical=MedicalNotes(allergies="Peanuts. EpiPen in the front pocket of her backpack."),
+            updated_at=now,
+        ),
+        "Omar Farouk": SafetyInfo(
+            user_id="",
+            minor=True,
+            contacts=[contact("Layla Farouk", "Mother", "555-0177", True)],
+            updated_at=now,
+        ),
+        "Rosa Alvarez": SafetyInfo(
+            user_id="",
+            contacts=[contact("Luis Alvarez", "Spouse", "555-0110")],
+            medical=MedicalNotes(conditions="Asthma", medications="Inhaler in her dance bag"),
+            updated_at=now,
+        ),
+    }
+    for name in ("Daniel Okafor", "George Haddad", "Elena Rossi", "Kofi Mensah", "Priya Nair", "Lin Park"):
+        infos[name] = SafetyInfo(
+            user_id="", contacts=[contact("Sam Carter", "Partner", "555-0190")], updated_at=now
+        )
+    for name, info in infos.items():
+        ctx.safety.put(info.model_copy(update={"user_id": users[name].user_id}))
