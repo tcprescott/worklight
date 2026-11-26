@@ -308,6 +308,13 @@ function Home(props: { view: TheaterView; reload: () => Promise<void>; setView: 
               Edit the strike list
             </Link>
           </section>
+          <section className="co-panel" aria-label="Costume and props stock">
+            <h2 className="co-panel-title">Costume and props stock</h2>
+            <span className="co-panel-sub">What the company owns, with photos and where it's kept. Shows pull from it.</span>
+            <Link to={`/c/${theaterId}/stock`} className="btn btn-dashed">
+              Open the stock
+            </Link>
+          </section>
         </aside>
       </main>
       {archiving && (

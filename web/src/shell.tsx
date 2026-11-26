@@ -43,6 +43,13 @@ export function AccountMenu(props: { showId?: string; isStaff?: boolean }) {
           </div>
           {theater && <Link to={`/c/${theater.theaterId}`}>Company home</Link>}
           {theater && <Link to={`/c/${theater.theaterId}/staff`}>Staff and admins</Link>}
+          {(me.keeps ?? [])
+            .filter((k) => k.theaterId !== theater?.theaterId)
+            .map((k) => (
+              <Link key={k.theaterId} to={`/c/${k.theaterId}/stock`}>
+                {me.keeps!.length > 1 ? `${k.theaterName} stock` : "Company stock"}
+              </Link>
+            ))}
           {activeShows.length > 1 && <Link to="/shows">All my shows</Link>}
           {props.showId && props.isStaff && <Link to={`/shows/${props.showId}/settings`}>Show settings</Link>}
           {props.showId && <Link to={`/shows/${props.showId}/conflicts`}>My conflicts</Link>}
@@ -78,7 +85,7 @@ export function CompanyShell(props: { context?: string; children: ReactNode }) {
   );
 }
 
-export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "strike" | "settings";
+export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "costumes" | "strike" | "settings";
 
 interface Tab {
   id: StaffTab;
@@ -96,6 +103,7 @@ export function staffTabs(view: ShowView): Tab[] {
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
   tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
+  tabs.push({ id: "costumes", label: "Costumes", icon: "hanger", path: `/shows/${id}/costumes` });
   if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
   // Strike shows from a week before tech (or opening, or closing) on.
   const from = view.show.techStart ?? view.show.openingDate ?? view.show.endDate;

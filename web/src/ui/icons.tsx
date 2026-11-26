@@ -41,6 +41,14 @@ const PATHS = {
   edit: <path d="M4 20h4L19 9l-4-4L4 16v4zM14 6l4 4" />,
   trash: <path d="M5 7h14M10 7V4h4v3M7 7l1 13h8l1-13" />,
   mail: <path d="M4 6h16v12H4zM4 7l8 6 8-6" />,
+  hanger: <path d="M10 6.5a2 2 0 112.6 1.9c-.4.2-.6.5-.6 1V11M3 18l9-6.5L21 18H3z" />,
+  camera: (
+    <>
+      <path d="M4 8h3l2-3h6l2 3h3v11H4z" />
+      <circle cx="12" cy="13" r="3.5" />
+    </>
+  ),
+  ruler: <path d="M3 15L15 3l6 6L9 21zM7 11l2 2M10 8l2 2M13 5l2 2" />,
 };
 
 export type IconName = keyof typeof PATHS;

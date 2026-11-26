@@ -25,6 +25,7 @@ from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
 from worklight.services import strike as strike_service
 from worklight.services import theaters as theaters_service
+from worklight.services import wardrobe as wardrobe_service
 from worklight.services.apikeys import KeyPrincipal, principal_for
 from worklight.services.base import Ctx, ServiceError
 
@@ -198,6 +199,14 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
             fields["done"] = done
         body = strike_service.UpdateTaskBody.model_validate(fields)
         return _out(strike_service.update_task(ctx, p.user, scoped(show_id), task_id, body))
+
+    @server.tool(
+        description="The show's costumes and props: each item with its characters, scenes, status, where it "
+        "comes from (stock, bought, built, rented, borrowed), costs, and the show's spend and open deposits. "
+        "Read only: changes are made by people with costume or props access in the app."
+    )
+    def get_costumes_and_props(show_id: str) -> str:
+        return _out(wardrobe_service.get_tracker(ctx, who().user, scoped(show_id)))
 
     return mcp
 

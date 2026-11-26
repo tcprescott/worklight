@@ -10,6 +10,7 @@ from worklight import keys
 from worklight.ids import new_id, now_iso
 from worklight.mailer import Mailer
 from worklight.models import Membership, Show, ShowRole, User
+from worklight.photos import PhotoStore
 from worklight.push import Pusher
 from worklight.roles import ShowAction, can_on_show
 from worklight.store import Store
@@ -52,6 +53,8 @@ class Ctx:
     mailer: Mailer
     # Public site origin, e.g. https://worklight.example.org. Used in emailed links.
     app_url: str
+    # Where costume and prop photos go. Unset where nothing stores photos (some scripts).
+    photos: PhotoStore | None = None
     # Push channels; empty means push is off for this deployment.
     push: Pusher = field(default_factory=Pusher)
 

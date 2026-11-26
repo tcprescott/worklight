@@ -5,6 +5,7 @@ from mangum import Mangum
 
 from tests.fakes import FakeMailer, FakePush
 from worklight.app import create_app
+from worklight.photos import MemoryPhotos
 from worklight.push import Pusher
 from worklight.services.base import Ctx
 from worklight.store import DynamoStore
@@ -14,8 +15,13 @@ class Client:
     """Calls the app the way API Gateway does: an HTTP API v2 event with the verified JWT claims."""
 
     def __init__(self, store: DynamoStore, mailer: FakeMailer, push: FakePush | None = None) -> None:
+        self.photos = MemoryPhotos()
         self.ctx = Ctx(
-            store=store, mailer=mailer, app_url="https://worklight.test", push=Pusher([push] if push else [])
+            store=store,
+            mailer=mailer,
+            app_url="https://worklight.test",
+            photos=self.photos,
+            push=Pusher([push] if push else []),
         )
         self.handler = Mangum(create_app(self.ctx), lifespan="off")
 
@@ -56,7 +62,7 @@ class Client:
                 "stage": "$default",
             },
             "body": raw_body if raw_body is not None else (None if body is None else json.dumps(body)),
-            "isBase64Encoded": False,
+            "isBase64Encoded": getattr(self, "_binary", None) is not None,
         }
         res = self.handler(event, None)
         if not res.get("body"):
@@ -64,6 +70,17 @@ class Client:
         if "json" not in res["headers"].get("content-type", ""):
             return res["statusCode"], res["body"]
         return res["statusCode"], json.loads(res["body"])
+
+    def upload(self, email: str, path: str, data: bytes, content_type: str = "image/jpeg") -> tuple[int, Any]:
+        """POSTs raw bytes the way API Gateway passes a binary body: base64 with isBase64Encoded."""
+        import base64
+
+        event_body = base64.b64encode(data).decode()
+        self._binary = (event_body, content_type)
+        try:
+            return self(email, "POST", path, raw_body=event_body, headers={"content-type": content_type})
+        finally:
+            self._binary = None
 
     def ok(self, email: str, method: str, path: str, body: Any = None) -> Any:
         status, data = self(email, method, path, body)

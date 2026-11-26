@@ -10,12 +10,16 @@ from worklight.models import (
     Character,
     CheckIn,
     DateConflict,
+    Keeper,
+    Measurements,
     Membership,
     Notice,
     NoticeRead,
     RehearsalSlot,
     Scene,
     Show,
+    ShowItem,
+    StockItem,
     StrikeTemplateTask,
     Theater,
     User,
@@ -319,6 +323,7 @@ def seed(ctx: Ctx) -> None:
 
     seed_schedule(ctx, jordan, users)
     seed_callboard(ctx, jordan, users)
+    seed_wardrobe(ctx, jordan, users)
     seed_strike(ctx, jordan, users)
 
 
@@ -503,3 +508,397 @@ def seed_strike(ctx: Ctx, director: User, users: dict[str, User]) -> None:
             assignee_ids=[users[n].user_id for n in names], done=True if i == 0 else None
         )
         strike.update_task(ctx, director, "midsummer", tasks[i].task_id, body)
+
+
+def _swatch(rgb: tuple[int, int, int], accent: tuple[int, int, int]) -> bytes:
+    """A small PNG: a colour field with a band across it, standing in for a photo."""
+    import struct
+    import zlib
+
+    size = 96
+    rows = b"".join(b"\x00" + bytes(accent if 36 <= y < 60 else rgb) * size for y in range(size))
+
+    def chunk(kind: bytes, data: bytes) -> bytes:
+        return (
+            struct.pack(">I", len(data))
+            + kind
+            + data
+            + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+        )
+
+    header = struct.pack(">IIBBBBB", size, size, 8, 2, 0, 0, 0)
+    return (
+        b"\x89PNG\r\n\x1a\n"
+        + chunk(b"IHDR", header)
+        + chunk(b"IDAT", zlib.compress(rows))
+        + chunk(b"IEND", b"")
+    )
+
+
+# (kind, name, character or None, status, source, lender, due back, cents: cost, rental, deposit, colours)
+ITEMS: list[
+    tuple[str, str, str | None, str, str | None, str | None, str | None, tuple[int, int, int], tuple]
+] = [
+    (
+        "costume",
+        "Athenian gown, white",
+        "Hermia",
+        "ready",
+        "stock",
+        None,
+        None,
+        (0, 0, 0),
+        ((236, 230, 220), (200, 170, 90)),
+    ),
+    (
+        "costume",
+        "Athenian gown, blue",
+        "Helena",
+        "pulled",
+        "rented",
+        "Costume Barn",
+        "2026-12-10",
+        (0, 8500, 5000),
+        ((90, 120, 180), (220, 200, 140)),
+    ),
+    (
+        "costume",
+        "Tunic and sash",
+        "Lysander",
+        "needed",
+        None,
+        None,
+        None,
+        (0, 0, 0),
+        ((150, 90, 60), (230, 210, 170)),
+    ),
+    (
+        "costume",
+        "Duke's doublet",
+        "Theseus",
+        "pulled",
+        "borrowed",
+        "Lincoln High Theatre",
+        "2026-12-12",
+        (0, 0, 0),
+        ((110, 30, 40), (210, 170, 60)),
+    ),
+    (
+        "costume",
+        "Donkey head",
+        "Bottom",
+        "building",
+        "built",
+        None,
+        None,
+        (4000, 0, 0),
+        ((120, 100, 85), (60, 50, 45)),
+    ),
+    (
+        "costume",
+        "Weaver's smock",
+        "Bottom",
+        "ready",
+        "stock",
+        None,
+        None,
+        (0, 0, 0),
+        ((140, 110, 80), (90, 70, 50)),
+    ),
+    (
+        "costume",
+        "Fairy queen gown",
+        "Titania",
+        "pulled",
+        "rented",
+        "Costume Barn",
+        "2026-12-10",
+        (0, 12000, 5000),
+        ((120, 160, 120), (230, 220, 240)),
+    ),
+    (
+        "costume",
+        "Flower crown",
+        "Titania",
+        "needed",
+        None,
+        None,
+        None,
+        (0, 0, 0),
+        ((220, 170, 190), (120, 160, 100)),
+    ),
+    (
+        "costume",
+        "Antler crown",
+        "Oberon",
+        "building",
+        "built",
+        None,
+        None,
+        (2500, 0, 0),
+        ((90, 70, 50), (40, 60, 40)),
+    ),
+    (
+        "costume",
+        "Leaf vest",
+        "Puck",
+        "ready",
+        "bought",
+        None,
+        None,
+        (3000, 0, 0),
+        ((70, 110, 60), (140, 170, 90)),
+    ),
+    (
+        "costume",
+        "Fairy wings (6)",
+        "Fairies",
+        "needed",
+        None,
+        None,
+        None,
+        (0, 0, 0),
+        ((210, 225, 235), (180, 200, 220)),
+    ),
+    (
+        "prop",
+        "Love-in-idleness flower",
+        "Puck",
+        "ready",
+        "built",
+        None,
+        None,
+        (800, 0, 0),
+        ((170, 60, 120), (80, 130, 70)),
+    ),
+    (
+        "prop",
+        "Script scrolls (6)",
+        "Quince",
+        "ready",
+        "bought",
+        None,
+        None,
+        (600, 0, 0),
+        ((230, 215, 180), (150, 120, 80)),
+    ),
+    (
+        "prop",
+        "Hunting horn",
+        "Theseus",
+        "pulled",
+        "borrowed",
+        "Riverside Community Band",
+        "2026-12-08",
+        (0, 0, 0),
+        ((190, 150, 60), (120, 90, 40)),
+    ),
+    (
+        "prop",
+        "Lantern",
+        None,
+        "pulled",
+        "borrowed",
+        "Lincoln High Theatre",
+        "2026-12-12",
+        (0, 0, 0),
+        ((60, 60, 70), (240, 200, 90)),
+    ),
+    (
+        "prop",
+        "Bower cushions",
+        "Titania",
+        "needed",
+        None,
+        None,
+        None,
+        (0, 0, 0),
+        ((150, 100, 140), (210, 180, 200)),
+    ),
+]
+
+STOCK = [
+    ("costume", "Athenian gown, white", "Dresses", "10", "Rack A"),
+    ("costume", "Weaver's smock", "Shirts and smocks", "XL", "Bin 4"),
+    ("costume", "Victorian tailcoat", "Coats", "42R", "Rack C"),
+    ("costume", "Top hat", "Hats", "7 1/4", "Shelf 2"),
+    ("costume", "Peasant blouse", "Shirts and smocks", "M", "Bin 4"),
+    ("prop", "Wooden goblets (4)", "Tableware", None, "Props loft, box 3"),
+    ("prop", "Rubber swords (2)", "Weapons", None, "Props loft, rack"),
+    ("prop", "Picnic basket", "Hand props", None, "Props loft, box 7"),
+]
+
+
+def seed_wardrobe(ctx: Ctx, director: User, users: dict[str, User]) -> None:
+    """Lin runs costumes and Priya props; Lin and Sam keep the company stock. Midsummer has a costume plot
+    half done, two rentals, two loans, measurements for a few of the cast, and fittings."""
+    from worklight.photos import key_for
+
+    store, now, show_id, theater_id = ctx.store, now_iso(), "midsummer", "maplewood"
+    lin, priya, sam = users["Lin Park"], users["Priya Nair"], users["Sam Whitfield"]
+    for person, costumes, props in ((lin, True, False), (priya, False, True)):
+        m = store.get_membership(show_id, person.user_id)
+        assert m
+        store.put_membership(m.model_copy(update={"costume_access": costumes, "props_access": props}))
+    store.put_keeper(Keeper(theater_id=theater_id, user_id=lin.user_id, costumes=True))
+    store.put_keeper(Keeper(theater_id=theater_id, user_id=sam.user_id, props=True))
+
+    def photo(name: str, colours: tuple) -> list[str]:
+        if ctx.photos is None:
+            return []
+        import re
+
+        photo_id = "seed-" + re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") + ".png"
+        ctx.photos.put(key_for(theater_id, photo_id), _swatch(*colours), "image/png")
+        return [photo_id]
+
+    stock: dict[str, StockItem] = {}
+    palette = [
+        ((236, 230, 220), (200, 170, 90)),
+        ((140, 110, 80), (90, 70, 50)),
+        ((30, 30, 40), (120, 120, 130)),
+        ((25, 25, 25), (90, 30, 30)),
+        ((240, 235, 225), (170, 140, 120)),
+        ((150, 100, 60), (110, 70, 40)),
+        ((120, 120, 130), (80, 60, 40)),
+        ((180, 140, 80), (120, 90, 50)),
+    ]
+    for i, (kind, name, category, size, location) in enumerate(STOCK):
+        item = StockItem(
+            item_id=f"stock{i + 1}",
+            theater_id=theater_id,
+            kind=kind,  # type: ignore[arg-type]
+            name=name,
+            category=category,
+            size=size,
+            location=location,
+            photo_ids=photo(f"stock {name}", palette[i]),
+            created_at=now,
+            updated_at=now,
+        )
+        stock[name] = item
+
+    scenes_of: dict[str, list[str]] = {}
+    for _act, number, _name, _pages, who in SCENES:
+        for c in who:
+            scenes_of.setdefault(c, []).append(f"s{number.replace('.', '-')}")
+    for i, (kind, name, char, status, source, lender, due, (cost, rental, deposit), colours) in enumerate(
+        ITEMS
+    ):
+        from_stock = stock.get(name) if source == "stock" else None
+        item = ShowItem(
+            item_id=f"item{i + 1}",
+            show_id=show_id,
+            theater_id=theater_id,
+            kind=kind,  # type: ignore[arg-type]
+            name=name,
+            char_ids=[f"c-{char.lower()}"] if char else [],
+            scene_ids=scenes_of.get(char, []) if char else ["s2-1", "s2-2", "s3-1"],
+            status=status,  # type: ignore[arg-type]
+            source=source,  # type: ignore[arg-type]
+            stock_item_id=from_stock.item_id if from_stock else None,
+            lender=lender,
+            due_back=due,
+            lender_contact="Dana at the front desk, 555-0142" if lender == "Costume Barn" else None,
+            cost_cents=cost or None,
+            rental_fee_cents=rental or None,
+            deposit_cents=deposit or None,
+            notes="Hem up 2 inches for Amélie" if name == "Athenian gown, blue" else None,
+            photo_ids=from_stock.photo_ids
+            if from_stock
+            else (photo(name, colours) if status != "needed" else []),
+            created_at=now,
+            updated_at=now,
+        )
+        store.put_show_item(item)
+        if from_stock:
+            stock[name] = from_stock.model_copy(
+                update={"in_show_id": show_id, "in_show_item_id": item.item_id}
+            )
+    store.put_stock_items(list(stock.values()))
+
+    sheets = {
+        "Maya Chen": dict(
+            height="5' 4\"",
+            weight="125 lb",
+            shoe="7.5",
+            suit_dress="6",
+            shirt="S",
+            trouser="27 / 29",
+            bra="34B",
+            hat="22",
+            head=22,
+            neck=13,
+            chest=34,
+            underbust=29,
+            waist=27,
+            hip=37,
+            below_knee=13,
+            inseam=29,
+            outseam=39.5,
+            nape_to_waist=15.5,
+            nape_to_floor=54,
+            nape_to_shoulder=7,
+            to_elbow=19.5,
+            to_wrist=29,
+            across_shoulders=14.5,
+            waist_to_floor=40,
+            notes="Allergic to wool. Pierced ears.",
+        ),
+        "George Haddad": dict(
+            height="5' 11\"",
+            weight="255 lb",
+            shoe="12",
+            head=25,
+            neck=18,
+            chest=47,
+            underbust=45.5,
+            waist=47.5,
+            hip=46,
+            below_knee=16.5,
+            inseam=35,
+            outseam=42,
+            nape_to_waist=20,
+            nape_to_floor=66,
+            nape_to_shoulder=12,
+            to_elbow=21.5,
+            to_wrist=32.5,
+            across_shoulders=20,
+            waist_to_floor=43,
+            notes="None",
+        ),
+        "Elena Rossi": dict(
+            height="5' 8\"", shoe="9", suit_dress="10", head=22.5, chest=38, waist=31, hip=40
+        ),
+    }
+    for name, fields in sheets.items():
+        store.put_measurements(
+            Measurements(
+                user_id=users[name].user_id,
+                **fields,  # type: ignore[arg-type]
+                updated_at=now,
+                updated_by=lin.user_id if name == "George Haddad" else users[name].user_id,
+            )
+        )
+
+    for day, start, end, who in (
+        ("2026-11-07", "13:30", "15:00", ["George Haddad", "Elena Rossi"]),
+        ("2026-11-28", "13:30", "15:00", ["Maya Chen", "Kofi Mensah", "Amélie Moreau"]),
+    ):
+        schedule.create_call(
+            ctx,
+            director,
+            show_id,
+            schedule.CreateCallBody(
+                date=day,
+                start=start,
+                end=end,
+                type="fitting",
+                title="Costume fitting",
+                location="Costume shop",
+                user_ids=[users[n].user_id for n in who],
+            ),
+        )
+        schedule.publish(
+            ctx, director, show_id, schedule.PublishBody.model_validate({"from": day, "to": day})
+        )

@@ -71,6 +71,7 @@ export const TYPE_LABEL: Record<MyCall["type"], string> = {
   dress: "Dress rehearsal",
   performance: "Performance",
   strike: "Strike",
+  fitting: "Costume fitting",
 };
 
 /** "Script and a pencil" -> "script and a pencil" for "Bring ..." */

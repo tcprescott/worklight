@@ -1,7 +1,7 @@
 from typing import Annotated, Any
 
 from worklight import keys
-from worklight.models import Me, Model, MyShow, MyTheater, NotifyPrefs, User
+from worklight.models import Me, Model, MyKeeper, MyShow, MyTheater, NotifyPrefs, User
 from worklight.services.base import Ctx, Unauthorized, text, user_for_email
 
 
@@ -17,11 +17,25 @@ def user_from_claims(ctx: Ctx, claims: dict[str, Any]) -> User:
 def get_me(ctx: Ctx, user: User) -> Me:
     store = ctx.store
     admin_ids = store.list_admin_theater_ids(user.user_id)
+    kept_ids = store.list_kept_theater_ids(user.user_id)
     memberships = store.list_memberships(user.user_id)
     shows = {s.show_id: s for s in store.get_shows((m.theater_id, m.show_id) for m in memberships)}
     theaters = {
-        t.theater_id: t for t in store.get_theaters([*admin_ids, *(m.theater_id for m in memberships)])
+        t.theater_id: t
+        for t in store.get_theaters([*admin_ids, *kept_ids, *(m.theater_id for m in memberships)])
     }
+    keeps = []
+    for theater_id in kept_ids:
+        keeper = store.get_keeper(theater_id, user.user_id)
+        if keeper and theater_id in theaters:
+            keeps.append(
+                MyKeeper(
+                    theater_id=theater_id,
+                    theater_name=theaters[theater_id].name,
+                    costumes=keeper.costumes,
+                    props=keeper.props,
+                )
+            )
     my_shows = [
         MyShow(
             show=shows[m.show_id],
@@ -30,6 +44,8 @@ def get_me(ctx: Ctx, user: User) -> Me:
             title=m.title,
             status=m.status,
             conflicts_submitted_at=m.conflicts_submitted_at,
+            costume_access=m.costume_access,
+            props_access=m.props_access,
         )
         for m in memberships
         if m.show_id in shows
@@ -39,6 +55,7 @@ def get_me(ctx: Ctx, user: User) -> Me:
         user=user,
         theaters=[MyTheater(theater=theaters[t], role="admin") for t in admin_ids if t in theaters],
         shows=my_shows,
+        keeps=keeps,
     )
 
 

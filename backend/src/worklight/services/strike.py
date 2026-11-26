@@ -36,6 +36,8 @@ class StrikeTaskView(StrikeTask):
     done_by_name: str | None = None
     # Whether the person looking can tick it off (staff, or one of its assignees).
     can_check: bool = False
+    # For a Returns task: the costumes and props in it.
+    return_items: list[str] = []
 
 
 class StrikeCallView(Model):
@@ -63,7 +65,11 @@ class StrikeChecklist(Model):
 
 
 def _views(
-    tasks: list[StrikeTask], names: dict[str, str | None], me: str, staff: bool
+    tasks: list[StrikeTask],
+    names: dict[str, str | None],
+    me: str,
+    staff: bool,
+    returns: dict[str, list[str]] | None = None,
 ) -> list[StrikeTaskView]:
     return [
         StrikeTaskView(
@@ -71,6 +77,7 @@ def _views(
             assignees=[Assignee(user_id=u, name=names.get(u)) for u in t.assignee_ids],
             done_by_name=names.get(t.done_by) if t.done_by else None,
             can_check=staff or me in t.assignee_ids,
+            return_items=(returns or {}).get(t.return_key or "", []),
         )
         for t in tasks
     ]
@@ -110,8 +117,10 @@ def get_checklist(ctx: Ctx, user: User, show_id: str) -> StrikeChecklist:
             )
     calls.sort(key=lambda c: (c.date, c.start))
     editable = staff and access.show.status != "archived"
+    from worklight.services.wardrobe import return_items_for
+
     return StrikeChecklist(
-        tasks=_views(visible, names, user.user_id, staff),
+        tasks=_views(visible, names, user.user_id, staff, return_items_for(part)),
         areas=_areas(visible),
         done_count=sum(1 for t in visible if t.done_at),
         unassigned_count=sum(1 for t in visible if not t.assignee_ids),
@@ -207,6 +216,10 @@ def update_task(ctx: Ctx, user: User, show_id: str, task_id: str, body: UpdateTa
         update["done_by"] = None
     updated = task.model_copy(update=update)
     ctx.store.put_strike_task(updated)
+    if updated.return_key and body.done is True and not task.done_at:
+        from worklight.services.wardrobe import mark_group_returned
+
+        mark_group_returned(ctx, show_id, updated.return_key)
     return updated
 
 
@@ -245,9 +258,13 @@ def copy_template(ctx: Ctx, user: User, show_id: str) -> StrikeChecklist:
 
 
 def start_checklist_if_empty(ctx: Ctx, show: Show) -> None:
-    """When a show gets its first strike call, its checklist starts as a copy of the company template."""
+    """When a show gets its first strike call, its checklist starts as a copy of the company template,
+    plus a task for each lender the show's costumes and props go back to."""
     if not ctx.store.list_strike_tasks(show.show_id):
         copy_template_into(ctx, show)
+    from worklight.services.wardrobe import sync_return_tasks
+
+    sync_return_tasks(ctx, show)
 
 
 # ---- Company template -----------------------------------------------------------------------------

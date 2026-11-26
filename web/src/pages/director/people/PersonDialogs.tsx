@@ -84,7 +84,7 @@ export function PartsDialog(props: {
   );
 }
 
-/** Role, title and department. */
+/** Role, title, department, and costume and props access. */
 export function EditMemberDialog(props: {
   showId: string;
   person: Person;
@@ -97,6 +97,8 @@ export function EditMemberDialog(props: {
   const [role, setRole] = useState<ShowRole>(m.role);
   const [title, setTitle] = useState(m.title ?? "");
   const [department, setDepartment] = useState(m.department ?? "");
+  const [costumes, setCostumes] = useState(Boolean(m.costumeAccess));
+  const [props_, setProps] = useState(Boolean(m.propsAccess));
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -108,6 +110,8 @@ export function EditMemberDialog(props: {
         role,
         title: title.trim() || null,
         department: department.trim() || null,
+        costumeAccess: costumes,
+        propsAccess: props_,
       });
       await props.onSaved(`Saved ${props.person.name}`);
       props.onClose();
@@ -164,6 +168,21 @@ export function EditMemberDialog(props: {
           </label>
         </div>
         {role === "cast" && <span className="hint">Cast are listed under Cast. Department only groups crew and staff.</span>}
+        <div className="field">
+          Costumes and props
+          <label className="check">
+            <input type="checkbox" checked={costumes} onChange={(e) => setCostumes(e.target.checked)} />
+            <span>
+              Costume access <span className="hint">Manages costumes and sees the cast's measurements</span>
+            </span>
+          </label>
+          <label className="check">
+            <input type="checkbox" checked={props_} onChange={(e) => setProps(e.target.checked)} />
+            <span>
+              Props access <span className="hint">Manages props</span>
+            </span>
+          </label>
+        </div>
         <FormError error={error} />
         <div className="dialog-actions">
           <button type="button" className="btn" onClick={props.onClose}>

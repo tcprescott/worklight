@@ -17,9 +17,12 @@ from worklight.models import (
     Call,
     Character,
     CheckIn,
+    CostumeNeeds,
     DateConflict,
     Invite,
+    Keeper,
     MagicLinkRecord,
+    Measurements,
     Membership,
     Model,
     Notice,
@@ -27,6 +30,8 @@ from worklight.models import (
     PushDevice,
     Scene,
     Show,
+    ShowItem,
+    StockItem,
     StrikeTask,
     StrikeTemplateTask,
     Theater,
@@ -102,6 +107,7 @@ class ShowPartition:
     notices: list[Notice] = field(default_factory=list)
     reads: list[NoticeRead] = field(default_factory=list)
     strike_tasks: list[StrikeTask] = field(default_factory=list)
+    items: list[ShowItem] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -412,6 +418,8 @@ class DynamoStore:
                 part.reads.append(NoticeRead.model_validate(data))
             elif sk.startswith(keys.STRIKE_PREFIX):
                 part.strike_tasks.append(StrikeTask.model_validate(data))
+            elif sk.startswith(keys.ITEM_PREFIX):
+                part.items.append(ShowItem.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
@@ -593,6 +601,82 @@ class DynamoStore:
         self._batch_delete(
             [keys.strike_template_task(theater_id, t.task_id) for t in old if t.task_id not in keep]
         )
+
+    # ---- costumes and props -------------------------------------------------------------------
+
+    def list_show_items(self, show_id: str) -> list[ShowItem]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], keys.ITEM_PREFIX)
+        return sorted((ShowItem.model_validate(i) for i in items), key=lambda i: i.name.lower())
+
+    def get_show_item(self, show_id: str, item_id: str) -> ShowItem | None:
+        item = self._get(keys.show_item(show_id, item_id))
+        return ShowItem.model_validate(item) if item else None
+
+    def put_show_item(self, item: ShowItem) -> None:
+        self._put_item(keys.show_item(item.show_id, item.item_id), "showItem", item)
+
+    def put_show_items(self, items: list[ShowItem]) -> None:
+        self._batch_put([(keys.show_item(i.show_id, i.item_id), "showItem", i) for i in items])
+
+    def delete_show_item(self, show_id: str, item_id: str) -> None:
+        self._delete(keys.show_item(show_id, item_id))
+
+    def list_costume_needs(self, show_id: str) -> list[CostumeNeeds]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], keys.NEEDS_PREFIX)
+        return [CostumeNeeds.model_validate(i) for i in items]
+
+    def get_costume_needs(self, show_id: str, user_id: str) -> CostumeNeeds | None:
+        item = self._get(keys.costume_needs(show_id, user_id))
+        return CostumeNeeds.model_validate(item) if item else None
+
+    def put_costume_needs(self, needs: CostumeNeeds) -> None:
+        self._put_item(keys.costume_needs(needs.show_id, needs.user_id), "costumeNeeds", needs)
+
+    def list_stock(self, theater_id: str) -> list[StockItem]:
+        items = self._query_all(keys.theater(theater_id)["PK"], keys.STOCK_PREFIX)
+        return sorted((StockItem.model_validate(i) for i in items), key=lambda i: i.name.lower())
+
+    def get_stock_item(self, theater_id: str, item_id: str) -> StockItem | None:
+        item = self._get(keys.stock_item(theater_id, item_id))
+        return StockItem.model_validate(item) if item else None
+
+    def put_stock_item(self, item: StockItem) -> None:
+        self._put_item(keys.stock_item(item.theater_id, item.item_id), "stockItem", item)
+
+    def put_stock_items(self, items: list[StockItem]) -> None:
+        self._batch_put([(keys.stock_item(i.theater_id, i.item_id), "stockItem", i) for i in items])
+
+    def delete_stock_item(self, theater_id: str, item_id: str) -> None:
+        self._delete(keys.stock_item(theater_id, item_id))
+
+    def list_keepers(self, theater_id: str) -> list[Keeper]:
+        items = self._query_all(keys.theater(theater_id)["PK"], keys.KEEPER_PREFIX)
+        return [Keeper.model_validate(i) for i in items]
+
+    def get_keeper(self, theater_id: str, user_id: str) -> Keeper | None:
+        item = self._get(keys.keeper(theater_id, user_id))
+        return Keeper.model_validate(item) if item else None
+
+    def list_kept_theater_ids(self, user_id: str) -> list[str]:
+        items = self._query_all(keys.user_gsi(user_id), keys.KEEPER_PREFIX, index="GSI1")
+        return [str(i["theaterId"]) for i in items]
+
+    def put_keeper(self, keeper: Keeper) -> None:
+        self._put_item(keys.keeper(keeper.theater_id, keeper.user_id), "keeper", keeper)
+
+    def delete_keeper(self, theater_id: str, user_id: str) -> None:
+        self._delete(keys.keeper(theater_id, user_id))
+
+    def get_measurements(self, user_id: str) -> Measurements | None:
+        item = self._get(keys.measurements(user_id))
+        return Measurements.model_validate(item) if item else None
+
+    def get_many_measurements(self, user_ids: Iterable[str]) -> list[Measurements]:
+        refs = [keys.measurements(u) for u in dict.fromkeys(user_ids)]
+        return [Measurements.model_validate(i) for i in self._batch_get(refs)]
+
+    def put_measurements(self, m: Measurements) -> None:
+        self._put_item(keys.measurements(m.user_id), "measurements", m)
 
     # ---- check-ins ----------------------------------------------------------------------------
 

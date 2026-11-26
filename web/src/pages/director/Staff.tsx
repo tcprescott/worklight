@@ -7,6 +7,7 @@ import { CompanyShell } from "../../shell";
 import type { Admin, Member, ShowSummary, TheaterView } from "../../types";
 import { Avatar, Dialog, ErrorView, FormError, Loading, useToast } from "../../ui";
 import { useAsync } from "../../useAsync";
+import { KeepersCard } from "../wardrobe/KeepersCard";
 import { ApiKeysCard } from "./ApiKeys";
 import "./company.css";
 import { ADMIN_SENTENCE, departmentFor, isStageManager, roleSentence, STAFF_ROLES, validEmail } from "./setup-parts";
@@ -139,6 +140,7 @@ function StaffPage(props: { view: TheaterView; reload: () => Promise<void>; setV
             </section>
           ))}
 
+          {isAdmin && <KeepersCard theaterId={theaterId} showToast={showToast} />}
           {isAdmin && <ApiKeysCard theaterId={theaterId} admins={view.admins} showToast={showToast} />}
         </div>
         {active.length === 0 && (

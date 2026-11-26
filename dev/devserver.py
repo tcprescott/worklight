@@ -23,7 +23,7 @@ from typing import Any
 
 import boto3
 import uvicorn
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from moto import mock_aws
 from pydantic import BaseModel
 
@@ -37,6 +37,7 @@ from worklight.keys import normalize_email  # noqa: E402
 from worklight.localdb import create_table  # noqa: E402
 from worklight.mailer import Email  # noqa: E402
 from worklight.models import PushDevice  # noqa: E402
+from worklight.photos import MemoryPhotos  # noqa: E402
 from worklight.push import Pusher, PushMessage, WebPushChannel  # noqa: E402
 from worklight.services.base import Ctx  # noqa: E402
 from worklight.services.shows import invite_sign_in_ok  # noqa: E402
@@ -109,15 +110,25 @@ def build(seeded: bool, app_url: str) -> Any:
     client = boto3.client("dynamodb", region_name="us-east-1")
     create_table(client)
     outbox = Outbox()
+    photos = MemoryPhotos()
     ctx = Ctx(
         store=DynamoStore("worklight", client),
         mailer=outbox,
         app_url=app_url,
+        photos=photos,
         push=Pusher([DevPush(outbox)]),
     )
     if seeded:
         seed(ctx)
     app: FastAPI = create_app(ctx)
+
+    @app.get("/api/dev/photos/{key:path}")
+    def get_photo(key: str) -> Response:
+        """Stands in for the photo bucket's presigned links."""
+        if key not in photos.files:
+            raise HTTPException(404, "No such photo")
+        data, content_type = photos.files[key]
+        return Response(data, media_type=content_type)
 
     @app.get("/api/dev/outbox")
     def get_outbox() -> list[dict[str, str]]:
