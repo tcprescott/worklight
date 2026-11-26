@@ -1,19 +1,21 @@
 import { useState, type ReactNode } from "react";
 import { longDate, shortWeekday, time12 } from "../../../lib/dates";
+import { Link } from "../../../router";
 import type { AttendancePerson, CheckInStatus } from "../../../types";
 import { Sheet } from "../../../ui";
-import type { TechModel } from "../TechWeek";
-import { NewCodeButton } from "./DoorSign";
-import { CELL_LABEL, doorUrl, flagOf, isHere, key, lateNote, monthDay, nightName, nightShort, weekOf, type Cell } from "./lib";
-import { QrCode } from "./QrCode";
+import type { TechModel } from "../AttendancePage";
+import { CELL_LABEL, flagOf, isHere, key, monthDay, nightName, nightShort, peopleOn, reportText, weekOf, type Cell } from "./lib";
+import { ComingUp, SeenButton } from "./Tonight";
 
 const OPTIONS: CheckInStatus[] = ["on_time", "late", "absent"];
+// The phone shows the last few and next few days around today, not the whole run.
+const DOTS = 7;
 
-function Dots(props: { cells: Cell[]; tonightIndex: number }) {
+function Dots(props: { cells: (Cell | undefined)[]; tonightIndex: number }) {
   return (
     <span className="tech-dots" aria-hidden="true">
       {props.cells.map((c, i) => (
-        <i key={i} className={`tech-sq-mini ${c ?? "none"}${i === props.tonightIndex && !c ? " tonight" : ""}`} />
+        <i key={i} className={`tech-sq-mini ${c === undefined ? "skip" : (c ?? "none")}${i === props.tonightIndex && !c ? " tonight" : ""}`} />
       ))}
     </span>
   );
@@ -22,19 +24,25 @@ function Dots(props: { cells: Cell[]; tonightIndex: number }) {
 export function PhoneTech(props: { m: TechModel; banner: ReactNode }) {
   const { m } = props;
   const { att, tonight } = m;
-  const [showQr, setShowQr] = useState(true);
   const [open, setOpen] = useState<string>();
-  const tonightIndex = att.nights.findIndex((n) => n.date === att.tonight);
+  // A window of nights around today for the dots and the per-person sheet.
+  const todayIdx = Math.max(0, att.nights.findIndex((n) => n.date >= att.today));
+  const from = Math.max(0, Math.min(todayIdx - 3, att.nights.length - DOTS));
+  const nights = att.nights.slice(from, from + DOTS);
+  const tonightIndex = nights.findIndex((n) => n.date === att.tonight);
+  const near = (userId: string) => weekOf(att, m.map, userId).slice(from, from + DOTS);
   const entry = (userId: string) => (tonight ? m.map.get(key(tonight.date, userId)) : undefined);
-  const here = att.people.filter((p) => isHere(entry(p.userId)));
-  const waiting = att.people.filter((p) => !isHere(entry(p.userId)));
-  const next = att.nights.find((n) => !att.tonight || n.date > att.tonight);
+  const called = tonight ? peopleOn(att, tonight) : [];
+  const here = called.filter((p) => isHere(entry(p.userId)));
+  const told = called.filter((p) => entry(p.userId)?.report && !isHere(entry(p.userId)));
+  const waiting = called.filter((p) => !isHere(entry(p.userId)) && !entry(p.userId)?.report);
+  const next = att.nights.find((n) => n.date > att.today);
 
   const card = (p: AttendancePerson) => {
-    const cells = weekOf(att, m.map, p.userId);
+    const cells = near(p.userId);
     const t = tonightIndex >= 0 ? cells[tonightIndex] : undefined;
-    const tonightText = tonightIndex < 0 ? "" : t ? `${CELL_LABEL[t]} tonight` : "Not here yet";
-    const sub = [tonightText, flagOf(cells), tonightIndex >= 0 && !t ? lateNote(entry(p.userId)) : ""].filter(Boolean).join(" · ");
+    const tonightText = tonightIndex < 0 || t === undefined ? "" : t ? `${CELL_LABEL[t]} today` : "Not here yet";
+    const sub = [tonightText, flagOf(weekOf(att, m.map, p.userId))].filter(Boolean).join(" · ");
     return (
       <button key={p.userId} type="button" className="tech-mrow" onClick={() => setOpen(p.userId)}>
         <span className="tech-person-text">
@@ -47,47 +55,58 @@ export function PhoneTech(props: { m: TechModel; banner: ReactNode }) {
   };
 
   const flagged = att.people.filter((p) => flagOf(weekOf(att, m.map, p.userId)));
-  const rest = att.people.filter((p) => !flagOf(weekOf(att, m.map, p.userId)) && (!tonight || isHere(entry(p.userId))));
+  const rest = att.people.filter((p) => !flagOf(weekOf(att, m.map, p.userId)));
   const groups = [
     { id: "eye", label: `Keep an eye on · ${flagged.length}`, people: flagged },
-    { id: "rest", label: tonight ? `Checked in · ${rest.length}` : `Everyone · ${rest.length}`, people: rest },
+    { id: "rest", label: `Everyone else · ${rest.length}`, people: rest },
   ].filter((g) => g.people.length);
 
   const person = att.people.find((p) => p.userId === open);
 
   return (
     <>
-      <section className="tech-door" aria-label="Stage door">
-        <span className="caps">Stage door{tonight ? ` · ${nightShort(tonight.date)}` : ""}</span>
-        {showQr && (
-          <>
-            <div className="tech-door-qr">
-              <QrCode value={doorUrl(m.showId, att.doorCode)} size={150} label="Stage door check-in code" />
-            </div>
-            <span className="tech-door-hint">Hold this up. Actors scan it to check in.</span>
-          </>
-        )}
+      <section className="tech-door" aria-label="Today">
+        <span className="caps">{tonight ? `${nightName(tonight)} · ${nightShort(tonight.date)} · ${time12(tonight.start)}` : "Attendance"}</span>
         {tonight ? (
           <span className="tech-door-count">
-            {here.length} <span>of {att.people.length} here</span>
+            {here.length} <span>of {called.length} here</span>
           </span>
         ) : (
           <span className="tech-door-hint">
-            {next
-              ? `No tech call tonight. ${nightName(next, att.nights)} is ${longDate(next.date)}, ${time12(next.start)} call.`
-              : "Tech week and the run are over."}
+            {next ? `Nobody's called today. Next is ${longDate(next.date)}, ${time12(next.start)} call.` : "There are no more calls."}
           </span>
         )}
-        <div className="tech-door-actions">
-          <button type="button" className="btn tech-door-btn" onClick={() => setShowQr(!showQr)}>
-            {showQr ? "Hide the code" : "Show the check-in code"}
-          </button>
-          {showQr && <NewCodeButton m={m} className="btn tech-door-btn tech-door-btn-quiet" />}
-        </div>
+        {tonight && <span className="tech-door-hint">People tap "I'm here" on their phone as they arrive.</span>}
       </section>
 
       <div className="tech-mbody">
         {props.banner}
+        {!att.venueSet && !m.readOnly && (
+          <p className="tech-venue-note">
+            "I'm here" can't check that people are at the venue yet.{" "}
+            <Link to={`/shows/${m.showId}/settings`}>Save where the venue is</Link> while you're standing in it.
+          </p>
+        )}
+        {tonight && told.length > 0 && (
+          <div className="tech-group">
+            <span className="caps tech-group-head told">Told us · {told.length}</span>
+            {told.map((p) => {
+              const c = entry(p.userId)!;
+              return (
+                <div key={p.userId} className="tech-person">
+                  <span className="tech-person-text">
+                    <strong>{p.name ?? "Someone"}</strong>
+                    <span>
+                      <span className={c.report === "absent" ? "tech-out-note" : "tech-late-note"}>{reportText(c)}</span>
+                      {c.note ? ` · "${c.note}"` : ""}
+                    </span>
+                  </span>
+                  <SeenButton m={m} date={tonight.date} userId={p.userId} />
+                </div>
+              );
+            })}
+          </div>
+        )}
         {tonight && (
           <>
             <span className="caps tech-missing-head">Still missing{m.readOnly ? "" : " · tap to check in"}</span>
@@ -103,16 +122,16 @@ export function PhoneTech(props: { m: TechModel; banner: ReactNode }) {
                     aria-label={`Check in ${p.name ?? "someone"}`}
                   >
                     {p.name ?? "Someone"}
-                    {entry(p.userId)?.runningLateMinutes ? <span> · {entry(p.userId)!.runningLateMinutes} min late</span> : null}
                   </button>
                 ))}
               </div>
             ) : (
-              <div className="tech-allin">Everyone's in. Places!</div>
+              <div className="tech-allin">Everyone's accounted for. Places!</div>
             )}
           </>
         )}
-        {!m.readOnly && <span className="small tech-hint">Tap anyone below to fix a night this week.</span>}
+        <ComingUp m={m} />
+        {!m.readOnly && <span className="small tech-hint">Tap anyone below to fix a day.</span>}
         {groups.map((g) => (
           <div key={g.id} className="tech-group">
             <span className={`caps tech-group-head ${g.id}`}>{g.label}</span>
@@ -125,14 +144,16 @@ export function PhoneTech(props: { m: TechModel; banner: ReactNode }) {
         <Sheet title={person.name ?? "Someone"} onClose={() => setOpen(undefined)}>
           {person.label && <span className="small muted tech-sheet-sub">{person.label}</span>}
           <div className="tech-sheet-nights">
-            {att.nights.map((n, i) => {
-              const cell = weekOf(att, m.map, person.userId)[i] ?? null;
+            {nights.map((n, i) => {
+              const cell = near(person.userId)[i];
+              if (cell === undefined) return null;
               const isTonight = n.date === att.tonight;
+              const said = reportText(m.map.get(key(n.date, person.userId)));
               return (
                 <div key={n.date} className="tech-sheet-night">
                   <span className={isTonight ? "tech-sheet-day tonight" : "tech-sheet-day"}>
-                    <strong>{isTonight ? "Tonight" : shortWeekday(n.date)}</strong>
-                    <span>{monthDay(n.date)}</span>
+                    <strong>{isTonight ? "Today" : shortWeekday(n.date)}</strong>
+                    <span>{said || monthDay(n.date)}</span>
                   </span>
                   <span className="tech-sheet-opts">
                     {OPTIONS.map((o) => (

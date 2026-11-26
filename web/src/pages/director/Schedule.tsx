@@ -88,7 +88,7 @@ export function Schedule(props: ShowPageProps) {
         }),
       unpublished,
       hasCalls: view.days.some((d) => d.calls.length > 0),
-      techPath: show.techStart ? `/shows/${showId}/tech` : undefined,
+      techPath: show.techStart ? `/shows/${showId}/attendance/all` : undefined,
       breakdownPath: `/shows/${showId}/breakdown`,
     };
     const taken = new Set(view.days.map((d) => d.date));

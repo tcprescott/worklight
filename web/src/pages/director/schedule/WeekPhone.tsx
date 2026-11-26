@@ -99,9 +99,9 @@ function DayPanel(props: WeekProps & { day: ScheduleDay; onAdd: () => void }) {
         </strong>
         {actions.techPath && (
           <>
-            <span>Calls for {day.kind === "performance" ? "performances" : "tech"} live on the Tech page.</span>
+            <span>Calls for {day.kind === "performance" ? "performances" : "tech"} are made on the Attendance page.</span>
             <Link to={actions.techPath} className="btn sch-dark-btn">
-              Open Tech
+              Open Attendance
             </Link>
           </>
         )}

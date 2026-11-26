@@ -13,8 +13,7 @@ import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
 import { Schedule } from "./pages/director/Schedule";
 import { CallboardPage } from "./pages/director/Callboard";
-import { TechWeek } from "./pages/director/TechWeek";
-import { StageDoor } from "./pages/actor/StageDoor";
+import { AttendancePage } from "./pages/director/AttendancePage";
 import { SetupWizard } from "./pages/director/SetupWizard";
 import { ShowSettings } from "./pages/director/ShowSettings";
 import { Staff } from "./pages/director/Staff";
@@ -111,11 +110,9 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return staff ? <Schedule {...pageProps} /> : <NotForYou />;
     case "callboard":
       return staff ? <CallboardPage {...pageProps} /> : <NotForYou />;
+    case "attendance":
     case "tech":
-      return staff ? <TechWeek {...pageProps} /> : <NotForYou />;
-    case "door":
-      // Scanned from the stage door sign: /shows/:id/door?code=...
-      return <StageDoor {...pageProps} />;
+      return staff ? <AttendancePage {...pageProps} /> : <NotForYou />;
     case "breakdown":
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
     case "people":

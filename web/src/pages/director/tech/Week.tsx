@@ -1,15 +1,15 @@
 import type { CSSProperties, ReactNode } from "react";
 import { shortWeekday } from "../../../lib/dates";
-import type { TechModel } from "../TechWeek";
-import { CELL_LABEL, exportCsv, flagOf, monthDay, nextCell, weekOf, type Cell } from "./lib";
-import { TechTabs } from "./Tonight";
+import type { TechModel } from "../AttendancePage";
+import { CELL_LABEL, exportCsv, flagOf, key, monthDay, nextCell, reportText, weekOf, type Cell } from "./lib";
+import { ComingUp, TechTabs } from "./Tonight";
 
-export function Square(props: { cell: Cell; onClick?: () => void; label: string; tonight?: boolean }) {
-  const text = props.cell === "late" ? "late" : props.cell === "absent" ? "out" : "";
+export function Square(props: { cell: Cell; onClick?: () => void; label: string; told?: boolean }) {
+  const text = props.cell === "late" ? "late" : props.cell === "absent" ? "out" : props.told ? "told" : "";
   return (
     <button
       type="button"
-      className={`tech-sq ${props.cell ?? "none"}`}
+      className={`tech-sq ${props.cell ?? "none"}${props.told ? " told" : ""}`}
       onClick={props.onClick}
       disabled={!props.onClick}
       aria-label={props.label}
@@ -39,6 +39,14 @@ export function Legend() {
         <i className="tech-sq-mini none" />
         Not yet
       </span>
+      <span>
+        <i className="tech-sq-mini none told" />
+        Told us ahead
+      </span>
+      <span>
+        <i className="tech-sq-mini skip" />
+        Not called
+      </span>
     </div>
   );
 }
@@ -53,9 +61,9 @@ export function WholeWeek(props: { m: TechModel; banner: ReactNode }) {
     <main className="page">
       <div className="page-head">
         <div>
-          <h1 className="title">Tech week attendance</h1>
+          <h1 className="title">Every call</h1>
           <p className="lede">
-            Everyone is called every night. Tonight's column fills in from stage-door check-ins.
+            One column per day with calls. Squares fill in as people tap "I'm here".
             {m.readOnly ? "" : " Click any square to fix it."}
           </p>
         </div>
@@ -63,7 +71,7 @@ export function WholeWeek(props: { m: TechModel; banner: ReactNode }) {
           Export for the board
         </button>
       </div>
-      <TechTabs showId={m.showId} current="week" />
+      <TechTabs showId={m.showId} current="all" />
       {props.banner}
       <Legend />
       <div className="tech-grid-wrap">
@@ -94,12 +102,23 @@ export function WholeWeek(props: { m: TechModel; banner: ReactNode }) {
                   {p.label && <span>{p.label}</span>}
                 </div>
                 {att.nights.map((n, i) => {
-                  const cell = cells[i] ?? null;
+                  const cls = n.date === att.tonight ? "tech-grid-cell tonight" : "tech-grid-cell";
+                  const raw = cells[i];
+                  if (raw === undefined)
+                    return (
+                      <div key={n.date} className={cls} role="cell" aria-label="Not called">
+                        <i className="tech-sq-mini skip" />
+                      </div>
+                    );
+                  const cell = raw;
+                  const told = m.map.get(key(n.date, p.userId));
+                  const said = reportText(told);
                   return (
-                    <div key={n.date} className={n.date === att.tonight ? "tech-grid-cell tonight" : "tech-grid-cell"} role="cell">
+                    <div key={n.date} className={cls} role="cell">
                       <Square
                         cell={cell}
-                        label={`${p.name ?? "Someone"}, ${monthDay(n.date)}: ${cell ? CELL_LABEL[cell] : "not yet"}`}
+                        told={!cell && !!said}
+                        label={`${p.name ?? "Someone"}, ${monthDay(n.date)}: ${cell ? CELL_LABEL[cell] : "not yet"}${said ? ` (told us: ${said})` : ""}`}
                         onClick={m.readOnly ? undefined : () => m.setMark(n.date, p.userId, nextCell(cell))}
                       />
                     </div>
@@ -113,6 +132,7 @@ export function WholeWeek(props: { m: TechModel; banner: ReactNode }) {
           })}
         </div>
       </div>
+      <ComingUp m={m} />
     </main>
   );
 }

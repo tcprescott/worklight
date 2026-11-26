@@ -134,6 +134,7 @@ export function ShowSettings(props: ShowPageProps) {
             <section aria-labelledby="set-show">
               <h2 id="set-show">Show and venue</h2>
               <ShowFields {...p} />
+              <VenueSpot view={props.view} reloadView={props.reloadView} readOnly={archived} onDone={showToast} />
             </section>
 
             <section aria-labelledby="set-dates">
@@ -235,5 +236,75 @@ export function ShowSettings(props: ShowPageProps) {
       )}
       {toast}
     </StaffShell>
+  );
+}
+
+/** Where the rehearsal room is, for the "I'm here" location check. Saved by someone standing in it. */
+function VenueSpot(props: { view: ShowPageProps["view"]; reloadView: () => Promise<void>; readOnly: boolean; onDone: (msg: string) => void }) {
+  const show = props.view.show;
+  const set = show.venueLat != null && show.venueLng != null;
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string>();
+
+  const save = () => {
+    setError(undefined);
+    if (!("geolocation" in navigator)) return setError("This browser can't share its location. Try on your phone.");
+    setBusy(true);
+    navigator.geolocation.getCurrentPosition(
+      async (pos) => {
+        try {
+          await api.setVenueLocation(show.showId, pos.coords.latitude, pos.coords.longitude);
+          await props.reloadView();
+          props.onDone("Venue saved. \"I'm here\" now checks people are nearby.");
+        } catch (err) {
+          setError((err as Error).message);
+        } finally {
+          setBusy(false);
+        }
+      },
+      () => {
+        setBusy(false);
+        setError("Your phone didn't share its location. Allow location for this site and try again.");
+      },
+      { enableHighAccuracy: true, timeout: 15_000, maximumAge: 0 },
+    );
+  };
+
+  const clear = async () => {
+    setBusy(true);
+    setError(undefined);
+    try {
+      await api.clearVenueLocation(show.showId);
+      await props.reloadView();
+      props.onDone("Venue location cleared.");
+    } catch (err) {
+      setError((err as Error).message);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="co-venue-spot">
+      <strong>Check-in location</strong>
+      <span className="hint">
+        {set
+          ? "Saved. When someone taps \"I'm here\", their phone is checked against this spot; anyone clearly far away is asked to check in when they arrive."
+          : "Stand in the rehearsal room and tap the button. \"I'm here\" will then check that people are actually at the venue."}
+      </span>
+      {!props.readOnly && (
+        <span className="co-venue-actions">
+          <button type="button" className="btn btn-outline btn-sm" disabled={busy} onClick={save}>
+            {busy ? "Finding you..." : set ? "I'm at the venue: update it" : "I'm at the venue"}
+          </button>
+          {set && (
+            <button type="button" className="link-btn" disabled={busy} onClick={() => void clear()}>
+              Clear it
+            </button>
+          )}
+        </span>
+      )}
+      <FormError error={error} />
+    </div>
   );
 }

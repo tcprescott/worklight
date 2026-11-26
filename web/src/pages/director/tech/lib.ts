@@ -1,5 +1,5 @@
-// Tech week helpers: who's where tonight, the week grid, flags, export.
-import { dayOfMonth, minutesOf, monthName, shortWeekday } from "../../../lib/dates";
+// Attendance helpers: who's called when, who told us what, the grid, flags, export.
+import { dayOfMonth, minutesOf, monthName, shortWeekday, time12 } from "../../../lib/dates";
 import type { Attendance, AttendanceNight, AttendancePerson, CheckIn, CheckInStatus } from "../../../types";
 
 export type Cell = CheckInStatus | null;
@@ -18,17 +18,29 @@ export function checkinMap(checkins: CheckIn[]): Map<string, CheckIn> {
 
 export const isHere = (c: CheckIn | undefined) => c?.status === "on_time" || c?.status === "late";
 
-/** Cast are called at the call time; crew and staff at the crew time when there is one. */
-export function callTimeFor(person: AttendancePerson, night: AttendanceNight): string {
-  return person.role === "cast" ? night.start : (night.crewStart ?? night.start);
+/** Someone's own call that day: when they're needed from and until, or undefined when they aren't called. */
+export function calledOn(night: AttendanceNight, userId: string) {
+  return night.called.find((c) => c.userId === userId);
 }
 
-/** "Night 2" from the call title "Tech night 2", or the title itself ("Performance"). */
-export function nightName(night: AttendanceNight, nights: AttendanceNight[]): string {
-  const m = /tech night (\d+)/i.exec(night.title ?? "");
-  if (m) return `Night ${m[1]}`;
-  if (night.title) return night.title;
-  return `Night ${nights.findIndex((n) => n.date === night.date) + 1}`;
+/** Their call time that day, falling back to the first call's start. */
+export function callTimeFor(person: AttendancePerson, night: AttendanceNight): string {
+  return calledOn(night, person.userId)?.start ?? night.start;
+}
+
+/** The people called on a night, in the board's usual order (cast, then crew, then staff, by name). */
+export function peopleOn(att: Attendance, night: AttendanceNight): AttendancePerson[] {
+  const called = new Set(night.called.map((c) => c.userId));
+  return att.people.filter((p) => called.has(p.userId));
+}
+
+const TYPE_NAME: Record<string, string> = { tech: "Tech", dress: "Dress", performance: "Performance" };
+
+/** "Tech night 2", "Performance", or "Rehearsal": what kind of night it is. */
+export function nightName(night: AttendanceNight): string {
+  const first = night.calls[0];
+  if (first?.title) return first.title;
+  return TYPE_NAME[first?.type ?? ""] ?? "Rehearsal";
 }
 
 /** "Sun Nov 29" */
@@ -64,12 +76,13 @@ export function clockTime(iso: string | null | undefined, timezone: string): str
   return new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "numeric", minute: "2-digit" }).format(new Date(iso));
 }
 
-export function weekOf(att: Attendance, map: Map<string, CheckIn>, userId: string): Cell[] {
-  return att.nights.map((n) => map.get(key(n.date, userId))?.status ?? null);
+/** A square per night: their mark, null when not marked yet, undefined when they weren't called. */
+export function weekOf(att: Attendance, map: Map<string, CheckIn>, userId: string): (Cell | undefined)[] {
+  return att.nights.map((n) => (calledOn(n, userId) ? (map.get(key(n.date, userId))?.status ?? null) : undefined));
 }
 
 /** "1 absent" wins over "Late 2x"; a single late night isn't worth a flag. */
-export function flagOf(cells: Cell[]): string {
+export function flagOf(cells: (Cell | undefined)[]): string {
   const out = cells.filter((c) => c === "absent").length;
   const late = cells.filter((c) => c === "late").length;
   if (out) return `${out} absent`;
@@ -77,17 +90,12 @@ export function flagOf(cells: Cell[]): string {
   return "";
 }
 
-/** "said running 20 min late · parking" for people who told us they're on their way. */
-export function lateNote(c: CheckIn | undefined): string {
-  if (!c) return "";
-  const bits = [];
-  if (c.runningLateMinutes) bits.push(`said running ${c.runningLateMinutes} min late`);
-  if (c.note) bits.push(c.note);
-  return bits.join(" · ");
-}
-
-export function doorUrl(showId: string, code: string): string {
-  return `${location.origin}/shows/${encodeURIComponent(showId)}/door?code=${encodeURIComponent(code)}`;
+/** "Can't come", "Late, arriving 7:20 PM", "Leaving at 8:00 PM": what someone told us. */
+export function reportText(c: Pick<CheckIn, "report" | "reportTime"> | undefined): string {
+  if (!c?.report) return "";
+  if (c.report === "absent") return "Can't come";
+  if (c.report === "late") return c.reportTime ? `Late, arriving ${time12(c.reportTime)}` : "Late";
+  return c.reportTime ? `Leaving at ${time12(c.reportTime)}` : "Leaving early";
 }
 
 function csvCell(s: string): string {
@@ -99,13 +107,13 @@ export function exportCsv(att: Attendance, map: Map<string, CheckIn>, showName: 
   const head = ["Person", "Part", ...att.nights.map((n) => `${nightShort(n.date)}`), "Flags"];
   const rows = att.people.map((p) => {
     const cells = weekOf(att, map, p.userId);
-    return [p.name ?? "", p.label ?? "", ...cells.map((c) => (c ? CELL_LABEL[c] : "")), flagOf(cells)];
+    return [p.name ?? "", p.label ?? "", ...cells.map((c) => (c === undefined ? "–" : c ? CELL_LABEL[c] : "")), flagOf(cells)];
   });
   const text = [head, ...rows].map((r) => r.map(csvCell).join(",")).join("\r\n") + "\r\n";
   const blob = new Blob([text], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `${showName.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "show"}-tech-attendance.csv`;
+  a.download = `${showName.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "show"}-attendance.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
