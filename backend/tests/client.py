@@ -3,9 +3,10 @@ from typing import Any
 
 from mangum import Mangum
 
-from tests.fakes import FakeMailer
+from tests.fakes import FakeMailer, FakePush
 from worklight.app import create_app
 from worklight.photos import MemoryPhotos
+from worklight.push import Pusher
 from worklight.services.base import Ctx
 from worklight.store import DynamoStore
 
@@ -13,10 +14,16 @@ from worklight.store import DynamoStore
 class Client:
     """Calls the app the way API Gateway does: an HTTP API v2 event with the verified JWT claims."""
 
-    def __init__(self, store: DynamoStore, mailer: FakeMailer) -> None:
+    def __init__(self, store: DynamoStore, mailer: FakeMailer, push: FakePush | None = None) -> None:
         self.photos = MemoryPhotos()
-        ctx = Ctx(store=store, mailer=mailer, app_url="https://worklight.test", photos=self.photos)
-        self.handler = Mangum(create_app(ctx), lifespan="off")
+        self.ctx = Ctx(
+            store=store,
+            mailer=mailer,
+            app_url="https://worklight.test",
+            photos=self.photos,
+            push=Pusher([push] if push else []),
+        )
+        self.handler = Mangum(create_app(self.ctx), lifespan="off")
 
     def __call__(
         self,

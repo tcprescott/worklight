@@ -1,5 +1,5 @@
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from typing import Annotated, Any
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
@@ -11,6 +11,7 @@ from worklight.ids import new_id, now_iso
 from worklight.mailer import Mailer
 from worklight.models import Membership, Show, ShowRole, User
 from worklight.photos import PhotoStore
+from worklight.push import Pusher
 from worklight.roles import ShowAction, can_on_show
 from worklight.store import Store
 
@@ -54,6 +55,8 @@ class Ctx:
     app_url: str
     # Where costume and prop photos go. Unset where nothing stores photos (some scripts).
     photos: PhotoStore | None = None
+    # Push channels; empty means push is off for this deployment.
+    push: Pusher = field(default_factory=Pusher)
 
     def link(self, path: str) -> str:
         return f"{self.app_url.rstrip('/')}{path}"

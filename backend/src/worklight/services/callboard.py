@@ -7,6 +7,7 @@ from pydantic import Field
 from worklight import mailer
 from worklight.ids import new_id, now_iso
 from worklight.models import Membership, Model, Notice, NoticeAudience, NoticeRead, User
+from worklight.push import PushMessage
 from worklight.services.base import (
     Ctx,
     NotFound,
@@ -15,6 +16,7 @@ from worklight.services.base import (
     readable_show,
     text,
 )
+from worklight.services.push import deliver
 
 
 def _reaches(audience: NoticeAudience, m: Membership) -> bool:
@@ -110,18 +112,23 @@ def post_notice(ctx: Ctx, user: User, show_id: str, body: PostNoticeBody) -> Not
             for m in ctx.store.list_members(show_id)
             if _reaches(body.audience, m) and m.user_id != user.user_id
         ]
+        url = ctx.link(f"/shows/{show_id}/callboard")
+        message = PushMessage(
+            title=f"{show.name} · {notice.title}",
+            body=notice.body,
+            url=url,
+            tag=f"notice-{notice.notice_id}",
+        )
         for person in ctx.store.get_users(audience):
-            if person.prefs.notice_emails:
-                ctx.mailer.send(
-                    mailer.notice_email(
-                        to=person.email,
-                        show_name=show.name,
-                        author=user.name or user.email,
-                        title=notice.title,
-                        body=notice.body,
-                        url=ctx.link(f"/shows/{show_id}"),
-                    )
-                )
+            email = mailer.notice_email(
+                to=person.email,
+                show_name=show.name,
+                author=user.name or user.email,
+                title=notice.title,
+                body=notice.body,
+                url=ctx.link(f"/shows/{show_id}"),
+            )
+            deliver(ctx, person, "notices", email, message)
     return notice
 
 

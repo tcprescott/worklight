@@ -90,7 +90,7 @@ class Membership(Model):
 
 
 class NotifyPrefs(Model):
-    """What a person wants emailed to them. Calendar feeds and the app are always on."""
+    """What a person wants sent to them, by email and by push. Calendar feeds and the app are always on."""
 
     # The day before each call.
     email_reminders: bool = True
@@ -98,6 +98,38 @@ class NotifyPrefs(Model):
     change_emails: bool = True
     # New notices on the callboard.
     notice_emails: bool = True
+    # The same three, as push notifications to each device the person turned push on for.
+    push_reminders: bool = True
+    push_changes: bool = True
+    push_notices: bool = True
+
+
+# webpush = a browser subscription. A native app later adds its own kind (and a sender for it).
+PushKind = Literal["webpush"]
+
+
+class PushDevice(Model):
+    """One phone or computer that gets push notifications for a person."""
+
+    device_id: str
+    user_id: str
+    kind: PushKind
+    # Web push: the subscription's endpoint on the browser vendor's push service, and its two keys.
+    endpoint: str
+    p256dh: str
+    auth: str
+    # Shown in settings, e.g. "Chrome on Android".
+    label: str | None = None
+    created_at: str
+    last_sent_at: str | None = None
+
+
+class PushDeviceView(Model):
+    device_id: str
+    kind: PushKind
+    label: str | None = None
+    created_at: str
+    last_sent_at: str | None = None
 
 
 class User(Model):

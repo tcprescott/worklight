@@ -5,7 +5,7 @@ from typing import Any
 from mangum import Mangum
 
 from worklight.app import AppDeps, create_app
-from worklight.config import get_app_url, require_env
+from worklight.config import get_app_url, get_pusher, require_env
 from worklight.mailer import SesMailer
 from worklight.photos import S3Photos
 from worklight.store import DynamoStore
@@ -21,6 +21,7 @@ def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
             mailer=SesMailer(require_env("FROM_EMAIL")),
             app_url=get_app_url(),
             photos=S3Photos(require_env("PHOTO_BUCKET")),
+            push=get_pusher(),
         )
         _handler = Mangum(create_app(deps), lifespan="off")
     return _handler(event, context)

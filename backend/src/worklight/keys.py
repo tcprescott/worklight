@@ -20,6 +20,7 @@ USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
 USER#<id>      MEASURE                     sizes and body measurements
+USER#<id>      DEVICE#<deviceId>           a device that gets push notifications
 EMAIL#<email>  USER              email -> userId lookup
 INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
@@ -55,6 +56,7 @@ ITEM_PREFIX = "ITEM#"
 NEEDS_PREFIX = "NEEDS#"
 STOCK_PREFIX = "STOCK#"
 KEEPER_PREFIX = "KEEPER#"
+DEVICE_PREFIX = "DEVICE#"
 
 
 def normalize_email(email: str) -> str:
@@ -210,3 +212,7 @@ def magic_link(address: str) -> Key:
 def primary(key: Key) -> Key:
     """Just PK and SK, for Get/Delete calls."""
     return {"PK": key["PK"], "SK": key["SK"]}
+
+
+def push_device(user_id: str, device_id: str) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": f"DEVICE#{device_id}"}
