@@ -13,6 +13,7 @@ SHOW#<showId>  CALL#<date>#<callId>       a rehearsal call (working copy + publi
 SHOW#<showId>  CHECKIN#<date>#<userId>    tech week and performance attendance
 SHOW#<showId>  NOTICE#<noticeId>          callboard notice
 SHOW#<showId>  READ#<noticeId>#<userId>   who has read a notice
+SHOW#<showId>  STRIKE#<taskId>            strike checklist task
 USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
@@ -22,6 +23,7 @@ INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
+THEATER#<id>   STRIKE#<taskId>   company strike template task
 APIKEY#<hash>  META              secret hash -> theaterId, keyId
 RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
@@ -44,6 +46,7 @@ CHECKIN_PREFIX = "CHECKIN#"
 NOTICE_PREFIX = "NOTICE#"
 APIKEY_PREFIX = "APIKEY#"
 READ_PREFIX = "READ#"
+STRIKE_PREFIX = "STRIKE#"
 DEVICE_PREFIX = "DEVICE#"
 
 
@@ -118,6 +121,14 @@ def notice(show_id: str, notice_id: str) -> Key:
 
 def notice_read(show_id: str, notice_id: str, user_id: str) -> Key:
     return {"PK": f"SHOW#{show_id}", "SK": f"READ#{notice_id}#{user_id}"}
+
+
+def strike_task(show_id: str, task_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"STRIKE#{task_id}"}
+
+
+def strike_template_task(theater_id: str, task_id: str) -> Key:
+    return {"PK": f"THEATER#{theater_id}", "SK": f"STRIKE#{task_id}"}
 
 
 def api_key(theater_id: str, key_id: str) -> Key:

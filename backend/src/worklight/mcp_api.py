@@ -23,6 +23,7 @@ from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
 from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
+from worklight.services import strike as strike_service
 from worklight.services import theaters as theaters_service
 from worklight.services.apikeys import KeyPrincipal, principal_for
 from worklight.services.base import Ctx, ServiceError
@@ -165,6 +166,38 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
             {"title": title, "body": body, "audience": audience, "pinned": pinned}
         )
         return _out(callboard_service.post_notice(ctx, p.user, scoped(show_id), notice_body))
+
+    @server.tool(
+        description="The show's strike checklist: tasks area by area, who each is assigned to, what's done, "
+        "and when the strike call is"
+    )
+    def get_strike_checklist(show_id: str) -> str:
+        return _out(strike_service.get_checklist(ctx, who().user, scoped(show_id)))
+
+    @server.tool(
+        description="Adds a task to the strike checklist under an area such as Set, Props or Lights, "
+        "optionally assigned to crew or staff by user id"
+    )
+    def add_strike_task(show_id: str, area: str, text: str, assignee_ids: list[str] | None = None) -> str:
+        p = write()
+        body = strike_service.AddTaskBody(area=area, text=text, assignee_ids=assignee_ids or [])
+        return _out(strike_service.add_task(ctx, p.user, scoped(show_id), body))
+
+    @server.tool(
+        description="Reassigns a strike task (assignee_ids replaces the list; crew and staff only) and/or "
+        "marks it done or not done"
+    )
+    def update_strike_task(
+        show_id: str, task_id: str, assignee_ids: list[str] | None = None, done: bool | None = None
+    ) -> str:
+        p = write()
+        fields: dict[str, Any] = {}
+        if assignee_ids is not None:
+            fields["assigneeIds"] = assignee_ids
+        if done is not None:
+            fields["done"] = done
+        body = strike_service.UpdateTaskBody.model_validate(fields)
+        return _out(strike_service.update_task(ctx, p.user, scoped(show_id), task_id, body))
 
     return mcp
 

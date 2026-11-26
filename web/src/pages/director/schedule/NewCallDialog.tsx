@@ -8,6 +8,7 @@ const TYPES: { id: CallType; label: string }[] = [
   { id: "music", label: "Music" },
   { id: "choreography", label: "Choreography" },
   { id: "run", label: "Run-through" },
+  { id: "strike", label: "Strike (calls everyone)" },
 ];
 
 /** A call on a day that isn't one of the usual rehearsal nights. */

@@ -241,7 +241,7 @@ class MyConflicts(Model):
 
 # ---- Scheduling ----------------------------------------------------------------------------------
 
-CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance"]
+CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance", "strike"]
 CallStatus = Literal["draft", "published"]
 # Who a call covers besides the people in its scenes.
 CallGroup = Literal["everyone", "cast", "crew"]
@@ -312,6 +312,36 @@ class CheckIn(Model):
     # "Running late" from the person, before they arrive.
     running_late_minutes: int | None = None
     note: str | None = None
+    updated_at: str
+
+
+# ---- Strike ---------------------------------------------------------------------------------------
+
+
+class StrikeTemplateTask(Model):
+    """One line of a company's standard strike list. Each show starts its checklist from a copy."""
+
+    task_id: str
+    theater_id: str
+    # Grouping on the checklist, e.g. "Set", "Props", "Lights & sound".
+    area: str
+    text: str
+    order: int
+
+
+class StrikeTask(Model):
+    """One job on a show's strike checklist, done by the named people (crew or staff)."""
+
+    task_id: str
+    show_id: str
+    area: str
+    text: str
+    order: int
+    note: str | None = None
+    assignee_ids: list[str] = []
+    done_at: str | None = None
+    done_by: str | None = None
+    created_at: str
     updated_at: str
 
 

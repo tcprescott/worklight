@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { api } from "./api";
 import { signOut } from "./auth";
+import { addDays, todayIso } from "./lib/dates";
 import { useIsPhone } from "./lib/useMedia";
 import { Link, navigate } from "./router";
 import { useSession } from "./session";
@@ -77,7 +78,7 @@ export function CompanyShell(props: { context?: string; children: ReactNode }) {
   );
 }
 
-export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "settings";
+export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "strike" | "settings";
 
 interface Tab {
   id: StaffTab;
@@ -96,6 +97,9 @@ export function staffTabs(view: ShowView): Tab[] {
   ];
   tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
   if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
+  // Strike shows from a week before tech (or opening, or closing) on.
+  const from = view.show.techStart ?? view.show.openingDate ?? view.show.endDate;
+  if (todayIso() >= addDays(from, -7)) tabs.push({ id: "strike", label: "Strike", icon: "check", path: `/shows/${id}/strike` });
   return tabs;
 }
 

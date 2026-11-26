@@ -16,11 +16,12 @@ from worklight.models import (
     RehearsalSlot,
     Scene,
     Show,
+    StrikeTemplateTask,
     Theater,
     User,
     WeeklyConflict,
 )
-from worklight.services import schedule
+from worklight.services import schedule, strike
 from worklight.services.base import Ctx, user_for_email
 
 # (name, part or title, role, department, status) where status is invited, joined or ready.
@@ -318,6 +319,7 @@ def seed(ctx: Ctx) -> None:
 
     seed_schedule(ctx, jordan, users)
     seed_callboard(ctx, jordan, users)
+    seed_strike(ctx, jordan, users)
 
 
 def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
@@ -450,3 +452,54 @@ def seed_callboard(ctx: Ctx, director: User, users: dict[str, User]) -> None:
                     show_id="midsummer", notice_id=notice_id, user_id=users[name].user_id, at=now_iso()
                 )
             )
+
+
+STRIKE_TEMPLATE = [
+    ("Set", "Unscrew and drop the forest flats"),
+    ("Set", "Break down the bower platform, stack lumber by length"),
+    ("Set", "Pull screws and bin the hardware"),
+    ("Props", "Return borrowed props to their lenders"),
+    ("Props", "Pack the prop tables"),
+    ("Costumes", "Collect costumes for laundry and return rentals"),
+    ("Lights & sound", "Restore the rep plot and pull gels"),
+    ("Lights & sound", "Coil and store cable"),
+    ("Space", "Sweep and mop the deck"),
+    ("Space", "Final walkthrough with the venue"),
+]
+
+
+def seed_strike(ctx: Ctx, director: User, users: dict[str, User]) -> None:
+    """The company strike list, and Midsummer's strike call the day after closing, partly assigned."""
+    ctx.store.replace_strike_template(
+        "maplewood",
+        [
+            StrikeTemplateTask(task_id=f"tpl{i}", theater_id="maplewood", area=a, text=t, order=i)
+            for i, (a, t) in enumerate(STRIKE_TEMPLATE, start=1)
+        ],
+    )
+    schedule.create_call(
+        ctx,
+        director,
+        "midsummer",
+        schedule.CreateCallBody(date="2026-12-07", start="10:00", end="14:00", type="strike"),
+    )
+    schedule.publish(
+        ctx,
+        director,
+        "midsummer",
+        schedule.PublishBody.model_validate({"from": "2026-12-07", "to": "2026-12-07"}),
+    )
+    tasks = ctx.store.list_strike_tasks("midsummer")
+    who = {
+        0: ["Sam Whitfield", "Ana Ruiz"],
+        1: ["Sam Whitfield"],
+        3: ["Priya Nair"],
+        5: ["Lin Park"],
+        6: ["Ana Ruiz"],
+        9: ["Priya Nair"],
+    }
+    for i, names in who.items():
+        body = strike.UpdateTaskBody(
+            assignee_ids=[users[n].user_id for n in names], done=True if i == 0 else None
+        )
+        strike.update_task(ctx, director, "midsummer", tasks[i].task_id, body)

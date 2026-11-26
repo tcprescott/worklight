@@ -42,6 +42,9 @@ from worklight.services.base import (
 from worklight.services.breakdown import scene_minutes
 from worklight.store import ShowPartition
 
+# How long after closing night a strike call can be.
+STRIKE_DAYS_AFTER = 14
+
 # How much each kind of conflict counts against a scene when ranking what to rehearse.
 WEIGHTS = {"hard": 10, "elsewhere": 10, "soft": 3, "partial": 1}
 
@@ -588,7 +591,14 @@ def _blocks(cast: ShowCast, show: Show, bodies: list[BlockBody]) -> list[Block]:
 
 def _check_content(cast: ShowCast, content: CallContent) -> None:
     show = cast.show
-    if not show.start_date <= content.date <= show.end_date:
+    if content.type == "strike":
+        # Strike is usually right after closing, but can be a few days later.
+        last = (date.fromisoformat(show.end_date) + timedelta(days=STRIKE_DAYS_AFTER)).isoformat()
+        if not show.start_date <= content.date <= last:
+            raise Invalid(
+                f"Strike has to fall between the first rehearsal and {STRIKE_DAYS_AFTER} days after closing"
+            )
+    elif not show.start_date <= content.date <= show.end_date:
         raise Invalid("Calls have to fall between the first rehearsal and closing night")
     if content.end <= content.start:
         raise Invalid("A call has to end after it starts")
@@ -632,7 +642,7 @@ def create_call(ctx: Ctx, user: User, show_id: str, body: CreateCallBody) -> Cal
         bring=body.bring,
         note=body.note,
         blocks=_blocks(cast, show, body.blocks or []),
-        groups=list(dict.fromkeys(body.groups or [])),
+        groups=list(dict.fromkeys(body.groups if body.groups is not None else _default_groups(body.type))),
         departments=list(dict.fromkeys(body.departments or [])),
         user_ids=list(dict.fromkeys(body.user_ids or [])),
         crew_start=body.crew_start,
@@ -641,7 +651,16 @@ def create_call(ctx: Ctx, user: User, show_id: str, body: CreateCallBody) -> Cal
     )
     _check_content(cast, call)
     ctx.store.put_call(call)
+    if call.type == "strike":
+        from worklight.services.strike import start_checklist_if_empty
+
+        start_checklist_if_empty(ctx, show)
     return call
+
+
+def _default_groups(call_type: CallType | None) -> list[CallGroup]:
+    # Strike is all hands unless staff say otherwise.
+    return ["everyone"] if call_type == "strike" else []
 
 
 def update_call(ctx: Ctx, user: User, show_id: str, call_id: str, body: UpdateCallBody) -> Call:
@@ -661,6 +680,10 @@ def update_call(ctx: Ctx, user: User, show_id: str, call_id: str, body: UpdateCa
     Call.model_validate(updated.model_dump())
     _check_content(cast, updated)
     ctx.store.put_call(updated, previous_date=call.date)
+    if updated.type == "strike" and call.type != "strike":
+        from worklight.services.strike import start_checklist_if_empty
+
+        start_checklist_if_empty(ctx, show)
     return updated
 
 

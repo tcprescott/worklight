@@ -1,7 +1,8 @@
 """GraphQL at /api/graphql: the same service layer as REST, signed in with an API key.
 
 Reads cover the company, its shows, breakdowns, people, conflicts, the schedule and the callboard. Writes
-(read and write keys only) cover building and publishing the schedule and posting notices."""
+(read and write keys only) cover building and publishing the schedule, posting notices, and the strike
+checklist."""
 
 from dataclasses import dataclass
 from typing import Any
@@ -17,6 +18,7 @@ from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
 from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
+from worklight.services import strike as strike_service
 from worklight.services import theaters as theaters_service
 from worklight.services.apikeys import KeyPrincipal, principal_for
 from worklight.services.base import Ctx, ServiceError
@@ -218,6 +220,23 @@ class Notice:
 
 
 @strawberry.type
+class StrikeAssignee:
+    user_id: strawberry.ID
+    name: str | None
+
+
+@strawberry.type
+class StrikeTask:
+    task_id: strawberry.ID
+    area: str
+    text: str
+    note: str | None
+    assignees: list[StrikeAssignee]
+    done_at: str | None
+    done_by_name: str | None
+
+
+@strawberry.type
 class PublishResult:
     published: int
     cancelled: int
@@ -338,6 +357,15 @@ class Query:
         board = callboard_service.get_callboard(c.ctx, c.principal.user, c.show_id(show_id))
         return [_build(Notice, n) for n in board.notices]
 
+    @strawberry.field(description="The show's strike checklist, area by area, with who has each task")
+    def strike_checklist(self, info: GInfo, show_id: strawberry.ID) -> list[StrikeTask]:
+        c = info.context
+        checklist = strike_service.get_checklist(c.ctx, c.principal.user, c.show_id(show_id))
+        return [
+            _build(StrikeTask, t, assignees=[_build(StrikeAssignee, a) for a in t.assignees])
+            for t in checklist.tasks
+        ]
+
 
 # ---- Mutation ----------------------------------------------------------------------------------------
 
@@ -397,6 +425,33 @@ class Mutation:
             ),
         )
         return strawberry.ID(notice.notice_id)
+
+    @strawberry.mutation(
+        description="Changes a strike task: who it's assigned to (crew and staff only) and whether it's done"
+    )
+    def update_strike_task(
+        self,
+        info: GInfo,
+        show_id: strawberry.ID,
+        task_id: str,
+        assignee_ids: list[strawberry.ID] | None = None,
+        done: bool | None = None,
+    ) -> bool:
+        c = info.context
+        c.principal.require_write()
+        fields: dict[str, Any] = {}
+        if assignee_ids is not None:
+            fields["assigneeIds"] = [str(a) for a in assignee_ids]
+        if done is not None:
+            fields["done"] = done
+        strike_service.update_task(
+            c.ctx,
+            c.principal.user,
+            c.show_id(show_id),
+            task_id,
+            strike_service.UpdateTaskBody.model_validate(fields),
+        )
+        return True
 
 
 class _ServiceErrors(strawberry.extensions.SchemaExtension):

@@ -126,7 +126,11 @@ def send_reminders(ctx: Ctx) -> int:
                 person = users.get(uid)
                 if not person:
                     continue
-                what = ", ".join(entry.labels) or content.title or "Rehearsal"
+                what = (
+                    ", ".join(entry.labels)
+                    or content.title
+                    or ("Strike" if content.type == "strike" else "Rehearsal")
+                )
                 email = mailer.call_reminder_email(
                     to=person.email,
                     show_name=show.name,
@@ -159,7 +163,9 @@ def send_reminders(ctx: Ctx) -> int:
 def _line(content: CallContent, entry: Called, what: str) -> str:
     times = f"{mailer.pretty_time(entry.start)} to {mailer.pretty_time(entry.end)}"
     when = f"{mailer.pretty_date(content.date)}, {times}"
-    label = ", ".join(entry.labels) or content.title or "Rehearsal"
+    label = (
+        ", ".join(entry.labels) or content.title or ("Strike" if content.type == "strike" else "Rehearsal")
+    )
     return f"{when}: {label}{what}"
 
 

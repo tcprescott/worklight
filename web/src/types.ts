@@ -82,3 +82,12 @@ export type ApiKey = Schemas["ApiKey"];
 export type ApiKeyScope = ApiKey["scope"];
 export type CreateApiKeyBody = Schemas["CreateApiKeyBody"];
 export type NewApiKey = Schemas["NewApiKey"];
+
+export type StrikeChecklist = Schemas["StrikeChecklist"];
+export type StrikeTaskView = Schemas["StrikeTaskView"];
+export type StrikeTask = Schemas["StrikeTask"];
+export type StrikeCallView = Schemas["StrikeCallView"];
+export type AddStrikeTaskBody = Schemas["AddTaskBody"];
+export type UpdateStrikeTaskBody = Schemas["UpdateTaskBody"];
+export type StrikeTemplate = Schemas["StrikeTemplate"];
+export type StrikeTemplateLine = Schemas["TemplateLine"];
