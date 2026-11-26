@@ -83,6 +83,44 @@
         "title": "AddAdminBody",
         "type": "object"
       },
+      "AddDeviceBody": {
+        "description": "A browser's PushSubscription.toJSON(), plus a label for the settings list.",
+        "properties": {
+          "endpoint": {
+            "maxLength": 1000,
+            "title": "Endpoint",
+            "type": "string"
+          },
+          "keys": {
+            "$ref": "#/components/schemas/WebPushKeys"
+          },
+          "kind": {
+            "const": "webpush",
+            "default": "webpush",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          }
+        },
+        "required": [
+          "endpoint",
+          "keys"
+        ],
+        "title": "AddDeviceBody",
+        "type": "object"
+      },
       "AddSceneBody": {
         "properties": {
           "callId": {
@@ -2762,7 +2800,7 @@
         "type": "object"
       },
       "NotifyPrefs": {
-        "description": "What a person wants emailed to them. Calendar feeds and the app are always on.",
+        "description": "What a person wants sent to them, by email and by push. Calendar feeds and the app are always on.",
         "properties": {
           "changeEmails": {
             "default": true,
@@ -2777,6 +2815,21 @@
           "noticeEmails": {
             "default": true,
             "title": "Noticeemails",
+            "type": "boolean"
+          },
+          "pushChanges": {
+            "default": true,
+            "title": "Pushchanges",
+            "type": "boolean"
+          },
+          "pushNotices": {
+            "default": true,
+            "title": "Pushnotices",
+            "type": "boolean"
+          },
+          "pushReminders": {
+            "default": true,
+            "title": "Pushreminders",
             "type": "boolean"
           }
         },
@@ -2872,6 +2925,79 @@
           "callIds"
         ],
         "title": "PublishResult",
+        "type": "object"
+      },
+      "PushDeviceView": {
+        "properties": {
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "deviceId": {
+            "title": "Deviceid",
+            "type": "string"
+          },
+          "kind": {
+            "const": "webpush",
+            "title": "Kind",
+            "type": "string"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "lastSentAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lastsentat"
+          }
+        },
+        "required": [
+          "deviceId",
+          "kind",
+          "createdAt"
+        ],
+        "title": "PushDeviceView",
+        "type": "object"
+      },
+      "PushStatus": {
+        "properties": {
+          "devices": {
+            "items": {
+              "$ref": "#/components/schemas/PushDeviceView"
+            },
+            "title": "Devices",
+            "type": "array"
+          },
+          "publicKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Publickey"
+          }
+        },
+        "required": [
+          "devices"
+        ],
+        "title": "PushStatus",
         "type": "object"
       },
       "RehearsalSlot": {
@@ -3678,6 +3804,36 @@
         "title": "TechCallsBody",
         "type": "object"
       },
+      "TestPushBody": {
+        "properties": {
+          "deviceId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deviceid"
+          }
+        },
+        "title": "TestPushBody",
+        "type": "object"
+      },
+      "TestPushResult": {
+        "properties": {
+          "sent": {
+            "title": "Sent",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "sent"
+        ],
+        "title": "TestPushResult",
+        "type": "object"
+      },
       "Theater": {
         "properties": {
           "createdAt": {
@@ -4455,7 +4611,10 @@
             "default": {
               "changeEmails": true,
               "emailReminders": true,
-              "noticeEmails": true
+              "noticeEmails": true,
+              "pushChanges": true,
+              "pushNotices": true,
+              "pushReminders": true
             }
           },
           "userId": {
@@ -4589,6 +4748,28 @@
           "kind"
         ],
         "title": "Warning",
+        "type": "object"
+      },
+      "WebPushKeys": {
+        "properties": {
+          "auth": {
+            "maxLength": 32,
+            "minLength": 16,
+            "title": "Auth",
+            "type": "string"
+          },
+          "p256dh": {
+            "maxLength": 100,
+            "minLength": 80,
+            "title": "P256Dh",
+            "type": "string"
+          }
+        },
+        "required": [
+          "p256dh",
+          "auth"
+        ],
+        "title": "WebPushKeys",
         "type": "object"
       },
       "WeeklyBody": {
@@ -5228,6 +5409,132 @@
           }
         },
         "summary": "My Days"
+      }
+    },
+    "/api/me/push": {
+      "get": {
+        "operationId": "push_status_api_me_push_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushStatus"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Push Status"
+      }
+    },
+    "/api/me/push/devices": {
+      "put": {
+        "operationId": "add_push_device_api_me_push_devices_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddDeviceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PushDeviceView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Push Device"
+      }
+    },
+    "/api/me/push/devices/{device_id}": {
+      "delete": {
+        "operationId": "remove_push_device_api_me_push_devices__device_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "device_id",
+            "required": true,
+            "schema": {
+              "title": "Device Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Push Device"
+      }
+    },
+    "/api/me/push/test": {
+      "post": {
+        "operationId": "test_push_api_me_push_test_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TestPushBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TestPushResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Test Push"
       }
     },
     "/api/public/calendar/{token}.ics": {

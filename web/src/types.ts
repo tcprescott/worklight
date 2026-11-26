@@ -74,6 +74,9 @@ export type PostNoticeBody = Schemas["PostNoticeBody"];
 export type UpdateNoticeBody = Schemas["UpdateNoticeBody"];
 export type CalendarLinks = Schemas["CalendarLinks"];
 export type NotifyPrefs = Schemas["NotifyPrefs"];
+export type PushStatus = Schemas["PushStatus"];
+export type PushDevice = Schemas["PushDeviceView"];
+export type AddPushDeviceBody = Schemas["AddDeviceBody"];
 
 export type ApiKey = Schemas["ApiKey"];
 export type ApiKeyScope = ApiKey["scope"];

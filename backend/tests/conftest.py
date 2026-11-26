@@ -6,7 +6,7 @@ import pytest
 from moto import mock_aws
 
 from tests.client import Client
-from tests.fakes import FakeMailer
+from tests.fakes import FakeMailer, FakePush
 from worklight import clock
 from worklight.localdb import create_table
 from worklight.store import DynamoStore
@@ -30,8 +30,13 @@ def mailer() -> FakeMailer:
 
 
 @pytest.fixture
-def call(store: DynamoStore, mailer: FakeMailer) -> Client:
-    return Client(store, mailer)
+def pusher() -> FakePush:
+    return FakePush()
+
+
+@pytest.fixture
+def call(store: DynamoStore, mailer: FakeMailer, pusher: FakePush) -> Client:
+    return Client(store, mailer, pusher)
 
 
 @pytest.fixture(autouse=True)

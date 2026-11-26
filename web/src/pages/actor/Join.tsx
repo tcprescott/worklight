@@ -3,6 +3,7 @@ import { api, ApiError } from "../../api";
 import { isSignedIn, signedInEmail, signInWithInvite, signOut } from "../../auth";
 import { longDate, time12 } from "../../lib/dates";
 import { firstName } from "../../lib/people";
+import { pushSupport, turnOnPush } from "../../lib/push";
 import { navigate } from "../../router";
 import { Wordmark } from "../../shell";
 import type { InvitePreview, Me, ShowDay, ShowView } from "../../types";
@@ -283,7 +284,7 @@ type PrefId = "email" | "cal" | "push" | "sms";
 const PREFS: { id: PrefId; label: string; hint: string; paid?: boolean; later?: string }[] = [
   { id: "email", label: "Email", hint: "A reminder the day before you're called" },
   { id: "cal", label: "Add to my calendar", hint: "Rehearsals show up in your phone calendar" },
-  { id: "push", label: "Phone notifications", hint: "A nudge the day before you're called", later: "Coming with the app" },
+  { id: "push", label: "Phone notifications", hint: "A nudge the day before you're called, and when your calls change" },
   { id: "sms", label: "Text messages", hint: "Only for urgent changes", paid: true },
 ];
 
@@ -295,6 +296,21 @@ function Prefs(props: { showId: string; me: Me }) {
     sms: false,
   });
   const [step, setStep] = useState<"pick" | "calendar">("pick");
+  // Why push can't be picked on this device, if it can't.
+  const [pushLater, setPushLater] = useState<string | undefined>("Checking...");
+  const [pushKey, setPushKey] = useState<string>();
+  useEffect(() => {
+    const support = pushSupport();
+    if (support === "ios-needs-install") return setPushLater("Add Worklight to your Home Screen first, then turn this on in your account");
+    if (support === "unsupported") return setPushLater("Not available in this browser");
+    api
+      .pushStatus()
+      .then((s) => {
+        setPushKey(s.publicKey ?? undefined);
+        setPushLater(s.publicKey ? undefined : "Coming soon");
+      })
+      .catch(() => setPushLater("Not available right now"));
+  }, []);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string>();
   const toConflicts = () => navigate(`/shows/${props.showId}/setup`, true);
@@ -303,6 +319,8 @@ function Prefs(props: { showId: string; me: Me }) {
     setSaving(true);
     setError(undefined);
     try {
+      // First, while the tap still counts: browsers only ask for notification permission right after one.
+      if (on.push && pushKey) await turnOnPush(pushKey);
       if (on.email !== props.me.user.prefs.emailReminders) {
         await api.updatePrefs({ ...props.me.user.prefs, emailReminders: on.email });
       }
@@ -343,7 +361,8 @@ function Prefs(props: { showId: string; me: Me }) {
         </h1>
         <p className="lede">Pick as many as you like. You can change these later in your account.</p>
         {PREFS.map((p) => {
-          const off = !!p.paid || !!p.later;
+          const later = p.id === "push" ? pushLater : p.later;
+          const off = !!p.paid || !!later;
           return (
             <label key={p.id} className={off ? "actor-pref off" : on[p.id] ? "actor-pref on" : "actor-pref"}>
               <span className="actor-pref-text">
@@ -351,7 +370,7 @@ function Prefs(props: { showId: string; me: Me }) {
                   {p.label}
                   {p.paid && <span className="tag tag-paid">PAID PLAN</span>}
                 </strong>
-                <span>{p.later ? `${p.hint}. ${p.later}.` : p.hint}</span>
+                <span>{later ? `${p.hint}. ${later}.` : p.hint}</span>
               </span>
               <input
                 type="checkbox"

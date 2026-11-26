@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Response
 
-from worklight.models import Notice, User
+from worklight.models import Notice, PushDeviceView, User
 from worklight.rest import UserDep
-from worklight.services import callboard, notify
+from worklight.services import callboard, notify, push
 from worklight.services.base import Ctx
 
 ICS = "text/calendar; charset=utf-8"
@@ -37,6 +37,25 @@ def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
         return Response(
             notify.feed(ctx, token), media_type=ICS, headers={"cache-control": "private, max-age=900"}
         )
+
+    # ---- push notifications ----
+
+    @r.get("/me/push", response_model=push.PushStatus, response_model_exclude_none=True)
+    def push_status(user: CurrentUser) -> push.PushStatus:
+        return push.status(ctx, user)
+
+    @r.put("/me/push/devices", response_model=PushDeviceView, response_model_exclude_none=True)
+    def add_push_device(user: CurrentUser, body: push.AddDeviceBody) -> PushDeviceView:
+        return push.add_device(ctx, user, body)
+
+    @r.delete("/me/push/devices/{device_id}", status_code=204)
+    def remove_push_device(device_id: str, user: CurrentUser) -> Response:
+        push.remove_device(ctx, user, device_id)
+        return Response(status_code=204)
+
+    @r.post("/me/push/test", response_model=push.TestPushResult)
+    def test_push(user: CurrentUser, body: push.TestPushBody) -> push.TestPushResult:
+        return push.send_test(ctx, user, body)
 
     # ---- callboard ----
 

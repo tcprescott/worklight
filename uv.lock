@@ -1679,6 +1679,7 @@ version = "0.1.0"
 source = { editable = "backend" }
 dependencies = [
     { name = "boto3" },
+    { name = "cryptography" },
     { name = "fastapi" },
     { name = "mangum" },
     { name = "mcp" },
@@ -1690,6 +1691,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "boto3", specifier = ">=1.40" },
+    { name = "cryptography", specifier = ">=45" },
     { name = "fastapi", specifier = ">=0.120" },
     { name = "mangum", specifier = ">=0.19" },
     { name = "mcp", specifier = ">=1.20" },
