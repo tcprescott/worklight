@@ -308,6 +308,13 @@ function Home(props: { view: TheaterView; reload: () => Promise<void>; setView: 
 
         <aside>
           <AdminsPanel admins={view.admins} meId={me.user.userId} theaterId={theaterId} />
+          <section className="co-panel" aria-label="Strike list">
+            <h2 className="co-panel-title">Strike list</h2>
+            <span className="co-panel-sub">The standard strike tasks every new show starts from.</span>
+            <Link to={`/c/${theaterId}/strike-template`} className="btn btn-dashed">
+              Edit the strike list
+            </Link>
+          </section>
         </aside>
       </main>
       {archiving && (

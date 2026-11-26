@@ -1,4 +1,10 @@
 import type {
+  AddStrikeTaskBody,
+  StrikeChecklist,
+  StrikeTask,
+  StrikeTemplate,
+  StrikeTemplateLine,
+  UpdateStrikeTaskBody,
   Act,
   Admin,
   ApiKey,
@@ -12,6 +18,9 @@ import type {
   Callboard,
   Notice,
   NotifyPrefs,
+  PushStatus,
+  PushDevice,
+  AddPushDeviceBody,
   PostNoticeBody,
   UpdateNoticeBody,
   Call,
@@ -103,6 +112,10 @@ export const api = {
   me: () => request<Me>("GET", "/me"),
   updateName: (name: string) => request<User>("PATCH", "/me", { name }),
   updatePrefs: (prefs: NotifyPrefs) => request<User>("PATCH", "/me", { prefs }),
+  pushStatus: () => request<PushStatus>("GET", "/me/push"),
+  addPushDevice: (body: AddPushDeviceBody) => request<PushDevice>("PUT", "/me/push/devices", body),
+  removePushDevice: (deviceId: string) => request<void>("DELETE", `/me/push/devices/${e(deviceId)}`),
+  testPush: (deviceId?: string) => request<{ sent: number }>("POST", "/me/push/test", { deviceId }),
 
   // Company
   createTheater: (name: string, title?: string) => request<Theater>("POST", "/theaters", { name, title }),
@@ -211,6 +224,18 @@ export const api = {
   deleteNotice: (showId: string, noticeId: string) => request<void>("DELETE", `${show(showId)}/notices/${e(noticeId)}`),
   markNoticesRead: (showId: string, noticeIds: string[]) =>
     request<void>("POST", `${show(showId)}/notices/read`, { noticeIds }),
+
+  // Strike
+  strike: (showId: string) => request<StrikeChecklist>("GET", `${show(showId)}/strike`),
+  addStrikeTask: (showId: string, input: AddStrikeTaskBody) =>
+    request<StrikeTask>("POST", `${show(showId)}/strike/tasks`, input),
+  updateStrikeTask: (showId: string, taskId: string, input: UpdateStrikeTaskBody) =>
+    request<StrikeTask>("PATCH", `${show(showId)}/strike/tasks/${e(taskId)}`, input),
+  deleteStrikeTask: (showId: string, taskId: string) => request<void>("DELETE", `${show(showId)}/strike/tasks/${e(taskId)}`),
+  copyStrikeTemplate: (showId: string) => request<StrikeChecklist>("POST", `${show(showId)}/strike/copy-template`),
+  strikeTemplate: (theaterId: string) => request<StrikeTemplate>("GET", `/theaters/${e(theaterId)}/strike-template`),
+  saveStrikeTemplate: (theaterId: string, tasks: StrikeTemplateLine[]) =>
+    request<StrikeTemplate>("PUT", `/theaters/${e(theaterId)}/strike-template`, { tasks }),
 
   /** "I'm here". Coordinates are left out when the phone wouldn't say where it is. */
   checkIn: (showId: string, where: { lat?: number; lng?: number; accuracy?: number }) =>

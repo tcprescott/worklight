@@ -28,7 +28,7 @@ def create_theater(ctx: Ctx, user: User, body: CreateTheaterBody) -> Theater:
     return theater
 
 
-def _admin_theater(ctx: Ctx, user: User, theater_id: str) -> Theater:
+def admin_theater(ctx: Ctx, user: User, theater_id: str) -> Theater:
     theater = ctx.store.get_theater(theater_id)
     if not theater:
         raise NotFound("Theater not found")
@@ -49,7 +49,7 @@ def _admins(ctx: Ctx, theater_id: str) -> list[Admin]:
 
 def get_theater(ctx: Ctx, user: User, theater_id: str) -> TheaterView:
     """Company home: every show with its staff and head counts, plus the admins."""
-    theater = _admin_theater(ctx, user, theater_id)
+    theater = admin_theater(ctx, user, theater_id)
     shows = sorted(ctx.store.list_theater_shows(theater_id), key=lambda s: s.start_date)
     members_by_show = {s.show_id: ctx.store.list_members(s.show_id) for s in shows}
     staff_ids = {m.user_id for ms in members_by_show.values() for m in ms if m.role == "staff"}
@@ -96,7 +96,7 @@ class AddAdminBody(Model):
 
 
 def add_admin(ctx: Ctx, user: User, theater_id: str, body: AddAdminBody) -> list[Admin]:
-    theater = _admin_theater(ctx, user, theater_id)
+    theater = admin_theater(ctx, user, theater_id)
     person = user_for_email(ctx, body.email, body.name)
     if body.name and not person.name:
         ctx.store.update_user_name(person.user_id, body.name)
@@ -107,7 +107,7 @@ def add_admin(ctx: Ctx, user: User, theater_id: str, body: AddAdminBody) -> list
 
 
 def remove_admin(ctx: Ctx, user: User, theater_id: str, admin_id: str) -> list[Admin]:
-    _admin_theater(ctx, user, theater_id)
+    admin_theater(ctx, user, theater_id)
     admins = ctx.store.list_admins(theater_id)
     if admin_id not in {uid for uid, _ in admins}:
         raise NotFound("That person isn't an admin")

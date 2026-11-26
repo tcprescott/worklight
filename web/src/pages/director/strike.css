@@ -1,0 +1,230 @@
+/* Strike checklist: one list grouped by area, like a paper strike sheet. Shared by the crew's task list. */
+
+.strike-page {
+  max-width: 760px;
+}
+.strike-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.strike-call {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  font-size: 15px;
+}
+.strike-call-when {
+  font-family: var(--cond);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.strike-call-draft {
+  font-size: 14px;
+  color: var(--soft-text);
+  background: var(--soft-bg);
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+.strike-call-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.strike-call-fields {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+.strike-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.strike-progress-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.strike-unassigned-count {
+  color: var(--soft-text);
+}
+
+.strike-empty {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.strike-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.strike-area {
+  background: var(--surface);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+.strike-area-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: var(--sand-2);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.strike-task {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.strike-box {
+  width: 22px;
+  height: 22px;
+  margin: 1px 0 0;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+.strike-box:disabled {
+  cursor: default;
+}
+.strike-task-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.strike-task-text {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.strike-task.done .strike-task-text {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.strike-task-note {
+  font-size: 13px;
+  color: var(--muted);
+}
+.strike-who {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+.strike-chip {
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 14px;
+  border: 1px solid var(--plum-line);
+  background: var(--plum-tint);
+  color: var(--plum-dark);
+  font-size: 13px;
+  font-weight: 600;
+}
+.strike-chip:disabled {
+  cursor: default;
+}
+.strike-chip.none {
+  background: var(--soft-bg);
+  border-color: var(--soft-edge);
+  color: var(--soft-text);
+}
+.strike-chip.add {
+  background: transparent;
+  border-style: dashed;
+  color: var(--muted);
+  border-color: var(--rule-input);
+  min-width: 28px;
+  padding: 0 8px;
+}
+.strike-chip.mate {
+  cursor: default;
+  background: var(--sand-2);
+  border-color: var(--rule);
+  color: var(--ink-2);
+}
+.strike-done-by {
+  font-size: 12px;
+  color: var(--muted);
+}
+.strike-edit {
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  min-width: 36px;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+}
+.strike-edit:hover {
+  color: var(--plum);
+  background: var(--plum-tint);
+}
+.strike-add-here {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: transparent;
+  color: var(--plum);
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 14px;
+  min-height: 44px;
+}
+.strike-dlg-sub {
+  margin: -6px 0 4px;
+  color: var(--muted);
+}
+.strike-dlg-actions {
+  flex-wrap: wrap;
+}
+
+/* Company template editor */
+.strike-tpl-head {
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+}
+.strike-tpl-area {
+  font-family: var(--cond);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.strike-tpl-task {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--rule);
+  align-items: center;
+}

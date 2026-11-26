@@ -88,7 +88,7 @@ class Membership(Model):
 
 
 class NotifyPrefs(Model):
-    """What a person wants emailed to them. Calendar feeds and the app are always on."""
+    """What a person wants sent to them, by email and by push. Calendar feeds and the app are always on."""
 
     # The day before each call.
     email_reminders: bool = True
@@ -96,6 +96,38 @@ class NotifyPrefs(Model):
     change_emails: bool = True
     # New notices on the callboard.
     notice_emails: bool = True
+    # The same three, as push notifications to each device the person turned push on for.
+    push_reminders: bool = True
+    push_changes: bool = True
+    push_notices: bool = True
+
+
+# webpush = a browser subscription. A native app later adds its own kind (and a sender for it).
+PushKind = Literal["webpush"]
+
+
+class PushDevice(Model):
+    """One phone or computer that gets push notifications for a person."""
+
+    device_id: str
+    user_id: str
+    kind: PushKind
+    # Web push: the subscription's endpoint on the browser vendor's push service, and its two keys.
+    endpoint: str
+    p256dh: str
+    auth: str
+    # Shown in settings, e.g. "Chrome on Android".
+    label: str | None = None
+    created_at: str
+    last_sent_at: str | None = None
+
+
+class PushDeviceView(Model):
+    device_id: str
+    kind: PushKind
+    label: str | None = None
+    created_at: str
+    last_sent_at: str | None = None
 
 
 class User(Model):
@@ -210,7 +242,7 @@ class MyConflicts(Model):
 
 # ---- Scheduling ----------------------------------------------------------------------------------
 
-CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance"]
+CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance", "strike"]
 CallStatus = Literal["draft", "published"]
 # Who a call covers besides the people in its scenes.
 CallGroup = Literal["everyone", "cast", "crew"]
@@ -293,6 +325,36 @@ class CheckIn(Model):
     # Staff tapped "Got it" on the report.
     seen_by: str | None = None
     seen_at: str | None = None
+    updated_at: str
+
+
+# ---- Strike ---------------------------------------------------------------------------------------
+
+
+class StrikeTemplateTask(Model):
+    """One line of a company's standard strike list. Each show starts its checklist from a copy."""
+
+    task_id: str
+    theater_id: str
+    # Grouping on the checklist, e.g. "Set", "Props", "Lights & sound".
+    area: str
+    text: str
+    order: int
+
+
+class StrikeTask(Model):
+    """One job on a show's strike checklist, done by the named people (crew or staff)."""
+
+    task_id: str
+    show_id: str
+    area: str
+    text: str
+    order: int
+    note: str | None = None
+    assignee_ids: list[str] = []
+    done_at: str | None = None
+    done_by: str | None = None
+    created_at: str
     updated_at: str
 
 

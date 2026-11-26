@@ -6,6 +6,9 @@ and a stand-in for Cognito sign-in. Data resets when it stops.
 
 Sign in as anyone in the sample data (jordan@example.org directs, maya@example.org plays Hermia). Sign-in
 links and every other email land in the outbox at http://localhost:8787/api/dev/outbox.
+
+Push notifications are real: turn them on under Account in Chrome, Edge or Firefox and they arrive on this
+computer. Each push also shows in the outbox. The VAPID key is kept in dev/.vapid.pem across restarts.
 """
 
 import argparse
@@ -33,9 +36,14 @@ from worklight.app import create_app  # noqa: E402
 from worklight.keys import normalize_email  # noqa: E402
 from worklight.localdb import create_table  # noqa: E402
 from worklight.mailer import Email  # noqa: E402
+from worklight.models import PushDevice  # noqa: E402
+from worklight.push import Pusher, PushMessage, WebPushChannel  # noqa: E402
 from worklight.services.base import Ctx  # noqa: E402
 from worklight.services.shows import invite_sign_in_ok  # noqa: E402
 from worklight.store import DynamoStore  # noqa: E402
+from worklight.webpush import SendResult, VapidKey, WebPushSender  # noqa: E402
+
+VAPID_FILE = Path(__file__).resolve().parent / ".vapid.pem"
 
 
 class Outbox:
@@ -45,6 +53,28 @@ class Outbox:
     def send(self, email: Email) -> None:
         self.sent.append(email)
         print(f"\n[email to {email.to}] {email.subject}\n{email.text}\n", flush=True)
+
+
+class DevPush(WebPushChannel):
+    """Sends real web pushes, and copies each one into the outbox so it's visible without a browser."""
+
+    def __init__(self, outbox: Outbox) -> None:
+        if not VAPID_FILE.exists():
+            VAPID_FILE.write_text(VapidKey.generate().to_pem())
+        super().__init__(WebPushSender(VapidKey.from_pem(VAPID_FILE.read_text()), "mailto:dev@example.org"))
+        self.outbox = outbox
+
+    def deliver(self, device: PushDevice, message: PushMessage) -> SendResult:
+        result = super().deliver(device, message)
+        self.outbox.send(
+            Email(
+                to=f"push: {device.label or device.device_id} ({result})",
+                subject=message.title,
+                text=f"{message.body}\n\n{message.url}",
+                html="",
+            )
+        )
+        return result
 
 
 class DevAuth:
@@ -79,7 +109,12 @@ def build(seeded: bool, app_url: str) -> Any:
     client = boto3.client("dynamodb", region_name="us-east-1")
     create_table(client)
     outbox = Outbox()
-    ctx = Ctx(store=DynamoStore("worklight", client), mailer=outbox, app_url=app_url)
+    ctx = Ctx(
+        store=DynamoStore("worklight", client),
+        mailer=outbox,
+        app_url=app_url,
+        push=Pusher([DevPush(outbox)]),
+    )
     if seeded:
         seed(ctx)
     app: FastAPI = create_app(ctx)

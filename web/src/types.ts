@@ -79,8 +79,20 @@ export type PostNoticeBody = Schemas["PostNoticeBody"];
 export type UpdateNoticeBody = Schemas["UpdateNoticeBody"];
 export type CalendarLinks = Schemas["CalendarLinks"];
 export type NotifyPrefs = Schemas["NotifyPrefs"];
+export type PushStatus = Schemas["PushStatus"];
+export type PushDevice = Schemas["PushDeviceView"];
+export type AddPushDeviceBody = Schemas["AddDeviceBody"];
 
 export type ApiKey = Schemas["ApiKey"];
 export type ApiKeyScope = ApiKey["scope"];
 export type CreateApiKeyBody = Schemas["CreateApiKeyBody"];
 export type NewApiKey = Schemas["NewApiKey"];
+
+export type StrikeChecklist = Schemas["StrikeChecklist"];
+export type StrikeTaskView = Schemas["StrikeTaskView"];
+export type StrikeTask = Schemas["StrikeTask"];
+export type StrikeCallView = Schemas["StrikeCallView"];
+export type AddStrikeTaskBody = Schemas["AddTaskBody"];
+export type UpdateStrikeTaskBody = Schemas["UpdateTaskBody"];
+export type StrikeTemplate = Schemas["StrikeTemplate"];
+export type StrikeTemplateLine = Schemas["TemplateLine"];

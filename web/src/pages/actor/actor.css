@@ -1367,3 +1367,102 @@ button.actor-level {
 .actor-pref.off strong {
   color: var(--muted);
 }
+
+/* Email and Push columns, one row per kind of message. */
+.acct-matrix {
+  width: 100%;
+  border-collapse: collapse;
+}
+.acct-matrix thead th {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+  width: 56px;
+  padding: 0 0 6px;
+  text-align: center;
+}
+.acct-matrix thead th:first-child {
+  width: auto;
+}
+.acct-matrix tbody th {
+  text-align: left;
+  font-weight: normal;
+  padding: 10px 8px 10px 0;
+  border-top: 1px solid var(--rule);
+}
+.acct-matrix tbody th strong {
+  display: block;
+  font-size: 15px;
+}
+.acct-matrix tbody th span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+}
+.acct-matrix td {
+  text-align: center;
+  border-top: 1px solid var(--rule);
+}
+.acct-matrix input {
+  width: 22px;
+  height: 22px;
+  accent-color: var(--plum);
+  cursor: pointer;
+}
+.acct-matrix input:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* The device in hand: turn push on, test it, or turn it off. */
+.acct-device {
+  background: var(--sand-2);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+.acct-device-k {
+  font-family: var(--cond);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--muted);
+}
+.acct-device-on {
+  color: var(--done, #2f6b3a);
+  font-weight: 600;
+}
+.acct-device-note {
+  margin: 0;
+  font-size: 13px;
+  background: var(--warn-bg, #fdf1d6);
+  color: var(--warn-text, #6e4a00);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.acct-device-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.acct-device-others {
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-top: 1px solid var(--rule);
+  padding-top: 8px;
+}
+.acct-device-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}

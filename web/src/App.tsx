@@ -17,6 +17,8 @@ import { AttendancePage } from "./pages/director/AttendancePage";
 import { SetupWizard } from "./pages/director/SetupWizard";
 import { ShowSettings } from "./pages/director/ShowSettings";
 import { Staff } from "./pages/director/Staff";
+import { Strike } from "./pages/director/Strike";
+import { StrikeTemplatePage } from "./pages/director/StrikeTemplate";
 import { MagicLink } from "./pages/MagicLink";
 import { MyShows } from "./pages/MyShows";
 import { SignIn } from "./pages/SignIn";
@@ -57,6 +59,8 @@ function SignedIn(props: { path: string }) {
   if (m) return <CompanyHome theaterId={m.theaterId!} />;
   m = match("/c/{theaterId}/staff", path);
   if (m) return <Staff theaterId={m.theaterId!} />;
+  m = match("/c/{theaterId}/strike-template", path);
+  if (m) return <StrikeTemplatePage theaterId={m.theaterId!} />;
   m = match("/c/{theaterId}/new-show", path);
   if (m) return <SetupWizard theaterId={m.theaterId!} />;
 
@@ -115,6 +119,8 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return staff ? <AttendancePage {...pageProps} /> : <NotForYou />;
     case "breakdown":
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
+    case "strike":
+      return staff ? <Strike {...pageProps} /> : <NotForYou />;
     case "people":
       return staff ? <People {...pageProps} /> : <NotForYou />;
     case "settings":

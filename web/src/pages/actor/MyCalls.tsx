@@ -11,6 +11,7 @@ import { checkInHere, checkInOpen, ReportSheet, SeenPill, stillAhead, toldText }
 import { useAsync } from "../../useAsync";
 import { callWhat, directionsUrl, lowerFirst, useDirector, useStageManager } from "./actorLib";
 import { CalendarLinks, downloadCallIcs } from "./CalendarLinks";
+import { MyStrikeTasks } from "./StrikeTasks";
 import "./actor.css";
 
 function weekLabel(monday: string): string {
@@ -119,6 +120,7 @@ export function MyCalls(props: ShowPageProps) {
               </div>
             </div>
           )}
+          <MyStrikeTasks showId={show.showId} userId={me.user.userId} />
           <div className="actor-section-head actor-calls-head">
             <h2>All your calls</h2>
             <button type="button" className="btn btn-sm btn-outline actor-cal-btn" onClick={() => setCalOpen(true)}>

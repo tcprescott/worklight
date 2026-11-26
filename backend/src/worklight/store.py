@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -23,8 +24,11 @@ from worklight.models import (
     Model,
     Notice,
     NoticeRead,
+    PushDevice,
     Scene,
     Show,
+    StrikeTask,
+    StrikeTemplateTask,
     Theater,
     User,
     WeeklyConflict,
@@ -97,6 +101,7 @@ class ShowPartition:
     checkins: list[CheckIn] = field(default_factory=list)
     notices: list[Notice] = field(default_factory=list)
     reads: list[NoticeRead] = field(default_factory=list)
+    strike_tasks: list[StrikeTask] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -143,6 +148,15 @@ class DynamoStore:
     def _batch_delete(self, key_list: list[keys.Key]) -> None:
         for group in _chunks(key_list, 25):
             pending: list[Any] = [{"DeleteRequest": {"Key": _to_ddb(keys.primary(k))}} for k in group]
+            while pending:
+                res = self.db.batch_write_item(RequestItems={self.table: pending})
+                pending = list(res.get("UnprocessedItems", {}).get(self.table, []))
+
+    def _batch_put(self, records: list[tuple[keys.Key, str, Model]]) -> None:
+        for group in _chunks(records, 25):
+            pending: list[Any] = [
+                {"PutRequest": {"Item": _to_ddb(_item(k, kind, r))}} for k, kind, r in group
+            ]
             while pending:
                 res = self.db.batch_write_item(RequestItems={self.table: pending})
                 pending = list(res.get("UnprocessedItems", {}).get(self.table, []))
@@ -396,9 +410,12 @@ class DynamoStore:
                 part.notices.append(Notice.model_validate(data))
             elif sk.startswith(keys.READ_PREFIX):
                 part.reads.append(NoticeRead.model_validate(data))
+            elif sk.startswith(keys.STRIKE_PREFIX):
+                part.strike_tasks.append(StrikeTask.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
+        part.strike_tasks.sort(key=lambda t: t.order)
         return part
 
     # ---- memberships --------------------------------------------------------------------------
@@ -547,6 +564,36 @@ class DynamoStore:
     def put_notice_read(self, read: NoticeRead) -> None:
         self._put_item(keys.notice_read(read.show_id, read.notice_id, read.user_id), "noticeRead", read)
 
+    # ---- strike -------------------------------------------------------------------------------
+
+    def list_strike_tasks(self, show_id: str) -> list[StrikeTask]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], keys.STRIKE_PREFIX)
+        return sorted((StrikeTask.model_validate(i) for i in items), key=lambda t: t.order)
+
+    def put_strike_task(self, task: StrikeTask) -> None:
+        self._put_item(keys.strike_task(task.show_id, task.task_id), "strikeTask", task)
+
+    def put_strike_tasks(self, tasks: list[StrikeTask]) -> None:
+        self._batch_put([(keys.strike_task(t.show_id, t.task_id), "strikeTask", t) for t in tasks])
+
+    def delete_strike_task(self, show_id: str, task_id: str) -> None:
+        self._delete(keys.strike_task(show_id, task_id))
+
+    def list_strike_template(self, theater_id: str) -> list[StrikeTemplateTask]:
+        items = self._query_all(keys.theater(theater_id)["PK"], keys.STRIKE_PREFIX)
+        return sorted((StrikeTemplateTask.model_validate(i) for i in items), key=lambda t: t.order)
+
+    def replace_strike_template(self, theater_id: str, tasks: list[StrikeTemplateTask]) -> None:
+        """Swaps the whole template: new lines are written first, then the old ones removed."""
+        old = self.list_strike_template(theater_id)
+        self._batch_put(
+            [(keys.strike_template_task(theater_id, t.task_id), "strikeTemplateTask", t) for t in tasks]
+        )
+        keep = {t.task_id for t in tasks}
+        self._batch_delete(
+            [keys.strike_template_task(theater_id, t.task_id) for t in old if t.task_id not in keep]
+        )
+
     # ---- check-ins ----------------------------------------------------------------------------
 
     def list_checkins(self, show_id: str, date: str | None = None) -> list[CheckIn]:
@@ -585,6 +632,29 @@ class DynamoStore:
 
     def delete_date_conflict(self, user_id: str, date: str) -> None:
         self._delete(keys.date_conflict(user_id, date))
+
+    # ---- push devices -------------------------------------------------------------------------
+
+    def list_push_devices(self, user_id: str) -> list[PushDevice]:
+        items = self._query_all(keys.user(user_id)["PK"], keys.DEVICE_PREFIX)
+        return sorted((PushDevice.model_validate(i) for i in items), key=lambda d: d.created_at)
+
+    def put_push_device(self, device: PushDevice) -> None:
+        self._put_item(keys.push_device(device.user_id, device.device_id), "pushDevice", device)
+
+    def delete_push_device(self, user_id: str, device_id: str) -> None:
+        self._delete(keys.push_device(user_id, device_id))
+
+    def touch_push_device(self, user_id: str, device_id: str, at: str) -> None:
+        # Removed while we were sending: nothing to update.
+        with contextlib.suppress(self.db.exceptions.ConditionalCheckFailedException):
+            self.db.update_item(
+                TableName=self.table,
+                Key=_to_ddb(keys.push_device(user_id, device_id)),
+                UpdateExpression="SET lastSentAt = :at",
+                ConditionExpression="attribute_exists(PK)",
+                ExpressionAttributeValues={":at": {"S": at}},
+            )
 
     # ---- magic links --------------------------------------------------------------------------
 

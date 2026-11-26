@@ -178,6 +178,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/push": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Push Status */
+        get: operations["push_status_api_me_push_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Add Push Device */
+        put: operations["add_push_device_api_me_push_devices_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/devices/{device_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Push Device */
+        delete: operations["remove_push_device_api_me_push_devices__device_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Test Push */
+        post: operations["test_push_api_me_push_test_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/public/calendar/{token}.ics": {
         parameters: {
             query?: never;
@@ -799,6 +867,75 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/strike": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Checklist */
+        get: operations["get_checklist_api_shows__show_id__strike_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/strike/copy-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Copy Template */
+        post: operations["copy_template_api_shows__show_id__strike_copy_template_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/strike/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Task */
+        post: operations["add_task_api_shows__show_id__strike_tasks_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/strike/tasks/{task_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Task */
+        delete: operations["delete_task_api_shows__show_id__strike_tasks__task_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Task */
+        patch: operations["update_task_api_shows__show_id__strike_tasks__task_id__patch"];
+        trace?: never;
+    };
     "/api/shows/{show_id}/tech-calls": {
         parameters: {
             query?: never;
@@ -954,6 +1091,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/theaters/{theater_id}/strike-template": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Template */
+        get: operations["get_template_api_theaters__theater_id__strike_template_get"];
+        /** Put Template */
+        put: operations["put_template_api_theaters__theater_id__strike_template_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -997,12 +1152,43 @@ export interface components {
             /** Title */
             title?: string | null;
         };
+        /**
+         * AddDeviceBody
+         * @description A browser's PushSubscription.toJSON(), plus a label for the settings list.
+         */
+        AddDeviceBody: {
+            /** Endpoint */
+            endpoint: string;
+            keys: components["schemas"]["WebPushKeys"];
+            /**
+             * Kind
+             * @default webpush
+             * @constant
+             */
+            kind: "webpush";
+            /** Label */
+            label?: string | null;
+        };
         /** AddSceneBody */
         AddSceneBody: {
             /** Callid */
             callId?: string | null;
             /** Sceneid */
             sceneId: string;
+        };
+        /** AddTaskBody */
+        AddTaskBody: {
+            /** Area */
+            area: string;
+            /**
+             * Assigneeids
+             * @default []
+             */
+            assigneeIds: string[];
+            /** Note */
+            note?: string | null;
+            /** Text */
+            text: string;
         };
         /** Admin */
         Admin: {
@@ -1049,6 +1235,13 @@ export interface components {
             sceneId: string;
             /** Showid */
             showId: string;
+        };
+        /** Assignee */
+        Assignee: {
+            /** Name */
+            name?: string | null;
+            /** Userid */
+            userId: string;
         };
         /** Attendance */
         Attendance: {
@@ -1235,7 +1428,7 @@ export interface components {
              * @default rehearsal
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
             /** Updatedat */
             updatedAt: string;
             /**
@@ -1290,7 +1483,7 @@ export interface components {
              * @default rehearsal
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
             /**
              * Userids
              * @default []
@@ -1358,7 +1551,7 @@ export interface components {
              * Type
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
             /**
              * Unpublishedchanges
              * @default false
@@ -1507,7 +1700,7 @@ export interface components {
             /** Title */
             title?: string | null;
             /** Type */
-            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike") | null;
             /** Userids */
             userIds?: string[] | null;
         };
@@ -1838,7 +2031,7 @@ export interface components {
              * Type
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
         };
         /**
          * MyCheckIn
@@ -1991,7 +2184,7 @@ export interface components {
         };
         /**
          * NotifyPrefs
-         * @description What a person wants emailed to them. Calendar feeds and the app are always on.
+         * @description What a person wants sent to them, by email and by push. Calendar feeds and the app are always on.
          */
         NotifyPrefs: {
             /**
@@ -2009,6 +2202,21 @@ export interface components {
              * @default true
              */
             noticeEmails: boolean;
+            /**
+             * Pushchanges
+             * @default true
+             */
+            pushChanges: boolean;
+            /**
+             * Pushnotices
+             * @default true
+             */
+            pushNotices: boolean;
+            /**
+             * Pushreminders
+             * @default true
+             */
+            pushReminders: boolean;
         };
         /** PostNoticeBody */
         PostNoticeBody: {
@@ -2053,6 +2261,34 @@ export interface components {
             notified: number;
             /** Published */
             published: number;
+        };
+        /** PushDeviceView */
+        PushDeviceView: {
+            /** Createdat */
+            createdAt: string;
+            /** Deviceid */
+            deviceId: string;
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "webpush";
+            /** Label */
+            label?: string | null;
+            /** Lastsentat */
+            lastSentAt?: string | null;
+        };
+        /** PushStatus */
+        PushStatus: {
+            /** Devices */
+            devices: components["schemas"]["PushDeviceView"][];
+            /** Publickey */
+            publicKey?: string | null;
+        };
+        /** PutTemplateBody */
+        PutTemplateBody: {
+            /** Tasks */
+            tasks: components["schemas"]["TemplateLine"][];
         };
         /**
          * RehearsalSlot
@@ -2322,6 +2558,120 @@ export interface components {
             /** Weekday */
             weekday: number;
         };
+        /** StrikeCallView */
+        StrikeCallView: {
+            /** Callid */
+            callId: string;
+            /** Date */
+            date: string;
+            /** End */
+            end: string;
+            /** Location */
+            location?: string | null;
+            /**
+             * Published
+             * @default false
+             */
+            published: boolean;
+            /** Start */
+            start: string;
+        };
+        /** StrikeChecklist */
+        StrikeChecklist: {
+            /** Areas */
+            areas: string[];
+            /** Calls */
+            calls: components["schemas"]["StrikeCallView"][];
+            /** Canedit */
+            canEdit: boolean;
+            /** Donecount */
+            doneCount: number;
+            /** Tasks */
+            tasks: components["schemas"]["StrikeTaskView"][];
+            /**
+             * Templateavailable
+             * @default false
+             */
+            templateAvailable: boolean;
+            /** Unassignedcount */
+            unassignedCount: number;
+        };
+        /**
+         * StrikeTask
+         * @description One job on a show's strike checklist, done by the named people (crew or staff).
+         */
+        StrikeTask: {
+            /** Area */
+            area: string;
+            /**
+             * Assigneeids
+             * @default []
+             */
+            assigneeIds: string[];
+            /** Createdat */
+            createdAt: string;
+            /** Doneat */
+            doneAt?: string | null;
+            /** Doneby */
+            doneBy?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+            /** Taskid */
+            taskId: string;
+            /** Text */
+            text: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** StrikeTaskView */
+        StrikeTaskView: {
+            /** Area */
+            area: string;
+            /**
+             * Assigneeids
+             * @default []
+             */
+            assigneeIds: string[];
+            /**
+             * Assignees
+             * @default []
+             */
+            assignees: components["schemas"]["Assignee"][];
+            /**
+             * Cancheck
+             * @default false
+             */
+            canCheck: boolean;
+            /** Createdat */
+            createdAt: string;
+            /** Doneat */
+            doneAt?: string | null;
+            /** Doneby */
+            doneBy?: string | null;
+            /** Donebyname */
+            doneByName?: string | null;
+            /** Note */
+            note?: string | null;
+            /** Order */
+            order: number;
+            /** Showid */
+            showId: string;
+            /** Taskid */
+            taskId: string;
+            /** Text */
+            text: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** StrikeTemplate */
+        StrikeTemplate: {
+            /** Tasks */
+            tasks: components["schemas"]["TemplateLine"][];
+        };
         /** Suggestions */
         Suggestions: {
             /** Date */
@@ -2348,6 +2698,23 @@ export interface components {
             location?: string | null;
             /** Start */
             start: string;
+        };
+        /** TemplateLine */
+        TemplateLine: {
+            /** Area */
+            area: string;
+            /** Text */
+            text: string;
+        };
+        /** TestPushBody */
+        TestPushBody: {
+            /** Deviceid */
+            deviceId?: string | null;
+        };
+        /** TestPushResult */
+        TestPushResult: {
+            /** Sent */
+            sent: number;
         };
         /** Theater */
         Theater: {
@@ -2431,7 +2798,7 @@ export interface components {
             /** Title */
             title?: string | null;
             /** Type */
-            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance") | null;
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike") | null;
             /** Userids */
             userIds?: string[] | null;
         };
@@ -2512,6 +2879,19 @@ export interface components {
             /** Venue */
             venue?: string | null;
         };
+        /** UpdateTaskBody */
+        UpdateTaskBody: {
+            /** Area */
+            area?: string | null;
+            /** Assigneeids */
+            assigneeIds?: string[] | null;
+            /** Done */
+            done?: boolean | null;
+            /** Note */
+            note?: string | null;
+            /** Text */
+            text?: string | null;
+        };
         /** User */
         User: {
             /** Calendartoken */
@@ -2526,7 +2906,10 @@ export interface components {
              * @default {
              *       "changeEmails": true,
              *       "emailReminders": true,
-             *       "noticeEmails": true
+             *       "noticeEmails": true,
+             *       "pushChanges": true,
+             *       "pushNotices": true,
+             *       "pushReminders": true
              *     }
              */
             prefs: components["schemas"]["NotifyPrefs"];
@@ -2575,6 +2958,13 @@ export interface components {
             part?: string | null;
             /** Userid */
             userId: string;
+        };
+        /** WebPushKeys */
+        WebPushKeys: {
+            /** Auth */
+            auth: string;
+            /** P256Dh */
+            p256dh: string;
         };
         /** WeeklyBody */
         WeeklyBody: {
@@ -3019,6 +3409,121 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShowDayView"][];
+                };
+            };
+        };
+    };
+    push_status_api_me_push_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushStatus"];
+                };
+            };
+        };
+    };
+    add_push_device_api_me_push_devices_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddDeviceBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushDeviceView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_push_device_api_me_push_devices__device_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                device_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    test_push_api_me_push_test_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestPushBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestPushResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -4510,6 +5015,169 @@ export interface operations {
             };
         };
     };
+    get_checklist_api_shows__show_id__strike_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeChecklist"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    copy_template_api_shows__show_id__strike_copy_template_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeChecklist"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_task_api_shows__show_id__strike_tasks_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddTaskBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeTask"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_task_api_shows__show_id__strike_tasks__task_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_task_api_shows__show_id__strike_tasks__task_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                task_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTaskBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeTask"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     tech_calls_api_shows__show_id__tech_calls_post: {
         parameters: {
             query?: never;
@@ -4856,6 +5524,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_template_api_theaters__theater_id__strike_template_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeTemplate"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_template_api_theaters__theater_id__strike_template_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PutTemplateBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StrikeTemplate"];
                 };
             };
             /** @description Validation Error */
