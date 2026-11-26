@@ -107,6 +107,50 @@
         "title": "AddSceneBody",
         "type": "object"
       },
+      "AddTaskBody": {
+        "properties": {
+          "area": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Area",
+            "type": "string"
+          },
+          "assigneeIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Assigneeids",
+            "type": "array"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "text": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "area",
+          "text"
+        ],
+        "title": "AddTaskBody",
+        "type": "object"
+      },
       "Admin": {
         "properties": {
           "email": {
@@ -227,6 +271,30 @@
           "charId"
         ],
         "title": "Appearance",
+        "type": "object"
+      },
+      "Assignee": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "title": "Assignee",
         "type": "object"
       },
       "Attendance": {
@@ -728,7 +796,8 @@
               "run",
               "tech",
               "dress",
-              "performance"
+              "performance",
+              "strike"
             ],
             "title": "Type",
             "type": "string"
@@ -872,7 +941,8 @@
               "run",
               "tech",
               "dress",
-              "performance"
+              "performance",
+              "strike"
             ],
             "title": "Type",
             "type": "string"
@@ -1038,7 +1108,8 @@
               "run",
               "tech",
               "dress",
-              "performance"
+              "performance",
+              "strike"
             ],
             "title": "Type",
             "type": "string"
@@ -1443,7 +1514,8 @@
                   "run",
                   "tech",
                   "dress",
-                  "performance"
+                  "performance",
+                  "strike"
                 ],
                 "type": "string"
               },
@@ -2459,7 +2531,8 @@
               "run",
               "tech",
               "dress",
-              "performance"
+              "performance",
+              "strike"
             ],
             "title": "Type",
             "type": "string"
@@ -2872,6 +2945,23 @@
           "callIds"
         ],
         "title": "PublishResult",
+        "type": "object"
+      },
+      "PutTemplateBody": {
+        "properties": {
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TemplateLine"
+            },
+            "maxItems": 300,
+            "title": "Tasks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "title": "PutTemplateBody",
         "type": "object"
       },
       "RehearsalSlot": {
@@ -3581,6 +3671,306 @@
         "title": "SlotBody",
         "type": "object"
       },
+      "StrikeCallView": {
+        "properties": {
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "callId",
+          "date",
+          "start",
+          "end"
+        ],
+        "title": "StrikeCallView",
+        "type": "object"
+      },
+      "StrikeChecklist": {
+        "properties": {
+          "areas": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Areas",
+            "type": "array"
+          },
+          "calls": {
+            "items": {
+              "$ref": "#/components/schemas/StrikeCallView"
+            },
+            "title": "Calls",
+            "type": "array"
+          },
+          "canEdit": {
+            "title": "Canedit",
+            "type": "boolean"
+          },
+          "doneCount": {
+            "title": "Donecount",
+            "type": "integer"
+          },
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/StrikeTaskView"
+            },
+            "title": "Tasks",
+            "type": "array"
+          },
+          "templateAvailable": {
+            "default": false,
+            "title": "Templateavailable",
+            "type": "boolean"
+          },
+          "unassignedCount": {
+            "title": "Unassignedcount",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tasks",
+          "areas",
+          "doneCount",
+          "unassignedCount",
+          "calls",
+          "canEdit"
+        ],
+        "title": "StrikeChecklist",
+        "type": "object"
+      },
+      "StrikeTask": {
+        "description": "One job on a show's strike checklist, done by the named people (crew or staff).",
+        "properties": {
+          "area": {
+            "title": "Area",
+            "type": "string"
+          },
+          "assigneeIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Assigneeids",
+            "type": "array"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "doneAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doneat"
+          },
+          "doneBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doneby"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "taskId": {
+            "title": "Taskid",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId",
+          "showId",
+          "area",
+          "text",
+          "order",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "StrikeTask",
+        "type": "object"
+      },
+      "StrikeTaskView": {
+        "properties": {
+          "area": {
+            "title": "Area",
+            "type": "string"
+          },
+          "assigneeIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Assigneeids",
+            "type": "array"
+          },
+          "assignees": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Assignee"
+            },
+            "title": "Assignees",
+            "type": "array"
+          },
+          "canCheck": {
+            "default": false,
+            "title": "Cancheck",
+            "type": "boolean"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "doneAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doneat"
+          },
+          "doneBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Doneby"
+          },
+          "doneByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Donebyname"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "order": {
+            "title": "Order",
+            "type": "integer"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "taskId": {
+            "title": "Taskid",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId",
+          "showId",
+          "area",
+          "text",
+          "order",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "StrikeTaskView",
+        "type": "object"
+      },
+      "StrikeTemplate": {
+        "properties": {
+          "tasks": {
+            "items": {
+              "$ref": "#/components/schemas/TemplateLine"
+            },
+            "title": "Tasks",
+            "type": "array"
+          }
+        },
+        "required": [
+          "tasks"
+        ],
+        "title": "StrikeTemplate",
+        "type": "object"
+      },
       "Suggestions": {
         "properties": {
           "date": {
@@ -3676,6 +4066,28 @@
           "end"
         ],
         "title": "TechCallsBody",
+        "type": "object"
+      },
+      "TemplateLine": {
+        "properties": {
+          "area": {
+            "maxLength": 60,
+            "minLength": 1,
+            "title": "Area",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "area",
+          "text"
+        ],
+        "title": "TemplateLine",
         "type": "object"
       },
       "Theater": {
@@ -3974,7 +4386,8 @@
                   "run",
                   "tech",
                   "dress",
-                  "performance"
+                  "performance",
+                  "strike"
                 ],
                 "type": "string"
               },
@@ -4416,6 +4829,77 @@
           }
         },
         "title": "UpdateShowBody",
+        "type": "object"
+      },
+      "UpdateTaskBody": {
+        "properties": {
+          "area": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Area"
+          },
+          "assigneeIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assigneeids"
+          },
+          "done": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Done"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          }
+        },
+        "title": "UpdateTaskBody",
         "type": "object"
       },
       "User": {
@@ -7303,6 +7787,230 @@
         "summary": "Add Scene"
       }
     },
+    "/api/shows/{show_id}/strike": {
+      "get": {
+        "operationId": "get_checklist_api_shows__show_id__strike_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeChecklist"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Checklist"
+      }
+    },
+    "/api/shows/{show_id}/strike/copy-template": {
+      "post": {
+        "operationId": "copy_template_api_shows__show_id__strike_copy_template_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeChecklist"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Copy Template"
+      }
+    },
+    "/api/shows/{show_id}/strike/tasks": {
+      "post": {
+        "operationId": "add_task_api_shows__show_id__strike_tasks_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTaskBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeTask"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Task"
+      }
+    },
+    "/api/shows/{show_id}/strike/tasks/{task_id}": {
+      "delete": {
+        "operationId": "delete_task_api_shows__show_id__strike_tasks__task_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Task"
+      },
+      "patch": {
+        "operationId": "update_task_api_shows__show_id__strike_tasks__task_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTaskBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeTask"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Task"
+      }
+    },
     "/api/shows/{show_id}/tech-calls": {
       "post": {
         "operationId": "tech_calls_api_shows__show_id__tech_calls_post",
@@ -7716,6 +8424,92 @@
           }
         },
         "summary": "Create Show"
+      }
+    },
+    "/api/theaters/{theater_id}/strike-template": {
+      "get": {
+        "operationId": "get_template_api_theaters__theater_id__strike_template_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeTemplate"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Template"
+      },
+      "put": {
+        "operationId": "put_template_api_theaters__theater_id__strike_template_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StrikeTemplate"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Template"
       }
     }
   }
