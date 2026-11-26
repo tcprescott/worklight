@@ -70,6 +70,7 @@ export function MyStrikeTasks(props: { showId: string; userId: string; readOnly?
                   <span className="caps small muted">{t.area}</span>
                   <span className="strike-task-text">{t.text}</span>
                   {t.note && <span className="strike-task-note">{t.note}</span>}
+                  {t.returnItems && t.returnItems.length > 0 && <span className="strike-task-note">{t.returnItems.join(", ")}</span>}
                   {mates.length > 0 && (
                     <span className="strike-task-note">With {mates.map((m) => (m.name ? firstName(m.name) : "someone")).join(" and ")}</span>
                   )}

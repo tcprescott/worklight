@@ -2466,6 +2466,16 @@ export interface components {
             /** Conflictssubmittedat */
             conflictsSubmittedAt?: string | null;
             /**
+             * Costumeaccess
+             * @default false
+             */
+            costumeAccess: boolean;
+            /**
+             * Propsaccess
+             * @default false
+             */
+            propsAccess: boolean;
+            /**
              * Role
              * @enum {string}
              */

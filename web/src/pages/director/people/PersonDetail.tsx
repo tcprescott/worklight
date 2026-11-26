@@ -58,6 +58,12 @@ export function PersonDetail(
         <span className="grow stack-sm sp-gap-2">
           <span className="sp-person-name">{p.name}</span>
           <span className="sp-person-sub">{sub}</span>
+          {(m.costumeAccess || m.propsAccess) && (
+            <span className="row">
+              {m.costumeAccess && <span className="tag tag-plum">Costume access</span>}
+              {m.propsAccess && <span className="tag tag-plum">Props access</span>}
+            </span>
+          )}
         </span>
         {props.onClose && (
           <button className="btn btn-outline" onClick={props.onClose}>
@@ -124,7 +130,7 @@ export function PersonDetail(
           {!props.readOnly && (
             <div className="sp-person-more">
               <button className="sp-text-action" onClick={props.onEdit}>
-                Edit role
+                Edit role and access
               </button>
               {!props.isMe && (
                 <button className="sp-text-action sp-danger-text" onClick={props.onRemove}>

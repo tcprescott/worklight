@@ -1,4 +1,20 @@
 import type {
+  CreateItemBody,
+  CreateStockBody,
+  ItemView,
+  KeeperView,
+  MeasurementSheet,
+  MyItems,
+  Photo,
+  PullBody,
+  PutKeeperBody,
+  SaveSheetBody,
+  SheetRow,
+  Stock,
+  StockItemView,
+  Tracker,
+  UpdateItemBody,
+  UpdateStockBody,
   AddStrikeTaskBody,
   StrikeChecklist,
   StrikeTask,
@@ -84,6 +100,21 @@ async function request<T>(method: string, path: string, body?: unknown, retried 
   return data as T;
 }
 
+/** Sends a picture as the raw body (the API stores it and returns its id and a link). */
+async function upload(path: string, blob: Blob, retried = false): Promise<Photo> {
+  const token = await getIdToken(retried);
+  if (!token) throw new ApiError(401, "Sign in required");
+  const res = await fetch(`/api${path}`, {
+    method: "POST",
+    headers: { authorization: `Bearer ${token}`, "content-type": blob.type || "image/jpeg" },
+    body: blob,
+  });
+  if (res.status === 401 && !retried) return upload(path, blob, true);
+  const data = (await res.json().catch(() => ({}))) as { error?: string };
+  if (!res.ok) throw new ApiError(res.status, data.error ?? `Upload failed (${res.status})`);
+  return data as Photo;
+}
+
 async function requestText(method: string, path: string): Promise<string> {
   const token = await getIdToken();
   if (!token) throw new ApiError(401, "Sign in required");
@@ -103,6 +134,29 @@ const e = encodeURIComponent;
 const show = (id: string) => `/shows/${e(id)}`;
 
 export const api = {
+  // Costumes and props
+  tracker: (showId: string) => request<Tracker>("GET", `${show(showId)}/wardrobe`),
+  createItem: (showId: string, body: CreateItemBody) => request<ItemView>("POST", `${show(showId)}/wardrobe/items`, body),
+  updateItem: (showId: string, itemId: string, body: UpdateItemBody) =>
+    request<ItemView>("PATCH", `${show(showId)}/wardrobe/items/${e(itemId)}`, body),
+  deleteItem: (showId: string, itemId: string) => request<void>("DELETE", `${show(showId)}/wardrobe/items/${e(itemId)}`),
+  pullFromStock: (showId: string, body: PullBody) => request<ItemView>("POST", `${show(showId)}/wardrobe/pull`, body),
+  myItems: (showId: string) => request<MyItems>("GET", `${show(showId)}/wardrobe/mine`),
+  uploadShowPhoto: (showId: string, blob: Blob) => upload(`${show(showId)}/photos`, blob),
+  measurementSheets: (showId: string) => request<SheetRow[]>("GET", `${show(showId)}/measurements`),
+  measurements: (showId: string, userId: string) => request<MeasurementSheet>("GET", `${show(showId)}/measurements/${e(userId)}`),
+  saveMeasurements: (showId: string, userId: string, body: SaveSheetBody) =>
+    request<MeasurementSheet>("PATCH", `${show(showId)}/measurements/${e(userId)}`, body),
+  stock: (theaterId: string) => request<Stock>("GET", `/theaters/${e(theaterId)}/stock`),
+  createStock: (theaterId: string, body: CreateStockBody) => request<StockItemView>("POST", `/theaters/${e(theaterId)}/stock`, body),
+  updateStock: (theaterId: string, itemId: string, body: UpdateStockBody) =>
+    request<StockItemView>("PATCH", `/theaters/${e(theaterId)}/stock/${e(itemId)}`, body),
+  deleteStock: (theaterId: string, itemId: string) => request<void>("DELETE", `/theaters/${e(theaterId)}/stock/${e(itemId)}`),
+  uploadStockPhoto: (theaterId: string, blob: Blob) => upload(`/theaters/${e(theaterId)}/photos`, blob),
+  keepers: (theaterId: string) => request<KeeperView[]>("GET", `/theaters/${e(theaterId)}/keepers`),
+  putKeeper: (theaterId: string, body: PutKeeperBody) => request<KeeperView[]>("PUT", `/theaters/${e(theaterId)}/keepers`, body),
+  removeKeeper: (theaterId: string, userId: string) => request<KeeperView[]>("DELETE", `/theaters/${e(theaterId)}/keepers/${e(userId)}`),
+
   // Account
   me: () => request<Me>("GET", "/me"),
   updateName: (name: string) => request<User>("PATCH", "/me", { name }),

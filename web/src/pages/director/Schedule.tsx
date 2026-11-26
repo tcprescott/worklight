@@ -143,6 +143,7 @@ export function Schedule(props: ShowPageProps) {
       {open?.kind === "new" && (
         <NewCallDialog
           date={open.date}
+          members={data.members}
           onClose={close}
           create={async (body) => {
             const ok = await data.mutate(() => api.createCall(showId, body), "Call added");

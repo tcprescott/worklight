@@ -10,6 +10,7 @@ import { DateMark, Icon } from "../../ui";
 import { useAsync } from "../../useAsync";
 import { callWhat, KIND_LABEL, useDirector } from "./actorLib";
 import { AUDIENCE_LABEL, excerpt, postedWhen } from "../callboardLib";
+import { MyCostumes } from "../wardrobe/MyCostumes";
 import "./actor.css";
 
 function opensLine(opening: string | null | undefined, start: string, end: string): string {
@@ -122,6 +123,8 @@ export function ShowHome(props: ShowPageProps) {
           </div>
         </>
       )}
+
+      <MyCostumes view={view} />
 
       <Announcements showId={show.showId} archived={archived} directorName={director.name} />
     </ActorShell>

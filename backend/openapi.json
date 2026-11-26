@@ -3850,6 +3850,16 @@
             ],
             "title": "Conflictssubmittedat"
           },
+          "costumeAccess": {
+            "default": false,
+            "title": "Costumeaccess",
+            "type": "boolean"
+          },
+          "propsAccess": {
+            "default": false,
+            "title": "Propsaccess",
+            "type": "boolean"
+          },
           "role": {
             "enum": [
               "staff",

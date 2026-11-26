@@ -44,6 +44,8 @@ def get_me(ctx: Ctx, user: User) -> Me:
             title=m.title,
             status=m.status,
             conflicts_submitted_at=m.conflicts_submitted_at,
+            costume_access=m.costume_access,
+            props_access=m.props_access,
         )
         for m in memberships
         if m.show_id in shows

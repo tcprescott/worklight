@@ -223,6 +223,7 @@ function TaskRow(props: { task: StrikeTaskView; canEdit: boolean; onToggle: () =
       <div className="strike-task-body">
         <span className="strike-task-text">{t.text}</span>
         {t.note && <span className="strike-task-note">{t.note}</span>}
+        {t.returnItems && t.returnItems.length > 0 && <span className="strike-task-note strike-return-items">{t.returnItems.join(", ")}</span>}
         <div className="strike-who">
           {t.assignees.length === 0 ? (
             <button type="button" className="strike-chip none" onClick={props.onAssign} disabled={!props.canEdit}>

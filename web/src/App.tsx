@@ -21,6 +21,9 @@ import { Staff } from "./pages/director/Staff";
 import { Strike } from "./pages/director/Strike";
 import { StrikeTemplatePage } from "./pages/director/StrikeTemplate";
 import { MagicLink } from "./pages/MagicLink";
+import { MeasurementForm } from "./pages/wardrobe/MeasurementForm";
+import { StockPage } from "./pages/wardrobe/StockPage";
+import { WardrobePage } from "./pages/wardrobe/Tracker";
 import { MyShows } from "./pages/MyShows";
 import { SignIn } from "./pages/SignIn";
 import { canOnShow } from "./roles";
@@ -62,6 +65,8 @@ function SignedIn(props: { path: string }) {
   if (m) return <Staff theaterId={m.theaterId!} />;
   m = match("/c/{theaterId}/strike-template", path);
   if (m) return <StrikeTemplatePage theaterId={m.theaterId!} />;
+  m = match("/c/{theaterId}/stock", path);
+  if (m) return <StockPage theaterId={m.theaterId!} />;
   m = match("/c/{theaterId}/new-show", path);
   if (m) return <SetupWizard theaterId={m.theaterId!} />;
 
@@ -78,6 +83,8 @@ function Home() {
     const theater = me.theaters[0];
     const active = me.shows.filter((s) => s.show.status === "active");
     if (theater) navigate(`/c/${theater.theater.theaterId}`, true);
+    // A keeper who isn't on any show works from the company stock.
+    else if (active.length === 0 && me.keeps?.[0]) navigate(`/c/${me.keeps[0].theaterId}/stock`, true);
     else if (active.length === 1) navigate(`/shows/${active[0]!.show.showId}`, true);
     else navigate("/shows", true);
   }, [me]);
@@ -124,6 +131,10 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
     case "strike":
       return staff ? <Strike {...pageProps} /> : <NotForYou />;
+    case "costumes":
+      return staff || view.costumeAccess || view.propsAccess ? <WardrobePage {...pageProps} /> : <NotForYou />;
+    case "measurements":
+      return <MeasurementForm {...pageProps} />;
     case "people":
       return staff ? <People {...pageProps} /> : <NotForYou />;
     case "settings":

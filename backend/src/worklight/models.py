@@ -497,6 +497,8 @@ class MyShow(Model):
     title: str | None = None
     status: MemberStatus = "joined"
     conflicts_submitted_at: str | None = None
+    costume_access: bool = False
+    props_access: bool = False
 
 
 class MyTheater(Model):
