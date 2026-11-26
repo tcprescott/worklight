@@ -6,7 +6,9 @@ from zoneinfo import ZoneInfo
 from worklight import clock, ics, mailer
 from worklight.ids import new_token, now_iso
 from worklight.models import CallContent, Model, Show, User
+from worklight.push import PushMessage
 from worklight.services.base import Ctx, NotFound
+from worklight.services.push import deliver
 from worklight.services.schedule import Called, MyCall, ShowCast, _load_cast, my_calls
 
 REMINDER_LEAD = timedelta(hours=24)
@@ -118,26 +120,39 @@ def send_reminders(ctx: Ctx) -> int:
             called = cast.called(content)
             missing = [u for u in called if u not in users]
             users.update({u.user_id: u for u in ctx.store.get_users(missing)})
+            url = ctx.link(f"/shows/{show.show_id}/calls")
+            where = content.location or show.venue
             for uid, entry in called.items():
                 person = users.get(uid)
-                if not person or not person.prefs.email_reminders:
+                if not person:
                     continue
-                ctx.mailer.send(
-                    mailer.call_reminder_email(
-                        to=person.email,
-                        show_name=show.name,
-                        day=content.date,
-                        start=entry.start,
-                        end=entry.end,
-                        what=", ".join(entry.labels)
-                        or content.title
-                        or ("Strike" if content.type == "strike" else "Rehearsal"),
-                        where=content.location or show.venue,
-                        bring=content.bring,
-                        url=ctx.link(f"/shows/{show.show_id}/calls"),
-                    )
+                what = (
+                    ", ".join(entry.labels)
+                    or content.title
+                    or ("Strike" if content.type == "strike" else "Rehearsal")
                 )
-                sent += 1
+                email = mailer.call_reminder_email(
+                    to=person.email,
+                    show_name=show.name,
+                    day=content.date,
+                    start=entry.start,
+                    end=entry.end,
+                    what=what,
+                    where=where,
+                    bring=content.bring,
+                    url=url,
+                )
+                body = what + (f" at {where}" if where else "") + "."
+                if content.bring:
+                    body += f" Bring: {content.bring}."
+                message = PushMessage(
+                    title=f"{show.name} · tomorrow {mailer.pretty_time(entry.start)}",
+                    body=body,
+                    url=url,
+                    tag=f"reminder-{call.call_id}",
+                )
+                if deliver(ctx, person, "reminders", email, message):
+                    sent += 1
             ctx.store.put_call(call.model_copy(update={"reminded_at": now_iso()}))
     return sent
 
@@ -193,19 +208,29 @@ def schedule_published(ctx: Ctx, show: Show, changes: list[tuple[CallContent | N
     if not lines:
         return 0
     sent = 0
+    url = ctx.link(f"/shows/{show.show_id}/calls")
+    soon = (clock.today() + timedelta(days=1)).isoformat()
     for person in ctx.store.get_users(list(lines)):
-        if not person.prefs.change_emails:
-            continue
-        ctx.mailer.send(
-            mailer.schedule_update_email(
-                to=person.email,
-                show_name=show.name,
-                lines=[text for _, text in lines[person.user_id]],
-                first=first_time.get(person.user_id, False),
-                url=ctx.link(f"/shows/{show.show_id}/calls"),
-            )
+        mine = lines[person.user_id]
+        first = first_time.get(person.user_id, False)
+        email = mailer.schedule_update_email(
+            to=person.email,
+            show_name=show.name,
+            lines=[text for _, text in mine],
+            first=first,
+            url=url,
         )
-        sent += 1
+        more = f" (+{len(mine) - 1} more)" if len(mine) > 1 else ""
+        message = PushMessage(
+            title=f"{show.name} · {'your calls are up' if first else 'schedule changed'}",
+            body=mine[0][1] + more,
+            url=url,
+            tag=f"schedule-{show.show_id}",
+            # A change to today's or tomorrow's call shouldn't wait for the phone to wake up.
+            urgent=any(day <= soon for day, _ in mine),
+        )
+        if deliver(ctx, person, "changes", email, message):
+            sent += 1
     return sent
 
 

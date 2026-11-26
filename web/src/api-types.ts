@@ -178,6 +178,74 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/me/push": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Push Status */
+        get: operations["push_status_api_me_push_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/devices": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Add Push Device */
+        put: operations["add_push_device_api_me_push_devices_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/devices/{device_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Push Device */
+        delete: operations["remove_push_device_api_me_push_devices__device_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/push/test": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Test Push */
+        post: operations["test_push_api_me_push_test_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/public/calendar/{token}.ics": {
         parameters: {
             query?: never;
@@ -1017,6 +1085,23 @@ export interface components {
             name?: string | null;
             /** Title */
             title?: string | null;
+        };
+        /**
+         * AddDeviceBody
+         * @description A browser's PushSubscription.toJSON(), plus a label for the settings list.
+         */
+        AddDeviceBody: {
+            /** Endpoint */
+            endpoint: string;
+            keys: components["schemas"]["WebPushKeys"];
+            /**
+             * Kind
+             * @default webpush
+             * @constant
+             */
+            kind: "webpush";
+            /** Label */
+            label?: string | null;
         };
         /** AddSceneBody */
         AddSceneBody: {
@@ -1948,7 +2033,7 @@ export interface components {
         };
         /**
          * NotifyPrefs
-         * @description What a person wants emailed to them. Calendar feeds and the app are always on.
+         * @description What a person wants sent to them, by email and by push. Calendar feeds and the app are always on.
          */
         NotifyPrefs: {
             /**
@@ -1966,6 +2051,21 @@ export interface components {
              * @default true
              */
             noticeEmails: boolean;
+            /**
+             * Pushchanges
+             * @default true
+             */
+            pushChanges: boolean;
+            /**
+             * Pushnotices
+             * @default true
+             */
+            pushNotices: boolean;
+            /**
+             * Pushreminders
+             * @default true
+             */
+            pushReminders: boolean;
         };
         /** PostNoticeBody */
         PostNoticeBody: {
@@ -2010,6 +2110,29 @@ export interface components {
             notified: number;
             /** Published */
             published: number;
+        };
+        /** PushDeviceView */
+        PushDeviceView: {
+            /** Createdat */
+            createdAt: string;
+            /** Deviceid */
+            deviceId: string;
+            /**
+             * Kind
+             * @constant
+             */
+            kind: "webpush";
+            /** Label */
+            label?: string | null;
+            /** Lastsentat */
+            lastSentAt?: string | null;
+        };
+        /** PushStatus */
+        PushStatus: {
+            /** Devices */
+            devices: components["schemas"]["PushDeviceView"][];
+            /** Publickey */
+            publicKey?: string | null;
         };
         /** PutTemplateBody */
         PutTemplateBody: {
@@ -2434,6 +2557,16 @@ export interface components {
             /** Text */
             text: string;
         };
+        /** TestPushBody */
+        TestPushBody: {
+            /** Deviceid */
+            deviceId?: string | null;
+        };
+        /** TestPushResult */
+        TestPushResult: {
+            /** Sent */
+            sent: number;
+        };
         /** Theater */
         Theater: {
             /** Createdat */
@@ -2624,7 +2757,10 @@ export interface components {
              * @default {
              *       "changeEmails": true,
              *       "emailReminders": true,
-             *       "noticeEmails": true
+             *       "noticeEmails": true,
+             *       "pushChanges": true,
+             *       "pushNotices": true,
+             *       "pushReminders": true
              *     }
              */
             prefs: components["schemas"]["NotifyPrefs"];
@@ -2666,6 +2802,13 @@ export interface components {
             part?: string | null;
             /** Userid */
             userId: string;
+        };
+        /** WebPushKeys */
+        WebPushKeys: {
+            /** Auth */
+            auth: string;
+            /** P256Dh */
+            p256dh: string;
         };
         /** WeeklyBody */
         WeeklyBody: {
@@ -3110,6 +3253,121 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ShowDayView"][];
+                };
+            };
+        };
+    };
+    push_status_api_me_push_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushStatus"];
+                };
+            };
+        };
+    };
+    add_push_device_api_me_push_devices_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddDeviceBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PushDeviceView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_push_device_api_me_push_devices__device_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                device_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    test_push_api_me_push_test_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TestPushBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TestPushResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };

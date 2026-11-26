@@ -16,6 +16,9 @@ import type {
   Callboard,
   Notice,
   NotifyPrefs,
+  PushStatus,
+  PushDevice,
+  AddPushDeviceBody,
   PostNoticeBody,
   UpdateNoticeBody,
   Call,
@@ -107,6 +110,10 @@ export const api = {
   me: () => request<Me>("GET", "/me"),
   updateName: (name: string) => request<User>("PATCH", "/me", { name }),
   updatePrefs: (prefs: NotifyPrefs) => request<User>("PATCH", "/me", { prefs }),
+  pushStatus: () => request<PushStatus>("GET", "/me/push"),
+  addPushDevice: (body: AddPushDeviceBody) => request<PushDevice>("PUT", "/me/push/devices", body),
+  removePushDevice: (deviceId: string) => request<void>("DELETE", `/me/push/devices/${e(deviceId)}`),
+  testPush: (deviceId?: string) => request<{ sent: number }>("POST", "/me/push/test", { deviceId }),
 
   // Company
   createTheater: (name: string, title?: string) => request<Theater>("POST", "/theaters", { name, title }),

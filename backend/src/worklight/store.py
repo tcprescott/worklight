@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -23,6 +24,7 @@ from worklight.models import (
     Model,
     Notice,
     NoticeRead,
+    PushDevice,
     Scene,
     Show,
     StrikeTask,
@@ -630,6 +632,29 @@ class DynamoStore:
 
     def delete_date_conflict(self, user_id: str, date: str) -> None:
         self._delete(keys.date_conflict(user_id, date))
+
+    # ---- push devices -------------------------------------------------------------------------
+
+    def list_push_devices(self, user_id: str) -> list[PushDevice]:
+        items = self._query_all(keys.user(user_id)["PK"], keys.DEVICE_PREFIX)
+        return sorted((PushDevice.model_validate(i) for i in items), key=lambda d: d.created_at)
+
+    def put_push_device(self, device: PushDevice) -> None:
+        self._put_item(keys.push_device(device.user_id, device.device_id), "pushDevice", device)
+
+    def delete_push_device(self, user_id: str, device_id: str) -> None:
+        self._delete(keys.push_device(user_id, device_id))
+
+    def touch_push_device(self, user_id: str, device_id: str, at: str) -> None:
+        # Removed while we were sending: nothing to update.
+        with contextlib.suppress(self.db.exceptions.ConditionalCheckFailedException):
+            self.db.update_item(
+                TableName=self.table,
+                Key=_to_ddb(keys.push_device(user_id, device_id)),
+                UpdateExpression="SET lastSentAt = :at",
+                ConditionExpression="attribute_exists(PK)",
+                ExpressionAttributeValues={":at": {"S": at}},
+            )
 
     # ---- magic links --------------------------------------------------------------------------
 

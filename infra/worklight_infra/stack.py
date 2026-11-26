@@ -153,10 +153,15 @@ class WorklightStack(Stack):
             asset_hash_type=AssetHashType.CUSTOM,
             bundling=BundlingOptions(image=lambda_.Runtime.PYTHON_3_13.bundling_image, local=UvBundling()),
         )
+        # Web push (VAPID) private key. The first function to need it makes it and saves it here as a
+        # SecureString (CloudFormation can't create those), so it outlives the stack. Delete it by hand to
+        # reset; that ends every subscription.
+        vapid_param_name = f"/{self.stack_name}/vapid-key"
         shared_env = {
             "TABLE_NAME": table.table_name,
             "FROM_EMAIL": s.from_email,
             "APP_URL_PARAM": app_url_param.parameter_name,
+            "VAPID_KEY_PARAM": vapid_param_name,
         }
 
         def fn(
@@ -194,6 +199,17 @@ class WorklightStack(Stack):
                 )
             )
             if sends_email:
+                # Everything that emails also pushes.
+                f.add_to_role_policy(
+                    iam.PolicyStatement(
+                        actions=["ssm:GetParameter", "ssm:PutParameter"],
+                        resources=[
+                            self.format_arn(
+                                service="ssm", resource="parameter", resource_name=vapid_param_name[1:]
+                            )
+                        ],
+                    )
+                )
                 f.add_to_role_policy(
                     iam.PolicyStatement(
                         actions=["ses:SendEmail"],
