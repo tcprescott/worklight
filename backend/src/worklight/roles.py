@@ -12,6 +12,7 @@ ShowAction = Literal[
     "schedule:edit",
     "callboard:post",
     "strike:edit",
+    "notes:release",
     "conflicts:read-all",
     "conflicts:edit-own",
 ]

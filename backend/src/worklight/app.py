@@ -13,7 +13,18 @@ from fastapi.responses import JSONResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from worklight.models import User
-from worklight.rest import apikeys, breakdown, conflicts, notify, people, schedule, shows, strike, theaters
+from worklight.rest import (
+    apikeys,
+    breakdown,
+    conflicts,
+    linenotes,
+    notify,
+    people,
+    schedule,
+    shows,
+    strike,
+    theaters,
+)
 from worklight.services.accounts import user_from_claims
 from worklight.services.apikeys import principal_for
 from worklight.services.base import Ctx, Forbidden, ServiceError
@@ -96,7 +107,18 @@ def create_app(ctx: Ctx) -> FastAPI:
     def current_user(claims: Annotated[dict[str, Any], Depends(get_claims)]) -> User:
         return user_from_claims(ctx, claims)
 
-    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify, strike, apikeys):
+    for module in (
+        theaters,
+        shows,
+        people,
+        breakdown,
+        conflicts,
+        schedule,
+        notify,
+        strike,
+        linenotes,
+        apikeys,
+    ):
         app.include_router(module.router(ctx, current_user))
 
     # The public REST API: the same routes under /api/v1, signed in with an API key instead of Cognito.
@@ -116,7 +138,7 @@ def create_app(ctx: Ctx) -> FastAPI:
             principal.require_write()
         return principal.user
 
-    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify, strike):
+    for module in (theaters, shows, people, breakdown, conflicts, schedule, notify, strike, linenotes):
         app.include_router(module.router(ctx, key_user, base="/api/v1"), include_in_schema=False)
 
     from starlette.routing import Route

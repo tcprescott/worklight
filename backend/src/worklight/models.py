@@ -84,6 +84,8 @@ class Membership(Model):
     joined_at: str | None = None
     # When the person last pressed Send on their conflicts for this show.
     conflicts_submitted_at: str | None = None
+    # Crew only: may take line notes (as drafts that staff release), e.g. an ASM on book.
+    note_taker: bool = False
 
 
 class NotifyPrefs(Model):
@@ -345,6 +347,59 @@ class StrikeTask(Model):
     updated_at: str
 
 
+# ---- Line notes ----------------------------------------------------------------------------------
+
+# Dropped a line, paraphrased it, added words, called for line, jumped a cue, came in late, anything else.
+LineNoteKind = Literal["dropped", "paraphrase", "added", "called", "jumped", "late", "other"]
+
+
+class LineNoteSet(Model):
+    """The line notes from one run or rehearsal. Drafts until staff release them to the actors."""
+
+    set_id: str
+    show_id: str
+    date: str
+    # e.g. "Run of Act III".
+    title: str
+    call_id: str | None = None
+    created_by: str
+    created_at: str
+    updated_at: str
+    released_at: str | None = None
+    released_by: str | None = None
+
+
+class LineNote(Model):
+    """One note for one actor. Only that actor (and staff and note-takers) ever see it."""
+
+    note_id: str
+    show_id: str
+    set_id: str
+    actor_id: str
+    # The part it's about, when the actor plays more than one (or to label it).
+    char_id: str | None = None
+    kind: LineNoteKind
+    # Script page as printed, e.g. "42" or "42a".
+    page: str | None = None
+    scene_id: str | None = None
+    # What the script says, and what the actor said instead.
+    script_text: str | None = None
+    said_text: str | None = None
+    comment: str | None = None
+    created_by: str
+    created_at: str
+    updated_at: str
+
+
+class LineNoteRead(Model):
+    """When an actor first opened their notes from a set."""
+
+    show_id: str
+    set_id: str
+    user_id: str
+    at: str
+
+
 # ---- Callboard -----------------------------------------------------------------------------------
 
 NoticeAudience = Literal["everyone", "cast", "crew"]
@@ -438,6 +493,7 @@ class Member(Model):
     department: str | None = None
     status: MemberStatus
     conflicts_submitted_at: str | None = None
+    note_taker: bool = False
 
 
 class InviteSent(Model):

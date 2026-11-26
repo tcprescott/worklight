@@ -21,6 +21,7 @@ from worklight.models import Model
 from worklight.services import breakdown as breakdown_service
 from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
+from worklight.services import linenotes as linenotes_service
 from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
 from worklight.services import strike as strike_service
@@ -198,6 +199,63 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
             fields["done"] = done
         body = strike_service.UpdateTaskBody.model_validate(fields)
         return _out(strike_service.update_task(ctx, p.user, scoped(show_id), task_id, body))
+
+    @server.tool(
+        description="Line notes for the show: each run's set of notes, whether it has been released to the "
+        "actors, and the cast (user ids and the parts they play) that notes can go to"
+    )
+    def list_line_notes(show_id: str) -> str:
+        return _out(linenotes_service.get_home(ctx, who().user, scoped(show_id)))
+
+    @server.tool(
+        description="One run's line notes in page order, with who each note is for and, once released, "
+        "which actors have opened theirs"
+    )
+    def get_line_notes(show_id: str, set_id: str) -> str:
+        return _out(linenotes_service.get_set(ctx, who().user, scoped(show_id), set_id))
+
+    @server.tool(
+        description="Files line notes as drafts (nothing is sent until staff release them). Turn rough notes "
+        "into one entry each: kind is dropped, paraphrase, added, called (called for line), jumped (jumped a "
+        "cue), late (late entrance) or other. Name the actor by char_id (from get_breakdown) or actor_id. "
+        "page is the script page; script_text is what the script says and said_text what the actor said. "
+        "Leave set_id out to start a new set, which then needs date and title (e.g. 'Run of Act III'). "
+        "Read the parsed notes back to the person before filing if anything was unclear."
+    )
+    def add_line_notes(
+        show_id: str,
+        notes: list[dict[str, Any]],
+        set_id: str | None = None,
+        date: str | None = None,
+        title: str | None = None,
+    ) -> str:
+        p = write()
+        sid = scoped(show_id)
+        body = linenotes_service.AddNotesBody.model_validate({"notes": notes})
+        if not set_id:
+            if not date or not title:
+                raise ToolError("Give set_id to add to an existing set, or date and title to start one")
+            made = linenotes_service.create_set(
+                ctx, p.user, sid, linenotes_service.CreateSetBody(date=date, title=title)
+            )
+            set_id = made.set_id
+            try:
+                added = linenotes_service.add_notes(ctx, p.user, sid, set_id, body)
+            except ServiceError:
+                # Don't leave an empty set behind when the notes themselves were wrong.
+                ctx.store.delete_line_note_set(sid, set_id)
+                raise
+        else:
+            added = linenotes_service.add_notes(ctx, p.user, sid, set_id, body)
+        return _out({"setId": set_id, "added": [n.to_item() for n in added]})
+
+    @server.tool(
+        description="Releases a set of line notes: each actor with notes gets one email and push with a link "
+        "to their own notes. Can't be undone, so confirm with the person first."
+    )
+    def release_line_notes(show_id: str, set_id: str) -> str:
+        p = write()
+        return _out(linenotes_service.release_set(ctx, p.user, scoped(show_id), set_id))
 
     return mcp
 

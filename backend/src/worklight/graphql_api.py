@@ -16,6 +16,7 @@ from worklight.models import Model
 from worklight.services import breakdown as breakdown_service
 from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
+from worklight.services import linenotes as linenotes_service
 from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
 from worklight.services import strike as strike_service
@@ -237,6 +238,32 @@ class StrikeTask:
 
 
 @strawberry.type
+class LineNote:
+    note_id: strawberry.ID
+    actor_id: strawberry.ID
+    actor_name: str | None
+    char_name: str | None
+    kind: str
+    kind_label: str
+    page: str | None
+    scene_label: str | None
+    script_text: str | None
+    said_text: str | None
+    comment: str | None
+
+
+@strawberry.type
+class LineNoteSet:
+    set_id: strawberry.ID
+    date: str
+    title: str
+    taken_by_name: str | None
+    released_at: str | None
+    note_count: int
+    actor_count: int
+
+
+@strawberry.type
 class PublishResult:
     published: int
     cancelled: int
@@ -365,6 +392,18 @@ class Query:
             _build(StrikeTask, t, assignees=[_build(StrikeAssignee, a) for a in t.assignees])
             for t in checklist.tasks
         ]
+
+    @strawberry.field(description="The show's line note sets, newest first, and whether each is released")
+    def line_note_sets(self, info: GInfo, show_id: strawberry.ID) -> list[LineNoteSet]:
+        c = info.context
+        home = linenotes_service.get_home(c.ctx, c.principal.user, c.show_id(show_id))
+        return [_build(LineNoteSet, s) for s in home.sets]
+
+    @strawberry.field(description="One run's line notes in page order")
+    def line_notes(self, info: GInfo, show_id: strawberry.ID, set_id: strawberry.ID) -> list[LineNote]:
+        c = info.context
+        detail = linenotes_service.get_set(c.ctx, c.principal.user, c.show_id(show_id), str(set_id))
+        return [_build(LineNote, n) for n in detail.notes]
 
 
 # ---- Mutation ----------------------------------------------------------------------------------------

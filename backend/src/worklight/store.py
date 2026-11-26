@@ -19,6 +19,9 @@ from worklight.models import (
     CheckIn,
     DateConflict,
     Invite,
+    LineNote,
+    LineNoteRead,
+    LineNoteSet,
     MagicLinkRecord,
     Membership,
     Model,
@@ -102,6 +105,9 @@ class ShowPartition:
     notices: list[Notice] = field(default_factory=list)
     reads: list[NoticeRead] = field(default_factory=list)
     strike_tasks: list[StrikeTask] = field(default_factory=list)
+    line_note_sets: list[LineNoteSet] = field(default_factory=list)
+    line_notes: list[LineNote] = field(default_factory=list)
+    line_note_reads: list[LineNoteRead] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -412,6 +418,12 @@ class DynamoStore:
                 part.reads.append(NoticeRead.model_validate(data))
             elif sk.startswith(keys.STRIKE_PREFIX):
                 part.strike_tasks.append(StrikeTask.model_validate(data))
+            elif sk.startswith(keys.NOTESET_PREFIX):
+                part.line_note_sets.append(LineNoteSet.model_validate(data))
+            elif sk.startswith(keys.LINENOTE_PREFIX):
+                part.line_notes.append(LineNote.model_validate(data))
+            elif sk.startswith(keys.NOTEREAD_PREFIX):
+                part.line_note_reads.append(LineNoteRead.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
@@ -563,6 +575,46 @@ class DynamoStore:
 
     def put_notice_read(self, read: NoticeRead) -> None:
         self._put_item(keys.notice_read(read.show_id, read.notice_id, read.user_id), "noticeRead", read)
+
+    # ---- line notes ---------------------------------------------------------------------------
+
+    def list_line_note_sets(self, show_id: str) -> list[LineNoteSet]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], keys.NOTESET_PREFIX)
+        return [LineNoteSet.model_validate(i) for i in items]
+
+    def get_line_note_set(self, show_id: str, set_id: str) -> LineNoteSet | None:
+        item = self._get(keys.line_note_set(show_id, set_id))
+        return LineNoteSet.model_validate(item) if item else None
+
+    def put_line_note_set(self, note_set: LineNoteSet) -> None:
+        self._put_item(keys.line_note_set(note_set.show_id, note_set.set_id), "lineNoteSet", note_set)
+
+    def list_line_notes(self, show_id: str, set_id: str) -> list[LineNote]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], f"{keys.LINENOTE_PREFIX}{set_id}#")
+        return [LineNote.model_validate(i) for i in items]
+
+    def put_line_notes(self, notes: list[LineNote]) -> None:
+        self._batch_put([(keys.line_note(n.show_id, n.set_id, n.note_id), "lineNote", n) for n in notes])
+
+    def delete_line_note(self, show_id: str, set_id: str, note_id: str) -> None:
+        self._delete(keys.line_note(show_id, set_id, note_id))
+
+    def list_line_note_reads(self, show_id: str, set_id: str) -> list[LineNoteRead]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], f"{keys.NOTEREAD_PREFIX}{set_id}#")
+        return [LineNoteRead.model_validate(i) for i in items]
+
+    def put_line_note_read(self, read: LineNoteRead) -> None:
+        self._put_item(keys.line_note_read(read.show_id, read.set_id, read.user_id), "lineNoteRead", read)
+
+    def delete_line_note_set(self, show_id: str, set_id: str) -> None:
+        """The set, every note in it, and who opened it."""
+        doomed = [keys.line_note(show_id, set_id, n.note_id) for n in self.list_line_notes(show_id, set_id)]
+        doomed += [
+            keys.line_note_read(show_id, set_id, r.user_id)
+            for r in self.list_line_note_reads(show_id, set_id)
+        ]
+        self._batch_delete(doomed)
+        self._delete(keys.line_note_set(show_id, set_id))
 
     # ---- strike -------------------------------------------------------------------------------
 

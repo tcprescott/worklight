@@ -44,6 +44,54 @@
         "title": "ActBody",
         "type": "object"
       },
+      "ActorStatus": {
+        "properties": {
+          "characters": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "noteCount": {
+            "title": "Notecount",
+            "type": "integer"
+          },
+          "openedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openedat"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "noteCount"
+        ],
+        "title": "ActorStatus",
+        "type": "object"
+      },
       "AddAdminBody": {
         "properties": {
           "email": {
@@ -119,6 +167,24 @@
           "keys"
         ],
         "title": "AddDeviceBody",
+        "type": "object"
+      },
+      "AddNotesBody": {
+        "properties": {
+          "notes": {
+            "items": {
+              "$ref": "#/components/schemas/NoteFields"
+            },
+            "maxItems": 100,
+            "minItems": 1,
+            "title": "Notes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "notes"
+        ],
+        "title": "AddNotesBody",
         "type": "object"
       },
       "AddSceneBody": {
@@ -1211,6 +1277,47 @@
         "title": "Callboard",
         "type": "object"
       },
+      "CastOption": {
+        "description": "Someone notes can be for: a cast member and the parts they play, in script order.",
+        "properties": {
+          "charIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Charids",
+            "type": "array"
+          },
+          "characters": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "title": "CastOption",
+        "type": "object"
+      },
       "Character": {
         "properties": {
           "castUserIds": {
@@ -1747,6 +1854,39 @@
         "title": "CreateSceneBody",
         "type": "object"
       },
+      "CreateSetBody": {
+        "properties": {
+          "callId": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callid"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "title": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Title",
+            "type": "string"
+          }
+        },
+        "required": [
+          "date",
+          "title"
+        ],
+        "title": "CreateSetBody",
+        "type": "object"
+      },
       "CreateShowBody": {
         "properties": {
           "address": {
@@ -2255,6 +2395,553 @@
         "title": "InviteSent",
         "type": "object"
       },
+      "LineNote": {
+        "description": "One note for one actor. Only that actor (and staff and note-takers) ever see it.",
+        "properties": {
+          "actorId": {
+            "title": "Actorid",
+            "type": "string"
+          },
+          "charId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charid"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "dropped",
+              "paraphrase",
+              "added",
+              "called",
+              "jumped",
+              "late",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "noteId": {
+            "title": "Noteid",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "saidText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saidtext"
+          },
+          "sceneId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sceneid"
+          },
+          "scriptText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scripttext"
+          },
+          "setId": {
+            "title": "Setid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noteId",
+          "showId",
+          "setId",
+          "actorId",
+          "kind",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "LineNote",
+        "type": "object"
+      },
+      "LineNoteSet": {
+        "description": "The line notes from one run or rehearsal. Drafts until staff release them to the actors.",
+        "properties": {
+          "callId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callid"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "releasedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedat"
+          },
+          "releasedBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedby"
+          },
+          "setId": {
+            "title": "Setid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setId",
+          "showId",
+          "date",
+          "title",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "LineNoteSet",
+        "type": "object"
+      },
+      "LineNoteSetDetail": {
+        "properties": {
+          "actors": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ActorStatus"
+            },
+            "title": "Actors",
+            "type": "array"
+          },
+          "canEdit": {
+            "title": "Canedit",
+            "type": "boolean"
+          },
+          "canRelease": {
+            "title": "Canrelease",
+            "type": "boolean"
+          },
+          "notes": {
+            "items": {
+              "$ref": "#/components/schemas/LineNoteView"
+            },
+            "title": "Notes",
+            "type": "array"
+          },
+          "set": {
+            "$ref": "#/components/schemas/LineNoteSetSummary"
+          }
+        },
+        "required": [
+          "set",
+          "notes",
+          "canEdit",
+          "canRelease"
+        ],
+        "title": "LineNoteSetDetail",
+        "type": "object"
+      },
+      "LineNoteSetSummary": {
+        "properties": {
+          "actorCount": {
+            "default": 0,
+            "title": "Actorcount",
+            "type": "integer"
+          },
+          "callId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Callid"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "noteCount": {
+            "default": 0,
+            "title": "Notecount",
+            "type": "integer"
+          },
+          "openedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openedat"
+          },
+          "releasedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedat"
+          },
+          "releasedBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Releasedby"
+          },
+          "setId": {
+            "title": "Setid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "takenByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Takenbyname"
+          },
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "setId",
+          "showId",
+          "date",
+          "title",
+          "createdBy",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "LineNoteSetSummary",
+        "type": "object"
+      },
+      "LineNoteView": {
+        "properties": {
+          "actorId": {
+            "title": "Actorid",
+            "type": "string"
+          },
+          "actorName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actorname"
+          },
+          "charId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charid"
+          },
+          "charName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charname"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "createdBy": {
+            "title": "Createdby",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "dropped",
+              "paraphrase",
+              "added",
+              "called",
+              "jumped",
+              "late",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "kindLabel": {
+            "title": "Kindlabel",
+            "type": "string"
+          },
+          "noteId": {
+            "title": "Noteid",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "saidText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saidtext"
+          },
+          "sceneId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sceneid"
+          },
+          "sceneLabel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scenelabel"
+          },
+          "scriptText": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scripttext"
+          },
+          "setId": {
+            "title": "Setid",
+            "type": "string"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "updatedAfterRelease": {
+            "default": false,
+            "title": "Updatedafterrelease",
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "noteId",
+          "showId",
+          "setId",
+          "actorId",
+          "kind",
+          "createdBy",
+          "createdAt",
+          "updatedAt",
+          "kindLabel"
+        ],
+        "title": "LineNoteView",
+        "type": "object"
+      },
+      "LineNotesHome": {
+        "properties": {
+          "canRelease": {
+            "title": "Canrelease",
+            "type": "boolean"
+          },
+          "canTake": {
+            "title": "Cantake",
+            "type": "boolean"
+          },
+          "cast": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/CastOption"
+            },
+            "title": "Cast",
+            "type": "array"
+          },
+          "sets": {
+            "items": {
+              "$ref": "#/components/schemas/LineNoteSetSummary"
+            },
+            "title": "Sets",
+            "type": "array"
+          }
+        },
+        "required": [
+          "sets",
+          "canTake",
+          "canRelease"
+        ],
+        "title": "LineNotesHome",
+        "type": "object"
+      },
       "MarkBody": {
         "properties": {
           "status": {
@@ -2371,6 +3058,11 @@
               }
             ],
             "title": "Name"
+          },
+          "noteTaker": {
+            "default": false,
+            "title": "Notetaker",
+            "type": "boolean"
           },
           "role": {
             "enum": [
@@ -2706,6 +3398,113 @@
           "secret"
         ],
         "title": "NewApiKey",
+        "type": "object"
+      },
+      "NoteFields": {
+        "properties": {
+          "actorId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actorid"
+          },
+          "charId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charid"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "kind": {
+            "enum": [
+              "dropped",
+              "paraphrase",
+              "added",
+              "called",
+              "jumped",
+              "late",
+              "other"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "maxLength": 10,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "saidText": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saidtext"
+          },
+          "sceneId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sceneid"
+          },
+          "scriptText": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scripttext"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "title": "NoteFields",
         "type": "object"
       },
       "Notice": {
@@ -3114,6 +3913,23 @@
           "end"
         ],
         "title": "RehearsalSlot",
+        "type": "object"
+      },
+      "ReleaseResult": {
+        "properties": {
+          "actorCount": {
+            "title": "Actorcount",
+            "type": "integer"
+          },
+          "set": {
+            "$ref": "#/components/schemas/LineNoteSet"
+          }
+        },
+        "required": [
+          "set",
+          "actorCount"
+        ],
+        "title": "ReleaseResult",
         "type": "object"
       },
       "RemindBody": {
@@ -4666,6 +5482,17 @@
             ],
             "title": "Department"
           },
+          "noteTaker": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notetaker"
+          },
           "role": {
             "anyOf": [
               {
@@ -4697,6 +5524,117 @@
           }
         },
         "title": "UpdateMemberBody",
+        "type": "object"
+      },
+      "UpdateNoteBody": {
+        "properties": {
+          "actorId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actorid"
+          },
+          "charId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charid"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "dropped",
+                  "paraphrase",
+                  "added",
+                  "called",
+                  "jumped",
+                  "late",
+                  "other"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "maxLength": 10,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "saidText": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Saidtext"
+          },
+          "sceneId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sceneid"
+          },
+          "scriptText": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scripttext"
+          }
+        },
+        "title": "UpdateNoteBody",
         "type": "object"
       },
       "UpdateNoticeBody": {
@@ -4825,6 +5763,36 @@
           }
         },
         "title": "UpdateSceneBody",
+        "type": "object"
+      },
+      "UpdateSetBody": {
+        "properties": {
+          "date": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          }
+        },
+        "title": "UpdateSetBody",
         "type": "object"
       },
       "UpdateShowBody": {
@@ -7170,6 +8138,460 @@
           }
         },
         "summary": "Update Member"
+      }
+    },
+    "/api/shows/{show_id}/notes": {
+      "get": {
+        "operationId": "get_home_api_shows__show_id__notes_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineNotesHome"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Home"
+      },
+      "post": {
+        "operationId": "create_set_api_shows__show_id__notes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineNoteSet"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Set"
+      }
+    },
+    "/api/shows/{show_id}/notes/{set_id}": {
+      "delete": {
+        "operationId": "delete_set_api_shows__show_id__notes__set_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Set"
+      },
+      "get": {
+        "operationId": "get_set_api_shows__show_id__notes__set_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineNoteSetDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Set"
+      },
+      "patch": {
+        "operationId": "update_set_api_shows__show_id__notes__set_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineNoteSet"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Set"
+      }
+    },
+    "/api/shows/{show_id}/notes/{set_id}/notes": {
+      "post": {
+        "operationId": "add_notes_api_shows__show_id__notes__set_id__notes_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddNotesBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/LineNote"
+                  },
+                  "title": "Response Add Notes Api Shows  Show Id  Notes  Set Id  Notes Post",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Add Notes"
+      }
+    },
+    "/api/shows/{show_id}/notes/{set_id}/notes/{note_id}": {
+      "delete": {
+        "operationId": "delete_note_api_shows__show_id__notes__set_id__notes__note_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "required": true,
+            "schema": {
+              "title": "Note Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Note"
+      },
+      "patch": {
+        "operationId": "update_note_api_shows__show_id__notes__set_id__notes__note_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "note_id",
+            "required": true,
+            "schema": {
+              "title": "Note Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateNoteBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LineNote"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Note"
+      }
+    },
+    "/api/shows/{show_id}/notes/{set_id}/release": {
+      "post": {
+        "operationId": "release_api_shows__show_id__notes__set_id__release_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "set_id",
+            "required": true,
+            "schema": {
+              "title": "Set Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReleaseResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Release"
       }
     },
     "/api/shows/{show_id}/notices": {

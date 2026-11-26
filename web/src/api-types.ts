@@ -591,6 +591,95 @@ export interface paths {
         patch: operations["update_member_api_shows__show_id__members__member_id__patch"];
         trace?: never;
     };
+    "/api/shows/{show_id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Home */
+        get: operations["get_home_api_shows__show_id__notes_get"];
+        put?: never;
+        /** Create Set */
+        post: operations["create_set_api_shows__show_id__notes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notes/{set_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Set */
+        get: operations["get_set_api_shows__show_id__notes__set_id__get"];
+        put?: never;
+        post?: never;
+        /** Delete Set */
+        delete: operations["delete_set_api_shows__show_id__notes__set_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Set */
+        patch: operations["update_set_api_shows__show_id__notes__set_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notes/{set_id}/notes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Add Notes */
+        post: operations["add_notes_api_shows__show_id__notes__set_id__notes_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notes/{set_id}/notes/{note_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Note */
+        delete: operations["delete_note_api_shows__show_id__notes__set_id__notes__note_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Note */
+        patch: operations["update_note_api_shows__show_id__notes__set_id__notes__note_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/notes/{set_id}/release": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Release */
+        post: operations["release_api_shows__show_id__notes__set_id__release_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/shows/{show_id}/notices": {
         parameters: {
             query?: never;
@@ -1077,6 +1166,22 @@ export interface components {
             /** Name */
             name: string;
         };
+        /** ActorStatus */
+        ActorStatus: {
+            /**
+             * Characters
+             * @default []
+             */
+            characters: string[];
+            /** Name */
+            name?: string | null;
+            /** Notecount */
+            noteCount: number;
+            /** Openedat */
+            openedAt?: string | null;
+            /** Userid */
+            userId: string;
+        };
         /** AddAdminBody */
         AddAdminBody: {
             /** Email */
@@ -1102,6 +1207,11 @@ export interface components {
             kind: "webpush";
             /** Label */
             label?: string | null;
+        };
+        /** AddNotesBody */
+        AddNotesBody: {
+            /** Notes */
+            notes: components["schemas"]["NoteFields"][];
         };
         /** AddSceneBody */
         AddSceneBody: {
@@ -1496,6 +1606,26 @@ export interface components {
             /** Unread */
             unread: number;
         };
+        /**
+         * CastOption
+         * @description Someone notes can be for: a cast member and the parts they play, in script order.
+         */
+        CastOption: {
+            /**
+             * Charids
+             * @default []
+             */
+            charIds: string[];
+            /**
+             * Characters
+             * @default []
+             */
+            characters: string[];
+            /** Name */
+            name?: string | null;
+            /** Userid */
+            userId: string;
+        };
         /** Character */
         Character: {
             /**
@@ -1658,6 +1788,15 @@ export interface components {
             /** Number */
             number?: string | null;
         };
+        /** CreateSetBody */
+        CreateSetBody: {
+            /** Callid */
+            callId?: string | null;
+            /** Date */
+            date: string;
+            /** Title */
+            title: string;
+        };
         /** CreateShowBody */
         CreateShowBody: {
             /** Address */
@@ -1806,6 +1945,182 @@ export interface components {
             /** Userid */
             userId: string;
         };
+        /**
+         * LineNote
+         * @description One note for one actor. Only that actor (and staff and note-takers) ever see it.
+         */
+        LineNote: {
+            /** Actorid */
+            actorId: string;
+            /** Charid */
+            charId?: string | null;
+            /** Comment */
+            comment?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "dropped" | "paraphrase" | "added" | "called" | "jumped" | "late" | "other";
+            /** Noteid */
+            noteId: string;
+            /** Page */
+            page?: string | null;
+            /** Saidtext */
+            saidText?: string | null;
+            /** Sceneid */
+            sceneId?: string | null;
+            /** Scripttext */
+            scriptText?: string | null;
+            /** Setid */
+            setId: string;
+            /** Showid */
+            showId: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /**
+         * LineNoteSet
+         * @description The line notes from one run or rehearsal. Drafts until staff release them to the actors.
+         */
+        LineNoteSet: {
+            /** Callid */
+            callId?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /** Date */
+            date: string;
+            /** Releasedat */
+            releasedAt?: string | null;
+            /** Releasedby */
+            releasedBy?: string | null;
+            /** Setid */
+            setId: string;
+            /** Showid */
+            showId: string;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** LineNoteSetDetail */
+        LineNoteSetDetail: {
+            /**
+             * Actors
+             * @default []
+             */
+            actors: components["schemas"]["ActorStatus"][];
+            /** Canedit */
+            canEdit: boolean;
+            /** Canrelease */
+            canRelease: boolean;
+            /** Notes */
+            notes: components["schemas"]["LineNoteView"][];
+            set: components["schemas"]["LineNoteSetSummary"];
+        };
+        /** LineNoteSetSummary */
+        LineNoteSetSummary: {
+            /**
+             * Actorcount
+             * @default 0
+             */
+            actorCount: number;
+            /** Callid */
+            callId?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /** Date */
+            date: string;
+            /**
+             * Notecount
+             * @default 0
+             */
+            noteCount: number;
+            /** Openedat */
+            openedAt?: string | null;
+            /** Releasedat */
+            releasedAt?: string | null;
+            /** Releasedby */
+            releasedBy?: string | null;
+            /** Setid */
+            setId: string;
+            /** Showid */
+            showId: string;
+            /** Takenbyname */
+            takenByName?: string | null;
+            /** Title */
+            title: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** LineNoteView */
+        LineNoteView: {
+            /** Actorid */
+            actorId: string;
+            /** Actorname */
+            actorName?: string | null;
+            /** Charid */
+            charId?: string | null;
+            /** Charname */
+            charName?: string | null;
+            /** Comment */
+            comment?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Createdby */
+            createdBy: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "dropped" | "paraphrase" | "added" | "called" | "jumped" | "late" | "other";
+            /** Kindlabel */
+            kindLabel: string;
+            /** Noteid */
+            noteId: string;
+            /** Page */
+            page?: string | null;
+            /** Saidtext */
+            saidText?: string | null;
+            /** Sceneid */
+            sceneId?: string | null;
+            /** Scenelabel */
+            sceneLabel?: string | null;
+            /** Scripttext */
+            scriptText?: string | null;
+            /** Setid */
+            setId: string;
+            /** Showid */
+            showId: string;
+            /**
+             * Updatedafterrelease
+             * @default false
+             */
+            updatedAfterRelease: boolean;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** LineNotesHome */
+        LineNotesHome: {
+            /** Canrelease */
+            canRelease: boolean;
+            /** Cantake */
+            canTake: boolean;
+            /**
+             * Cast
+             * @default []
+             */
+            cast: components["schemas"]["CastOption"][];
+            /** Sets */
+            sets: components["schemas"]["LineNoteSetSummary"][];
+        };
         /** MarkBody */
         MarkBody: {
             /** Status */
@@ -1837,6 +2152,11 @@ export interface components {
             email?: string | null;
             /** Name */
             name?: string | null;
+            /**
+             * Notetaker
+             * @default false
+             */
+            noteTaker: boolean;
             /**
              * Role
              * @enum {string}
@@ -1959,6 +2279,28 @@ export interface components {
             key: components["schemas"]["ApiKey"];
             /** Secret */
             secret: string;
+        };
+        /** NoteFields */
+        NoteFields: {
+            /** Actorid */
+            actorId?: string | null;
+            /** Charid */
+            charId?: string | null;
+            /** Comment */
+            comment?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "dropped" | "paraphrase" | "added" | "called" | "jumped" | "late" | "other";
+            /** Page */
+            page?: string | null;
+            /** Saidtext */
+            saidText?: string | null;
+            /** Sceneid */
+            sceneId?: string | null;
+            /** Scripttext */
+            scriptText?: string | null;
         };
         /** Notice */
         Notice: {
@@ -2150,6 +2492,12 @@ export interface components {
             start: string;
             /** Weekday */
             weekday: number;
+        };
+        /** ReleaseResult */
+        ReleaseResult: {
+            /** Actorcount */
+            actorCount: number;
+            set: components["schemas"]["LineNoteSet"];
         };
         /** RemindBody */
         RemindBody: {
@@ -2672,10 +3020,31 @@ export interface components {
         UpdateMemberBody: {
             /** Department */
             department?: string | null;
+            /** Notetaker */
+            noteTaker?: boolean | null;
             /** Role */
             role?: ("staff" | "cast" | "crew") | null;
             /** Title */
             title?: string | null;
+        };
+        /** UpdateNoteBody */
+        UpdateNoteBody: {
+            /** Actorid */
+            actorId?: string | null;
+            /** Charid */
+            charId?: string | null;
+            /** Comment */
+            comment?: string | null;
+            /** Kind */
+            kind?: ("dropped" | "paraphrase" | "added" | "called" | "jumped" | "late" | "other") | null;
+            /** Page */
+            page?: string | null;
+            /** Saidtext */
+            saidText?: string | null;
+            /** Sceneid */
+            sceneId?: string | null;
+            /** Scripttext */
+            scriptText?: string | null;
         };
         /** UpdateNoticeBody */
         UpdateNoticeBody: {
@@ -2700,6 +3069,13 @@ export interface components {
             name?: string | null;
             /** Number */
             number?: string | null;
+        };
+        /** UpdateSetBody */
+        UpdateSetBody: {
+            /** Date */
+            date?: string | null;
+            /** Title */
+            title?: string | null;
         };
         /** UpdateShowBody */
         UpdateShowBody: {
@@ -4178,6 +4554,306 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Member"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_home_api_shows__show_id__notes_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNotesHome"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_set_api_shows__show_id__notes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateSetBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNoteSet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_set_api_shows__show_id__notes__set_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNoteSetDetail"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_set_api_shows__show_id__notes__set_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_set_api_shows__show_id__notes__set_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSetBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNoteSet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    add_notes_api_shows__show_id__notes__set_id__notes_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AddNotesBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNote"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_note_api_shows__show_id__notes__set_id__notes__note_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+                note_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_note_api_shows__show_id__notes__set_id__notes__note_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+                note_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateNoteBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LineNote"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    release_api_shows__show_id__notes__set_id__release_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                set_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReleaseResult"];
                 };
             };
             /** @description Validation Error */
