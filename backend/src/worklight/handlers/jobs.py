@@ -3,7 +3,7 @@
 import logging
 from typing import Any
 
-from worklight.config import get_app_url, require_env
+from worklight.config import get_app_url, get_pusher, require_env
 from worklight.mailer import SesMailer
 from worklight.services.base import Ctx
 from worklight.services.notify import send_reminders
@@ -17,6 +17,7 @@ def reminders(event: dict[str, Any], context: Any) -> dict[str, int]:
         store=DynamoStore(require_env("TABLE_NAME")),
         mailer=SesMailer(require_env("FROM_EMAIL")),
         app_url=get_app_url(),
+        push=get_pusher(),
     )
     sent = send_reminders(ctx)
     log.info("Sent %d call reminders", sent)
