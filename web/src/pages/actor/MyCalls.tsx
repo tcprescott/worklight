@@ -1,12 +1,13 @@
 import { useState } from "react";
 import type { ShowPageProps } from "../../App";
 import { api } from "../../api";
-import { addDays, dateRange, dayOfMonth, longDate, monthName, shortWeekday, time12, todayIso, weekStart } from "../../lib/dates";
+import { addDays, dateRange, dayOfMonth, hhmm, longDate, minutesOf, monthName, shortWeekday, time12, todayIso, weekStart } from "../../lib/dates";
 import { Link } from "../../router";
 import { useSession } from "../../session";
 import { AccountMenu, ActorShell } from "../../shell";
-import type { MyCall, ShowDay } from "../../types";
+import type { MyAttendance, MyCall, MyCheckIn, ShowDay } from "../../types";
 import { ErrorView, FormError, Icon, Loading, Sheet, useToast } from "../../ui";
+import { checkInHere, checkInOpen, ReportSheet, SeenPill, stillAhead, toldText } from "./Absence";
 import { useAsync } from "../../useAsync";
 import { callWhat, directionsUrl, lowerFirst, useDirector, useStageManager } from "./actorLib";
 import { CalendarLinks, downloadCallIcs } from "./CalendarLinks";
@@ -44,10 +45,16 @@ export function MyCalls(props: ShowPageProps) {
   const { data, error, reload } = useAsync(
     () =>
       archived
-        ? Promise.resolve<[MyCall[], ShowDay[]]>([[], []])
-        : Promise.all([api.myCalls(show.showId), api.myDays().catch(() => [] as ShowDay[])]),
+        ? Promise.resolve<[MyCall[], ShowDay[], MyAttendance | null]>([[], [], null])
+        : Promise.all([
+            api.myCalls(show.showId),
+            api.myDays().catch(() => [] as ShowDay[]),
+            api.myAttendance(show.showId).catch(() => null),
+          ]),
     [show.showId, archived],
   );
+  const [reporting, setReporting] = useState<MyCall>();
+  const sm = useStageManager(show.showId);
   const archivedShows = me.shows.filter((s) => s.show.status === "archived");
   const [calOpen, setCalOpen] = useState(false);
   const [toast, showToast] = useToast();
@@ -56,7 +63,11 @@ export function MyCalls(props: ShowPageProps) {
 
   const calls = data?.[0] ?? [];
   const days = (data?.[1] ?? []).filter((d) => d.showId === show.showId);
+  const att = data?.[2] ?? null;
+  const mine = new Map((att?.checkins ?? []).map((c) => [c.date, c]));
   const live = calls.filter((c) => !c.cancelled);
+  const reportable = live.filter(stillAhead);
+  const report = archived ? undefined : (call: MyCall) => setReporting(call);
   const today = todayIso();
   const featured = live.find((c) => c.date === today) ?? live.find((c) => c.date > today);
   const rows = agenda(calls, days, featured?.callId);
@@ -67,7 +78,17 @@ export function MyCalls(props: ShowPageProps) {
   return (
     <ActorShell showId={show.showId} current="calls" archived={archived}>
       {featured ? (
-        <TonightCard call={featured} tonight={featured.date === today} showId={show.showId} isStaff={props.view.role === "staff"} onAdd={addOne} />
+        <TonightCard
+          call={featured}
+          tonight={featured.date === today}
+          showId={show.showId}
+          isStaff={props.view.role === "staff"}
+          onAdd={addOne}
+          att={att}
+          mine={mine.get(featured.date)}
+          onReport={report}
+          onCheckedIn={() => void reload()}
+        />
       ) : (
         <header className="actor-head" style={{ borderBottom: "none" }}>
           <div className="actor-topline">
@@ -127,7 +148,7 @@ export function MyCalls(props: ShowPageProps) {
                         <span>{calledWeeks.has(wk) ? "Not called" : "Schedule not out yet"}</span>
                       </div>
                     ) : (
-                      <CallRow call={r.call} onAdd={addOne} />
+                      <CallRow call={r.call} onAdd={addOne} mine={mine.get(r.call.date)} onReport={report} />
                     )}
                   </div>
                 );
@@ -170,18 +191,40 @@ export function MyCalls(props: ShowPageProps) {
           </button>
         </Sheet>
       )}
+      {reporting && (
+        <ReportSheet
+          showId={show.showId}
+          call={reporting}
+          others={reportable.filter((c) => c.callId !== reporting.callId)}
+          existing={mine.get(reporting.date)}
+          smName={sm.first ?? "stage management"}
+          onClose={() => setReporting(undefined)}
+          onSent={(msg) => {
+            setReporting(undefined);
+            showToast(msg);
+            void reload();
+          }}
+        />
+      )}
       {toast}
     </ActorShell>
   );
+}
+
+/** An ISO timestamp as "6:22 PM" where the show is. */
+function clock(iso: string, timezone: string): string {
+  return new Intl.DateTimeFormat("en-US", { timeZone: timezone, hour: "numeric", minute: "2-digit" }).format(new Date(iso));
 }
 
 function placeLine(call: MyCall): string {
   return [call.location, call.bring ? `Bring ${lowerFirst(call.bring)}` : ""].filter(Boolean).join(" · ");
 }
 
-function CallRow(props: { call: MyCall; onAdd: (call: MyCall) => void }) {
+function CallRow(props: { call: MyCall; onAdd: (call: MyCall) => void; mine?: MyCheckIn; onReport?: (call: MyCall) => void }) {
   const c = props.call;
   const place = placeLine(c);
+  const told = props.mine?.report ? props.mine : undefined;
+  const canReport = !c.cancelled && props.onReport && stillAhead(c);
   return (
     <div className={c.cancelled ? "actor-call cancelled" : "actor-call"}>
       <span className="datemark">
@@ -193,6 +236,16 @@ function CallRow(props: { call: MyCall; onAdd: (call: MyCall) => void }) {
         <span className="actor-call-what">{callWhat(c)}</span>
         {c.cancelled ? <span className="actor-call-cancel">Cancelled</span> : place && <span className="actor-call-place">{place}</span>}
         {!c.cancelled && c.note && <span className="actor-call-place">{c.note}</span>}
+        {!c.cancelled && told && (
+          <span className="actor-call-told">
+            {toldText(told)} <SeenPill c={told} />
+          </span>
+        )}
+        {canReport && (
+          <button type="button" className="link-btn actor-call-report" onClick={() => props.onReport!(c)}>
+            {told ? "Change this" : "Can't make it?"}
+          </button>
+        )}
       </div>
       {!c.cancelled && (
         <button type="button" className="actor-call-add" aria-label="Add to calendar" title="Add to calendar" onClick={() => props.onAdd(c)}>
@@ -203,33 +256,43 @@ function CallRow(props: { call: MyCall; onAdd: (call: MyCall) => void }) {
   );
 }
 
-const LATE_CHOICES = [10, 15, 20, 30];
-
-function TonightCard(props: { call: MyCall; tonight: boolean; showId: string; isStaff: boolean; onAdd: (call: MyCall) => void }) {
+function TonightCard(props: {
+  call: MyCall;
+  tonight: boolean;
+  showId: string;
+  isStaff: boolean;
+  onAdd: (call: MyCall) => void;
+  att: MyAttendance | null;
+  mine?: MyCheckIn;
+  onReport?: (call: MyCall) => void;
+  onCheckedIn: () => void;
+}) {
   const c = props.call;
   const sm = useStageManager(props.showId);
-  const [open, setOpen] = useState(false);
-  const [minutes, setMinutes] = useState(15);
-  const [note, setNote] = useState("");
-  const [sending, setSending] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
-  const [told, setTold] = useState<number>();
   const directions = directionsUrl(c);
   const place = placeLine(c);
+  const arrived = props.mine?.arrivedAt && (props.mine.status === "on_time" || props.mine.status === "late");
+  const told = props.mine?.report && !arrived ? props.mine : undefined;
+  const canHere = props.tonight && !arrived && props.mine?.report !== "absent" && checkInOpen(c, props.att?.checkInEarlyMinutes ?? 30);
 
-  async function send() {
-    setSending(true);
+  async function here() {
+    setBusy(true);
     setError(undefined);
     try {
-      await api.runningLate(props.showId, minutes, note.trim() || undefined);
-      setTold(minutes);
-      setOpen(false);
+      await checkInHere(props.showId, props.att?.venueSet ?? false);
+      props.onCheckedIn();
     } catch (err) {
       setError((err as Error).message);
     } finally {
-      setSending(false);
+      setBusy(false);
     }
   }
+
+  const actions = [directions ? "dir" : "", canHere ? "here" : ""].filter(Boolean);
+  const early = props.att?.checkInEarlyMinutes ?? 30;
+  const opensLater = props.tonight && !arrived && !canHere && props.mine?.report !== "absent" && stillAhead(c);
 
   return (
     <header className="actor-tonight">
@@ -245,50 +308,49 @@ function TonightCard(props: { call: MyCall; tonight: boolean; showId: string; is
       </span>
       {place && <span className="actor-tonight-place">{place}</span>}
       {c.note && <span className="actor-tonight-place">{c.note}</span>}
-      {(directions || props.tonight) && (
-        <div className={directions && props.tonight ? "actor-tonight-actions" : "actor-tonight-actions one"}>
+      {actions.length > 0 && (
+        <div className={actions.length === 2 ? "actor-tonight-actions" : "actor-tonight-actions one"}>
+          {canHere && (
+            <button type="button" className="btn btn-lg actor-tonight-here" disabled={busy} onClick={() => void here()}>
+              {busy ? "Checking you in..." : "I'm here"}
+            </button>
+          )}
           {directions && (
             <a className="btn btn-lg actor-tonight-dir" href={directions} target="_blank" rel="noreferrer">
               Directions
             </a>
           )}
-          {props.tonight && (
-            <button type="button" className="btn btn-lg actor-tonight-late" onClick={() => setOpen(true)}>
-              Running late
-            </button>
-          )}
         </div>
       )}
-      <button type="button" className="actor-tonight-add" onClick={() => props.onAdd(c)}>
-        Add to calendar
-      </button>
+      {opensLater && <span className="actor-tonight-place">"I'm here" opens at {time12(hhmm(minutesOf(c.start) - early))}.</span>}
+      {error && (
+        <div className="actor-tonight-told warn" role="alert">
+          {error}
+        </div>
+      )}
+      {arrived && props.mine && (
+        <div className="actor-tonight-told ok" role="status">
+          ✓ Checked in at {clock(props.mine.arrivedAt!, c.timezone)}.{" "}
+          {props.mine.location === "unknown"
+            ? `We couldn't confirm where you are, so ${sm.first ?? "stage management"} will see that.`
+            : `${sm.first ?? "Stage management"} can see you're here.`}
+        </div>
+      )}
       {told && (
         <div className="actor-tonight-told" role="status">
-          {sm.first ?? "Stage management"} knows you'll be about {told} minutes late.
+          {toldText(told)}. <SeenPill c={told} />
         </div>
       )}
-      {open && (
-        <Sheet title="How late will you be?" onClose={() => setOpen(false)}>
-          <p className="small muted" style={{ marginTop: -6 }}>
-            We'll let {sm.phrase} know right away.
-          </p>
-          <div className="actor-late-opts" role="group" aria-label="Minutes late">
-            {LATE_CHOICES.map((n) => (
-              <button key={n} type="button" className="actor-late-opt" aria-pressed={minutes === n} onClick={() => setMinutes(n)}>
-                {n === 30 ? "30 min or more" : `About ${n} min`}
-              </button>
-            ))}
-          </div>
-          <label className="field">
-            Anything they should know? (optional)
-            <input value={note} onChange={(e) => setNote(e.target.value)} maxLength={200} placeholder="Stuck in traffic" />
-          </label>
-          <FormError error={error} />
-          <button type="button" className="btn btn-primary btn-lg btn-block" disabled={sending} onClick={() => void send()}>
-            {sending ? "Sending..." : `Tell ${sm.first ?? "stage management"}`}
+      <div className="actor-tonight-links">
+        {props.onReport && !arrived && stillAhead(c) && (
+          <button type="button" className="actor-tonight-add" onClick={() => props.onReport!(c)}>
+            {told ? "Change what you told them" : props.tonight ? "Running late or can't make it?" : "Can't make it?"}
           </button>
-        </Sheet>
-      )}
+        )}
+        <button type="button" className="actor-tonight-add" onClick={() => props.onAdd(c)}>
+          Add to calendar
+        </button>
+      </div>
     </header>
   );
 }

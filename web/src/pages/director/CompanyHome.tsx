@@ -136,6 +136,13 @@ function Home(props: { view: TheaterView; reload: () => Promise<void>; setView: 
           showToast(parts.length ? parts.join(", ") + "." : "Nobody to remind.");
         },
       });
+    if (s.unseenReports > 0)
+      out.push({
+        key: "reports",
+        text: `${s.unseenReports} absence ${s.unseenReports === 1 ? "report needs" : "reports need"} a "Got it"`,
+        action: "Open attendance",
+        run: () => navigate(`/shows/${show.showId}/attendance`),
+      });
     if (!show.slots.length)
       out.push({ key: "slots", text: "Finish setup: rehearsal nights", action: "Finish setup", run: () => navigate(`/shows/${show.showId}/settings`) });
     if (!s.staff.some((m) => isStageManager(m.title)))

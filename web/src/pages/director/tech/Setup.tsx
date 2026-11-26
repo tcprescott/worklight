@@ -5,8 +5,40 @@ import { Link } from "../../../router";
 import type { ShowView } from "../../../types";
 import { FormError } from "../../../ui";
 
+/** Nothing published yet. */
+export function NoCalls(props: { view: ShowView; readOnly: boolean; onMade: (n: number) => Promise<void> }) {
+  const show = props.view.show;
+  return (
+    <main className="page tech-setup-page">
+      <div className="tech-head">
+        <span className="kicker">Attendance</span>
+        <h1 className="title">Who's here</h1>
+        <p className="lede">
+          Once calls are published, people tap "I'm here" on their phone when they arrive, and anything they tell you ahead of
+          time shows up here.
+        </p>
+      </div>
+      {props.readOnly ? (
+        <div className="tech-setup">
+          <h2 className="title-sm">No calls</h2>
+          <p className="lede">This show never published a call.</p>
+        </div>
+      ) : (
+        <div className="tech-setup">
+          <h2 className="title-sm">No calls published yet</h2>
+          <p className="lede">Publish a week on the Schedule and it shows up here.</p>
+          <Link to={`/shows/${show.showId}/schedule`} className="btn btn-outline">
+            Open the Schedule
+          </Link>
+        </div>
+      )}
+      {!props.readOnly && show.techStart && <TechCallsForm view={props.view} onMade={props.onMade} />}
+    </main>
+  );
+}
+
 /** No tech calls yet: call everyone for every tech night and performance in one go. */
-export function NoTechCalls(props: { view: ShowView; readOnly: boolean; onMade: (n: number) => Promise<void> }) {
+export function TechCallsForm(props: { view: ShowView; onMade: (n: number) => Promise<void> }) {
   const show = props.view.show;
   const [cast, setCast] = useState("18:00");
   const [crew, setCrew] = useState("17:30");
@@ -14,6 +46,7 @@ export function NoTechCalls(props: { view: ShowView; readOnly: boolean; onMade: 
   const [where, setWhere] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string>();
+  if (!show.techStart) return null;
 
   async function make() {
     setError(undefined);
@@ -33,67 +66,43 @@ export function NoTechCalls(props: { view: ShowView; readOnly: boolean; onMade: 
   }
 
   return (
-    <main className="page tech-setup-page">
-      <div className="tech-head">
-        <span className="kicker">Tech week</span>
-        <h1 className="title">Who's in the building</h1>
-        <p className="lede">Once tech calls are out, people check in here by scanning a code at the stage door.</p>
+    <form
+      className="tech-setup"
+      onSubmit={(e) => {
+        e.preventDefault();
+        void make();
+      }}
+    >
+      <h2 className="title-sm">Call everyone for tech week</h2>
+      <p className="lede">
+        Everyone is called every tech night and performance, {dateRange(show.techStart, show.endDate, false)}. You can change any
+        night on the Schedule afterwards.
+      </p>
+      <div className="tech-setup-fields">
+        <label className="field">
+          Cast call
+          <input type="time" value={cast} onChange={(e) => setCast(e.target.value)} required />
+        </label>
+        <label className="field">
+          Crew call
+          <input type="time" value={crew} onChange={(e) => setCrew(e.target.value)} />
+        </label>
+        <label className="field">
+          Ends
+          <input type="time" value={end} onChange={(e) => setEnd(e.target.value)} required />
+        </label>
+        <label className="field tech-setup-where">
+          Where
+          <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder={show.venue ?? "The theater"} maxLength={200} />
+        </label>
       </div>
-      {!show.techStart ? (
-        <div className="tech-setup">
-          <h2 className="title-sm">Tech week isn't on the calendar</h2>
-          <p className="lede">Set when tech week starts in the show settings, then come back here to call everyone.</p>
-          {!props.readOnly && (
-            <Link to={`/shows/${show.showId}/settings`} className="btn btn-outline">
-              Open show settings
-            </Link>
-          )}
-        </div>
-      ) : props.readOnly ? (
-        <div className="tech-setup">
-          <h2 className="title-sm">No tech calls</h2>
-          <p className="lede">This show never called tech week.</p>
-        </div>
-      ) : (
-        <form
-          className="tech-setup"
-          onSubmit={(e) => {
-            e.preventDefault();
-            void make();
-          }}
-        >
-          <h2 className="title-sm">Call everyone for tech week</h2>
-          <p className="lede">
-            Everyone is called every tech night and performance, {dateRange(show.techStart, show.endDate, false)}. You can change any
-            night on the Schedule afterwards.
-          </p>
-          <div className="tech-setup-fields">
-            <label className="field">
-              Cast call
-              <input type="time" value={cast} onChange={(e) => setCast(e.target.value)} required />
-            </label>
-            <label className="field">
-              Crew call
-              <input type="time" value={crew} onChange={(e) => setCrew(e.target.value)} />
-            </label>
-            <label className="field">
-              Ends
-              <input type="time" value={end} onChange={(e) => setEnd(e.target.value)} required />
-            </label>
-            <label className="field tech-setup-where">
-              Where
-              <input value={where} onChange={(e) => setWhere(e.target.value)} placeholder={show.venue ?? "The theater"} maxLength={200} />
-            </label>
-          </div>
-          <FormError error={error} />
-          <div>
-            <button type="submit" className="btn btn-primary" disabled={busy}>
-              {busy ? "Calling everyone..." : "Call everyone"}
-            </button>
-          </div>
-        </form>
-      )}
-    </main>
+      <FormError error={error} />
+      <div>
+        <button type="submit" className="btn btn-primary" disabled={busy}>
+          {busy ? "Calling everyone..." : "Call everyone"}
+        </button>
+      </div>
+    </form>
   );
 }
 

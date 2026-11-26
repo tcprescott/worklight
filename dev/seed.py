@@ -148,6 +148,8 @@ def seed(ctx: Ctx) -> None:
         name="A Midsummer Night's Dream",
         venue="Fellowship Hall",
         address="210 Elm St",
+        venue_lat=41.8789,
+        venue_lng=-87.6359,
         timezone="America/Chicago",
         start_date="2026-11-02",
         end_date="2026-12-06",
@@ -376,6 +378,25 @@ def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
                 date="2026-11-29",
                 user_id=users[name].user_id,
                 status=status,
+                updated_at=stamp,
+            )  # type: ignore[arg-type]
+        )
+    # Heads-ups for later in tech week: one waiting for "Got it", one already seen.
+    for name, day, kind, time, note, seen in (
+        ("Tom Byrne", "2026-11-30", "absent", None, "Stomach bug, sorry", False),
+        ("Nao Sato", "2026-12-01", "late", "18:30", "Work runs late Tuesdays", True),
+    ):
+        ctx.store.put_checkin(
+            CheckIn(
+                show_id=show_id,
+                date=day,
+                user_id=users[name].user_id,
+                report=kind,
+                report_time=time,
+                note=note,
+                reported_at=stamp,
+                seen_by=director.user_id if seen else None,
+                seen_at=stamp if seen else None,
                 updated_at=stamp,
             )  # type: ignore[arg-type]
         )

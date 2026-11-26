@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, Query, Response
 
-from worklight.models import Call, CheckIn, Model, User
+from worklight.models import Call, CheckIn, User
 from worklight.rest import UserDep
 from worklight.services import schedule as service
 from worklight.services import tech
@@ -10,10 +10,6 @@ from worklight.services.base import Ctx, IsoDate
 
 From = Annotated[IsoDate | None, Query(alias="from")]
 To = Annotated[IsoDate | None, Query(alias="to")]
-
-
-class DoorCode(Model):
-    door_code: str
 
 
 def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
@@ -74,7 +70,7 @@ def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
     ) -> list[service.MyCall]:
         return service.my_calls(ctx, user, show_id)
 
-    # ---- tech week ----
+    # ---- attendance ----
 
     @r.get("/shows/{show_id}/attendance", response_model=tech.Attendance, response_model_exclude_none=True)
     def attendance(show_id: str, user: CurrentUser) -> tech.Attendance:
@@ -90,16 +86,46 @@ def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
     ) -> CheckIn | None:
         return tech.mark(ctx, user, show_id, day, user_id, body)
 
-    @r.post("/shows/{show_id}/door-code", response_model=DoorCode)
-    def rotate(show_id: str, user: CurrentUser) -> DoorCode:
-        return DoorCode(door_code=tech.rotate_door_code(ctx, user, show_id))
+    @r.post(
+        "/shows/{show_id}/attendance/{day}/{user_id}/seen",
+        response_model=CheckIn,
+        response_model_exclude_none=True,
+    )
+    def seen(show_id: str, day: IsoDate, user_id: str, user: CurrentUser) -> CheckIn:
+        return tech.mark_seen(ctx, user, show_id, day, user_id)
+
+    @r.put("/shows/{show_id}/venue-location", status_code=204)
+    def set_venue(show_id: str, user: CurrentUser, body: tech.VenueLocationBody) -> Response:
+        tech.set_venue_location(ctx, user, show_id, body)
+        return Response(status_code=204)
+
+    @r.delete("/shows/{show_id}/venue-location", status_code=204)
+    def clear_venue(show_id: str, user: CurrentUser) -> Response:
+        tech.set_venue_location(ctx, user, show_id, None)
+        return Response(status_code=204)
 
     @r.post("/shows/{show_id}/check-in", response_model=tech.CheckInResult, response_model_exclude_none=True)
     def check_in(show_id: str, user: CurrentUser, body: tech.CheckInBody) -> tech.CheckInResult:
         return tech.self_check_in(ctx, user, show_id, body)
 
-    @r.post("/shows/{show_id}/running-late", response_model=CheckIn, response_model_exclude_none=True)
-    def running_late(show_id: str, user: CurrentUser, body: tech.RunningLateBody) -> CheckIn:
-        return tech.running_late(ctx, user, show_id, body)
+    @r.get(
+        "/shows/{show_id}/my-attendance", response_model=tech.MyAttendance, response_model_exclude_none=True
+    )
+    def my_attendance(show_id: str, user: CurrentUser) -> tech.MyAttendance:
+        return tech.my_attendance(ctx, user, show_id)
+
+    @r.post(
+        "/shows/{show_id}/absences",
+        status_code=201,
+        response_model=list[CheckIn],
+        response_model_exclude_none=True,
+    )
+    def report_absence(show_id: str, user: CurrentUser, body: tech.AbsenceBody) -> list[CheckIn]:
+        return tech.report_absence(ctx, user, show_id, body)
+
+    @r.delete("/shows/{show_id}/absences/{day}", status_code=204)
+    def take_back(show_id: str, day: IsoDate, user: CurrentUser) -> Response:
+        tech.take_back(ctx, user, show_id, day)
+        return Response(status_code=204)
 
     return r

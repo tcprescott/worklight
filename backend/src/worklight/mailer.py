@@ -129,17 +129,22 @@ def admin_added_email(to: str, theater_name: str, sender_name: str, url: str) ->
     )
 
 
-def running_late_email(
-    to: str, show_name: str, person_name: str, minutes: int, call_time: str | None, note: str | None, url: str
+def absence_report_email(
+    to: str, show_name: str, person_name: str, what: str, note: str | None, url: str
 ) -> Email:
-    when = f" for the {_pretty_time(call_time)} call" if call_time else ""
+    """'what' reads on from the name: "can't come Tue Dec 8 (7:00 PM call)"."""
     extra = f' They said: "{note}"' if note else ""
-    line = f"{person_name} is running about {minutes} minutes late{when} tonight.{extra}"
+    line = f"{person_name} {what}.{extra}"
     return Email(
         to=to,
-        subject=f"{show_name}: {person_name} is running {minutes} min late",
-        text=f"{line}\n\n{url}",
-        html=_layout("Running late", escape(line), "Open tonight's sign-in", url),
+        subject=f"{show_name}: {person_name} {what}",
+        text=f"{line}\n\nTap Got it on the attendance page so they know you saw it.\n\n{url}",
+        html=_layout(
+            "Heads-up from the cast",
+            escape(line) + "<br><br>Tap <strong>Got it</strong> so they know you saw it.",
+            "Open attendance",
+            url,
+        ),
     )
 
 

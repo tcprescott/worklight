@@ -25,7 +25,7 @@ export function WeekWeb(props: WeekProps) {
           <p className="lede">
             {allDark
               ? actions.techPath
-                ? "Tech and performances this week. Their calls live on the Tech week page."
+                ? "Tech and performances this week. Their calls are made on the Attendance page."
                 : "Performances this week."
               : canEdit
               ? 'Drag a scene onto a night, or pick one and press "Put it here". Times fill in as you go.'
@@ -166,9 +166,9 @@ function Night(props: WeekProps & { day: ScheduleDay }) {
         <span className="sch-dark-kind">{day.kind === "performance" ? "Performance" : "Tech week"}</span>
         {actions.techPath && (
           <>
-            <p className="sch-dark-text">Calls for {day.kind === "performance" ? "performances" : "tech"} live on the Tech week page.</p>
+            <p className="sch-dark-text">Calls for {day.kind === "performance" ? "performances" : "tech"} are made on the Attendance page.</p>
             <Link to={actions.techPath} className="sch-dark-link">
-              Open Tech week
+              Open Attendance
             </Link>
           </>
         )}

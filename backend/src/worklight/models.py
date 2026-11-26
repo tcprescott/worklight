@@ -61,8 +61,9 @@ class Show(Model):
     # Minutes of rehearsal per script page; scene times come from this unless a scene overrides it.
     minutes_per_page: float = 8
     conflict_deadline: str | None = None
-    # Printed on the stage door sign; scanning it checks a person in for tonight.
-    door_code: str | None = None
+    # Where the rehearsal room is, saved by staff standing in it. "I'm here" check-ins are compared to it.
+    venue_lat: float | None = None
+    venue_lng: float | None = None
     status: ShowStatus = "active"
     archived_at: str | None = None
     created_at: str
@@ -246,6 +247,9 @@ CallStatus = Literal["draft", "published"]
 # Who a call covers besides the people in its scenes.
 CallGroup = Literal["everyone", "cast", "crew"]
 CheckInStatus = Literal["on_time", "late", "absent"]
+AbsenceKind = Literal["absent", "late", "leave_early"]
+# "confirmed": the phone was near the venue. "unknown": it couldn't or wouldn't say.
+CheckInLocation = Literal["confirmed", "unknown"]
 
 
 class Block(Model):
@@ -300,7 +304,7 @@ class Call(CallContent):
 
 
 class CheckIn(Model):
-    """One person on one tech or performance night (or a rehearsal they said they'd be late to)."""
+    """One person on one day they're called: what they told us ahead of time, and whether they came."""
 
     show_id: str
     date: str
@@ -309,9 +313,18 @@ class CheckIn(Model):
     status: CheckInStatus | None = None
     arrived_at: str | None = None
     by_self: bool = False
-    # "Running late" from the person, before they arrive.
-    running_late_minutes: int | None = None
+    # Set when they checked themselves in: did their phone place them at the venue?
+    location: CheckInLocation | None = None
+    # What they told stage management ahead of time: can't come, late (arriving by report_time),
+    # or leaving early (at report_time).
+    report: AbsenceKind | None = None
+    report_time: str | None = None
+    reported_at: str | None = None
+    # Only staff see the reason.
     note: str | None = None
+    # Staff tapped "Got it" on the report.
+    seen_by: str | None = None
+    seen_at: str | None = None
     updated_at: str
 
 
@@ -485,6 +498,8 @@ class ShowSummary(Model):
     crew_count: int
     # Members who haven't sent their conflicts yet (invited or joined).
     waiting_count: int
+    # Absence reports for today or later that no staff member has said "Got it" to.
+    unseen_reports: int = 0
 
 
 class TheaterView(Model):

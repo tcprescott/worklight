@@ -245,36 +245,86 @@ def test_tech_week_calls_and_attendance(
     assert (sam_call["start"], sam_call["labels"]) == ("17:30", ["Tech night 1"])
     assert call.ok("maya@example.org", "GET", "/api/me/calls")[0]["start"] == "18:00"
 
-    # 6:10 PM in Chicago on Nov 29.
+    # Staff standing in the hall save where it is.
+    hall = {"lat": 41.8789, "lng": -87.6359}
+    call.ok(DIRECTOR, "PUT", f"{base}/venue-location", hall)
+
+    # 5:20 PM in Chicago on Nov 29: too early for "I'm here" (opens 5:30 for a 6:00 call).
+    monkeypatch.setattr(clock, "now", lambda: datetime(2026, 11, 29, 23, 20, tzinfo=UTC))
+    status, body = call("maya@example.org", "POST", f"{base}/check-in", hall)
+    assert status == 400 and "5:30 PM" in body["error"]
+
+    # 6:10 PM.
     monkeypatch.setattr(clock, "now", lambda: datetime(2026, 11, 30, 0, 10, tzinfo=UTC))
     board = call.ok(DIRECTOR, "GET", f"{base}/attendance")
-    assert board["tonight"] == "2026-11-29"
+    assert board["tonight"] == "2026-11-29" and board["venueSet"]
     assert len(board["nights"]) == 8
-    code = board["doorCode"]
+    assert {p["userId"] for p in board["nights"][0]["called"]} >= {show["maya"], show["sam"]}
     assert {p["label"] for p in board["people"]} >= {"Hermia", "Stage manager"}
 
-    status, _ = call("maya@example.org", "POST", f"{base}/check-in", {"code": "wrong"})
-    assert status == 400
-    arrived = call.ok("maya@example.org", "POST", f"{base}/check-in", {"code": code})
+    # Four miles away is refused; no location at all checks in with a flag.
+    status, body = call("maya@example.org", "POST", f"{base}/check-in", {"lat": 41.93, "lng": -87.6359})
+    assert status == 400 and "4 miles" in body["error"]
+    arrived = call.ok("maya@example.org", "POST", f"{base}/check-in", {**hall, "accuracy": 30})
     assert (arrived["checkin"]["status"], arrived["minutesLate"]) == ("late", 10)
-    early = call.ok("sam@example.org", "POST", f"{base}/check-in", {"code": code})
-    assert early["checkin"]["status"] == "late"
+    assert arrived["checkin"]["location"] == "confirmed"
+    jay = call.ok("jay@example.org", "POST", f"{base}/check-in", {})
+    assert jay["checkin"]["location"] == "unknown"
 
+    # George says he can't come tomorrow or Tuesday; stage management gets one email.
     mailer.sent.clear()
-    late = call.ok("george@example.org", "POST", f"{base}/running-late", {"minutes": 20, "note": "parking"})
-    assert late["runningLateMinutes"] == 20 and "status" not in late
+    reported = call.ok(
+        "george@example.org",
+        "POST",
+        f"{base}/absences",
+        {"dates": ["2026-11-30", "2026-12-01"], "kind": "absent", "note": "parking"},
+    )
+    assert [r["date"] for r in reported] == ["2026-11-30", "2026-12-01"]
     assert [m.to for m in mailer.sent] == ["sam@example.org"]
-    assert "George Haddad" in mailer.sent[0].subject
+    assert "George Haddad can't come Mon Nov 30 and Tue Dec 1" in mailer.sent[0].subject
+    status, _ = call(
+        "george@example.org", "POST", f"{base}/absences", {"dates": ["2026-11-20"], "kind": "absent"}
+    )
+    assert status == 400
+    status, _ = call(
+        "george@example.org", "POST", f"{base}/absences", {"dates": ["2026-12-02"], "kind": "late"}
+    )
+    assert status == 400
+    call.ok(
+        "george@example.org",
+        "POST",
+        f"{base}/absences",
+        {"dates": ["2026-11-29"], "kind": "late", "time": "18:30"},
+    )
+
+    mine = call.ok("george@example.org", "GET", f"{base}/my-attendance")
+    assert [(c["date"], c["report"]) for c in mine["checkins"]] == [
+        ("2026-11-29", "late"),
+        ("2026-11-30", "absent"),
+        ("2026-12-01", "absent"),
+    ]
+    assert "seenByName" not in mine["checkins"][1]
+    call.ok("sam@example.org", "POST", f"{base}/attendance/2026-11-30/{show['george']}/seen")
+    mine = call.ok("george@example.org", "GET", f"{base}/my-attendance")
+    assert mine["checkins"][1]["seenByName"]
+    call.ok("george@example.org", "DELETE", f"{base}/absences/2026-12-01")
+    mine = call.ok("george@example.org", "GET", f"{base}/my-attendance")
+    assert [c["date"] for c in mine["checkins"]] == ["2026-11-29", "2026-11-30"]
 
     call.ok(DIRECTOR, "PUT", f"{base}/attendance/2026-11-29/{show['george']}", {"status": "absent"})
     call.ok(DIRECTOR, "PUT", f"{base}/attendance/2026-11-29/{show['maya']}", {"status": None})
-    marks = {c["userId"]: c.get("status") for c in call.ok(DIRECTOR, "GET", f"{base}/attendance")["checkins"]}
-    assert marks[show["george"]] == "absent" and show["maya"] not in marks
+    marks = {
+        c["userId"]: c
+        for c in call.ok(DIRECTOR, "GET", f"{base}/attendance")["checkins"]
+        if c["date"] == "2026-11-29"
+    }
+    assert marks[show["george"]]["status"] == "absent" and marks[show["george"]]["report"] == "late"
+    assert show["maya"] not in marks
 
-    old = code
-    new = call.ok(DIRECTOR, "POST", f"{base}/door-code")["doorCode"]
-    assert new != old
-    status, _ = call("jay@example.org", "POST", f"{base}/check-in", {"code": old})
-    assert status == 400
+    # The company home counts reports nobody has said "Got it" to (just tonight's, now).
+    theater_id = call.ok(DIRECTOR, "GET", f"/api/shows/{show['id']}")["show"]["theaterId"]
+    summary = call.ok(DIRECTOR, "GET", f"/api/theaters/{theater_id}")["shows"][0]
+    assert summary["unseenReports"] == 1
+
     status, _ = call("maya@example.org", "GET", f"{base}/attendance")
     assert status == 403

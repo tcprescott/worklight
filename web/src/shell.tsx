@@ -78,7 +78,7 @@ export function CompanyShell(props: { context?: string; children: ReactNode }) {
   );
 }
 
-export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "strike" | "settings";
+export type StaffTab = "schedule" | "breakdown" | "people" | "attendance" | "callboard" | "strike" | "settings";
 
 interface Tab {
   id: StaffTab;
@@ -87,7 +87,7 @@ interface Tab {
   path: string;
 }
 
-/** Tabs that exist so far. Tech shows from 7 days before tech week through closing. */
+/** Tabs that exist so far. */
 export function staffTabs(view: ShowView): Tab[] {
   const id = view.show.showId;
   const tabs: Tab[] = [
@@ -96,7 +96,7 @@ export function staffTabs(view: ShowView): Tab[] {
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
   tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
-  if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
+  tabs.push({ id: "attendance", label: "Attendance", icon: "target", path: `/shows/${id}/attendance` });
   // Strike shows from a week before tech (or opening, or closing) on.
   const from = view.show.techStart ?? view.show.openingDate ?? view.show.endDate;
   if (todayIso() >= addDays(from, -7)) tabs.push({ id: "strike", label: "Strike", icon: "check", path: `/shows/${id}/strike` });

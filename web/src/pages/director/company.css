@@ -949,3 +949,22 @@
   font-size: 14px;
   color: var(--ink-2);
 }
+
+/* Show settings: where the rehearsal room is, for "I'm here". */
+.co-venue-spot {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+}
+.co-venue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-top: 4px;
+}

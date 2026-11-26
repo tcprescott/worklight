@@ -1088,102 +1088,105 @@ button.actor-level {
   color: var(--plum);
 }
 
-/* ---- Stage door check-in (phase 3) ------------------------------------------------------------ */
+/* ---- "Can't make it?" and "I'm here" ---------------------------------------------------------- */
 
-.door {
-  min-height: 100dvh;
-  background: var(--stage);
+/* Sheets open from inside the dark card. */
+.actor-tonight .sheet {
+  color: var(--ink);
+}
+.btn.actor-tonight-here {
+  min-height: 52px;
+  border: none;
+  border-radius: 6px;
+  background: #2f6b3a;
   color: #fff;
-  padding: 48px 24px calc(40px + var(--safe-bottom));
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 14px;
+  font-size: 17px;
+  font-weight: 700;
 }
-.door .caps {
-  color: var(--plum-soft);
-}
-.door-mark {
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  background: var(--plum);
+.btn.actor-tonight-here:hover {
   color: #fff;
+  background: #275a31;
+}
+.actor-tonight-told.ok {
+  background: #2c4a31;
+}
+.actor-tonight-told.warn {
+  background: #5e3a2a;
+}
+.actor-tonight-links {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 8px 0 4px;
+  flex-wrap: wrap;
+  gap: 0 20px;
 }
-.door-mark svg {
-  width: 48px;
-  height: 48px;
+.actor-pill {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
 }
-.door-late .door-mark {
+.actor-pill.sent {
   background: var(--part-bg);
   color: var(--part-text);
 }
-.door h1 {
-  font-family: var(--serif);
-  font-size: 34px;
-  font-weight: 700;
-  line-height: 1.1;
-  max-width: 340px;
+.actor-pill.seen {
+  background: #e3efe3;
+  color: #2f6b3a;
 }
-.door-time {
-  font-family: var(--cond);
-  font-size: 72px;
+.actor-call-told {
+  margin-top: 2px;
+  font-size: 13px;
   font-weight: 600;
-  line-height: 0.95;
-}
-.door p {
-  max-width: 320px;
-  font-size: 15px;
-  color: var(--stage-text);
-  line-height: 1.5;
-}
-.btn.door-btn {
-  margin-top: 12px;
-  min-width: 220px;
-  border: none;
-  background: #fff;
-  color: var(--stage);
-  font-weight: 700;
-}
-.btn.door-btn:hover {
-  color: var(--stage);
-  background: var(--sand-2);
-}
-.door-wait {
-  flex: 1;
-  padding: 64px 24px 40px;
+  color: var(--part-text);
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 16px;
+  gap: 6px;
 }
-.door-wait h1 {
-  font-family: var(--serif);
-  font-size: 30px;
-  font-weight: 700;
-  line-height: 1.15;
+.link-btn.actor-call-report {
+  align-self: flex-start;
+  font-size: 13px;
+  padding: 4px 0;
+  text-align: left;
 }
-.door-wait .form-error {
-  max-width: 340px;
+.actor-report-kinds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
 }
-.door-wait-actions {
+.actor-report-kinds .actor-late-opt {
+  font-size: 14px;
+}
+.actor-report-more {
+  border: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 320px;
+  gap: 6px;
 }
-/* The running-late sheet opens from inside the dark card. */
-.actor-tonight .sheet {
-  color: var(--ink);
+.actor-report-more legend {
+  padding: 0 0 4px;
+}
+.actor-report-day {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--rule-input);
+  border-radius: 6px;
+  font-size: 15px;
+}
+.actor-report-day input {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: var(--plum);
+}
+.link-btn.actor-report-more-btn {
+  align-self: flex-start;
 }
 
 /* ---- Announcements (Show page) ---------------------------------------------------------------- */

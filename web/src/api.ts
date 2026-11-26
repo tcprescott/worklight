@@ -10,7 +10,9 @@ import type {
   ApiKey,
   CreateApiKeyBody,
   NewApiKey,
+  AbsenceBody,
   Attendance,
+  MyAttendance,
   Breakdown,
   CalendarLinks,
   Callboard,
@@ -197,11 +199,18 @@ export const api = {
   createTechCalls: (showId: string, input: TechCallsBody) => request<Call[]>("POST", `${show(showId)}/tech-calls`, input),
   myCalls: (showId?: string) => request<MyCall[]>("GET", `/me/calls${showId ? `?showId=${e(showId)}` : ""}`),
 
-  // Tech week
+  // Attendance
   attendance: (showId: string) => request<Attendance>("GET", `${show(showId)}/attendance`),
   mark: (showId: string, date: string, userId: string, status: CheckInStatus | null) =>
     request<CheckIn | null>("PUT", `${show(showId)}/attendance/${e(date)}/${e(userId)}`, { status }),
-  rotateDoorCode: (showId: string) => request<{ doorCode: string }>("POST", `${show(showId)}/door-code`),
+  markSeen: (showId: string, date: string, userId: string) =>
+    request<CheckIn>("POST", `${show(showId)}/attendance/${e(date)}/${e(userId)}/seen`),
+  setVenueLocation: (showId: string, lat: number, lng: number) =>
+    request<void>("PUT", `${show(showId)}/venue-location`, { lat, lng }),
+  clearVenueLocation: (showId: string) => request<void>("DELETE", `${show(showId)}/venue-location`),
+  myAttendance: (showId: string) => request<MyAttendance>("GET", `${show(showId)}/my-attendance`),
+  reportAbsence: (showId: string, input: AbsenceBody) => request<CheckIn[]>("POST", `${show(showId)}/absences`, input),
+  takeBack: (showId: string, date: string) => request<void>("DELETE", `${show(showId)}/absences/${e(date)}`),
   // Calendar: a private feed of every call that needs me, and one call as a file.
   calendarLinks: () => request<CalendarLinks>("GET", "/me/calendar"),
   rotateCalendar: () => request<CalendarLinks>("POST", "/me/calendar/rotate"),
@@ -228,7 +237,7 @@ export const api = {
   saveStrikeTemplate: (theaterId: string, tasks: StrikeTemplateLine[]) =>
     request<StrikeTemplate>("PUT", `/theaters/${e(theaterId)}/strike-template`, { tasks }),
 
-  checkIn: (showId: string, code: string) => request<CheckInResult>("POST", `${show(showId)}/check-in`, { code }),
-  runningLate: (showId: string, minutes: number, note?: string) =>
-    request<CheckIn>("POST", `${show(showId)}/running-late`, { minutes, note }),
+  /** "I'm here". Coordinates are left out when the phone wouldn't say where it is. */
+  checkIn: (showId: string, where: { lat?: number; lng?: number; accuracy?: number }) =>
+    request<CheckInResult>("POST", `${show(showId)}/check-in`, where),
 };

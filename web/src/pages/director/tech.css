@@ -1,4 +1,4 @@
-/* Tech week: tonight's sign-in, the whole week grid, the phone stage door, and the printed sign. */
+/* Attendance: today's board, the every-call grid, and the phone view. */
 
 .tech-head {
   display: flex;
@@ -62,6 +62,16 @@
 .tech-col-waiting .tech-person {
   border-color: #ebcdbf;
 }
+.tech-col-told {
+  background: #fdf8ec;
+}
+.tech-col-told h2 span {
+  color: var(--part-text);
+}
+.tech-col-told .tech-person {
+  border-color: #eedfb8;
+  flex-wrap: wrap;
+}
 .tech-col-arrived {
   background: #f6f0fa;
 }
@@ -102,6 +112,48 @@
 .tech-person-text .tech-late-note {
   color: var(--part-text);
 }
+.tech-person-text .tech-out-note {
+  color: var(--hard-text);
+  font-weight: 600;
+}
+.tech-person-text .tech-late-note {
+  font-weight: 600;
+}
+.tech-gotit.btn {
+  min-height: 36px;
+  padding: 0 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+}
+.tech-seen {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--plum-dark);
+  white-space: nowrap;
+}
+.tech-venue-note {
+  font-size: 13px;
+  color: var(--soft-text);
+  background: var(--soft-bg);
+  border-left: 3px solid var(--soft-edge);
+  border-radius: 4px;
+  padding: 8px 12px;
+}
+.tech-venue-note a {
+  color: var(--soft-text);
+  font-weight: 600;
+}
+.tech-upcoming {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 760px;
+}
+.tech-upcoming h2 {
+  color: var(--muted);
+  padding-top: 4px;
+}
 .tech-checkin.btn {
   min-height: 36px;
   padding: 0 10px;
@@ -128,33 +180,6 @@
   border-radius: 3px;
   background: var(--part-bg);
   border: 1px solid var(--part-edge);
-}
-
-.tech-sign {
-  flex: 1 1 260px;
-  max-width: 300px;
-  background: var(--surface);
-  border-radius: 6px;
-  box-shadow: 0 1px 2px rgba(34, 27, 43, 0.06), 0 4px 16px rgba(109, 59, 142, 0.06);
-  padding: 22px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  text-align: center;
-}
-.tech-sign-qr {
-  border-radius: 4px;
-}
-.tech-sign-title {
-  font-family: var(--serif);
-  font-size: 20px;
-  font-weight: 700;
-}
-.tech-sign .link-btn {
-  font-size: 13px;
-  font-weight: 600;
-  text-decoration: underline;
 }
 
 /* ---- Whole week ------------------------------------------------------------------------------- */
@@ -304,6 +329,31 @@
 .tech-sq.none:hover:not(:disabled) {
   border-color: var(--plum);
 }
+.tech-sq.told {
+  border-color: var(--part-edge);
+  color: var(--part-text);
+  font-weight: 600;
+}
+.tech-sq-mini.none.told {
+  border-color: var(--part-edge);
+  background: var(--part-bg);
+}
+.tech-sq-mini.skip {
+  background: transparent;
+  border: none;
+  position: relative;
+}
+.tech-sq-mini.skip::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  right: 2px;
+  top: 50%;
+  border-top: 1.5px solid var(--rule);
+}
+.tech-grid-cell .tech-sq-mini.skip {
+  width: 24px;
+}
 .tech-sq-mini {
   display: inline-block;
   width: 12px;
@@ -377,15 +427,6 @@
 .tech-door .caps {
   color: var(--plum-soft);
 }
-.tech-door-qr {
-  width: 168px;
-  height: 168px;
-  border-radius: 8px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .tech-door-hint {
   font-size: 13px;
   color: var(--stage-text);
@@ -400,28 +441,6 @@
 .tech-door-count span {
   font-size: 18px;
   color: var(--plum-soft);
-}
-.tech-door-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-.btn.tech-door-btn {
-  border-color: #5a5048;
-  background: transparent;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-}
-.btn.tech-door-btn:hover {
-  color: #fff;
-  border-color: var(--plum-soft);
-}
-.btn.tech-door-btn-quiet {
-  border-color: transparent;
-  color: var(--plum-soft);
-  font-weight: 600;
 }
 .tech-mbody {
   padding: 14px 16px 16px;
@@ -474,6 +493,9 @@
 }
 .tech-group-head.eye {
   color: var(--soft-text);
+}
+.tech-group-head.told {
+  color: var(--part-text);
 }
 .tech-group-head.rest {
   color: var(--plum-dark);
@@ -575,66 +597,6 @@
   }
   .tech-mbody .tech-draft {
     font-size: 13px;
-  }
-}
-
-/* ---- The printed sign ------------------------------------------------------------------------- */
-
-.tech-print {
-  display: none;
-}
-@media print {
-  @page {
-    margin: 0.6in;
-  }
-  .topbar,
-  .phone-top,
-  .tabs,
-  .archived-bar,
-  .toast,
-  .tech-screen {
-    display: none !important;
-  }
-  .has-tabs {
-    padding: 0 !important;
-  }
-  html,
-  body {
-    background: #fff !important;
-  }
-  .tech-print {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 18px;
-    padding-top: 0.3in;
-    color: #000;
-  }
-  .tech-print-show {
-    font-family: var(--cond);
-    font-size: 22px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-  .tech-print h1 {
-    font-family: var(--serif);
-    font-size: 64px;
-    font-weight: 700;
-    line-height: 1.05;
-  }
-  .tech-print svg {
-    width: 5in;
-    height: 5in;
-  }
-  .tech-print p {
-    font-size: 20px;
-    max-width: 6in;
-  }
-  .tech-print .tech-print-small {
-    font-size: 15px;
-    color: #444;
   }
 }
 
