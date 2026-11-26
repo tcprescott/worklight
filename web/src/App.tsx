@@ -19,6 +19,7 @@ import { SetupWizard } from "./pages/director/SetupWizard";
 import { ShowSettings } from "./pages/director/ShowSettings";
 import { Staff } from "./pages/director/Staff";
 import { Strike } from "./pages/director/Strike";
+import { LineNotesPage } from "./pages/LineNotes";
 import { StrikeTemplatePage } from "./pages/director/StrikeTemplate";
 import { MagicLink } from "./pages/MagicLink";
 import { MyShows } from "./pages/MyShows";
@@ -122,6 +123,9 @@ function ShowRoute(props: { showId: string; page: string; sub?: string }) {
       return <StageDoor {...pageProps} />;
     case "breakdown":
       return staff ? <Breakdown {...pageProps} /> : <NotForYou />;
+    case "notes":
+      // Staff and note-takers take notes; cast read their own. The page asks the server which.
+      return <LineNotesPage {...pageProps} />;
     case "strike":
       return staff ? <Strike {...pageProps} /> : <NotForYou />;
     case "people":

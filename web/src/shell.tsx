@@ -78,7 +78,7 @@ export function CompanyShell(props: { context?: string; children: ReactNode }) {
   );
 }
 
-export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "strike" | "settings";
+export type StaffTab = "schedule" | "breakdown" | "people" | "tech" | "callboard" | "notes" | "strike" | "settings";
 
 interface Tab {
   id: StaffTab;
@@ -96,6 +96,7 @@ export function staffTabs(view: ShowView): Tab[] {
     { id: "people", label: "People", icon: "people", path: `/shows/${id}/people` },
   ];
   tabs.push({ id: "callboard", label: "Callboard", icon: "megaphone", path: `/shows/${id}/callboard` });
+  tabs.push({ id: "notes", label: "Notes", icon: "edit", path: `/shows/${id}/notes` });
   if (view.show.techStart) tabs.push({ id: "tech", label: "Tech week", icon: "target", path: `/shows/${id}/tech` });
   // Strike shows from a week before tech (or opening, or closing) on.
   const from = view.show.techStart ?? view.show.openingDate ?? view.show.endDate;

@@ -1,4 +1,11 @@
 import type {
+  CreateLineNoteSetBody,
+  LineNote,
+  LineNoteSet,
+  LineNoteSetDetail,
+  LineNotesHome,
+  NoteFields,
+  ReleaseResult,
   AddStrikeTaskBody,
   StrikeChecklist,
   StrikeTask,
@@ -215,6 +222,19 @@ export const api = {
   deleteNotice: (showId: string, noticeId: string) => request<void>("DELETE", `${show(showId)}/notices/${e(noticeId)}`),
   markNoticesRead: (showId: string, noticeIds: string[]) =>
     request<void>("POST", `${show(showId)}/notices/read`, { noticeIds }),
+
+  // Line notes
+  lineNotes: (showId: string) => request<LineNotesHome>("GET", `${show(showId)}/notes`),
+  createLineNoteSet: (showId: string, input: CreateLineNoteSetBody) =>
+    request<LineNoteSet>("POST", `${show(showId)}/notes`, input),
+  lineNoteSet: (showId: string, setId: string) => request<LineNoteSetDetail>("GET", `${show(showId)}/notes/${e(setId)}`),
+  deleteLineNoteSet: (showId: string, setId: string) => request<void>("DELETE", `${show(showId)}/notes/${e(setId)}`),
+  addLineNotes: (showId: string, setId: string, notes: NoteFields[]) =>
+    request<LineNote[]>("POST", `${show(showId)}/notes/${e(setId)}/notes`, { notes }),
+  deleteLineNote: (showId: string, setId: string, noteId: string) =>
+    request<void>("DELETE", `${show(showId)}/notes/${e(setId)}/notes/${e(noteId)}`),
+  releaseLineNotes: (showId: string, setId: string) =>
+    request<ReleaseResult>("POST", `${show(showId)}/notes/${e(setId)}/release`),
 
   // Strike
   strike: (showId: string) => request<StrikeChecklist>("GET", `${show(showId)}/strike`),

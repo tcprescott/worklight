@@ -97,6 +97,7 @@ export function EditMemberDialog(props: {
   const [role, setRole] = useState<ShowRole>(m.role);
   const [title, setTitle] = useState(m.title ?? "");
   const [department, setDepartment] = useState(m.department ?? "");
+  const [noteTaker, setNoteTaker] = useState(Boolean(m.noteTaker));
   const [error, setError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
@@ -108,6 +109,7 @@ export function EditMemberDialog(props: {
         role,
         title: title.trim() || null,
         department: department.trim() || null,
+        noteTaker: role === "crew" && noteTaker,
       });
       await props.onSaved(`Saved ${props.person.name}`);
       props.onClose();
@@ -164,6 +166,15 @@ export function EditMemberDialog(props: {
           </label>
         </div>
         {role === "cast" && <span className="hint">Cast are listed under Cast. Department only groups crew and staff.</span>}
+        {role === "crew" && (
+          <label className="check-row">
+            <input type="checkbox" checked={noteTaker} onChange={(e) => setNoteTaker(e.target.checked)} />
+            <span>
+              Can take line notes
+              <span className="hint"> Their notes stay drafts until staff release them.</span>
+            </span>
+          </label>
+        )}
         <FormError error={error} />
         <div className="dialog-actions">
           <button type="button" className="btn" onClick={props.onClose}>

@@ -10,6 +10,7 @@ import { ErrorView, FormError, Icon, Loading, Sheet, useToast } from "../../ui";
 import { useAsync } from "../../useAsync";
 import { callWhat, directionsUrl, lowerFirst, useDirector, useStageManager } from "./actorLib";
 import { CalendarLinks, downloadCallIcs } from "./CalendarLinks";
+import { LineNotesCard } from "../LineNotes";
 import { MyStrikeTasks } from "./StrikeTasks";
 import "./actor.css";
 
@@ -99,6 +100,7 @@ export function MyCalls(props: ShowPageProps) {
               </div>
             </div>
           )}
+          <LineNotesCard showId={show.showId} />
           <MyStrikeTasks showId={show.showId} userId={me.user.userId} />
           <div className="actor-section-head actor-calls-head">
             <h2>All your calls</h2>

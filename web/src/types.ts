@@ -91,3 +91,16 @@ export type AddStrikeTaskBody = Schemas["AddTaskBody"];
 export type UpdateStrikeTaskBody = Schemas["UpdateTaskBody"];
 export type StrikeTemplate = Schemas["StrikeTemplate"];
 export type StrikeTemplateLine = Schemas["TemplateLine"];
+
+export type LineNotesHome = Schemas["LineNotesHome"];
+export type LineNoteSet = Schemas["LineNoteSet"];
+export type LineNoteSetSummary = Schemas["LineNoteSetSummary"];
+export type LineNoteSetDetail = Schemas["LineNoteSetDetail"];
+export type LineNote = Schemas["LineNote"];
+export type LineNoteView = Schemas["LineNoteView"];
+export type LineNoteKind = LineNote["kind"];
+export type CastOption = Schemas["CastOption"];
+export type ActorStatus = Schemas["ActorStatus"];
+export type NoteFields = Schemas["NoteFields"];
+export type CreateLineNoteSetBody = Schemas["CreateSetBody"];
+export type ReleaseResult = Schemas["ReleaseResult"];

@@ -204,7 +204,7 @@ def line_notes_email(
     """Says notes are waiting, without the notes themselves: they open in the app, just for the actor."""
     plural = "s" if count != 1 else ""
     when = _pretty_date(date)
-    intro = f"{sender} sent you {count} line note{plural} from {title} ({when}). Only you can see them."
+    intro = f"{sender} sent you {count} line note{plural} from {title} ({when}). They're just for you."
     return Email(
         to=to,
         subject=f"{show_name}: your line notes from {title}",

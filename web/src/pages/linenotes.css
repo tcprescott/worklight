@@ -1,0 +1,351 @@
+/* Line notes: tap an actor, tap what happened, type the line. Actors read theirs like a paper note sheet. */
+
+.ln-page {
+  max-width: 640px;
+}
+.ln-head {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ln-head p {
+  margin: 0;
+  max-width: 60ch;
+}
+.ln-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.85;
+}
+
+/* Starting a set */
+.ln-new {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 10px 12px;
+  align-items: end;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.ln-new .btn {
+  grid-column: 1 / -1;
+  justify-self: start;
+}
+@media (max-width: 480px) {
+  .ln-new {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* A list of sets */
+.ln-sets {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+.ln-set {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--rule);
+  color: inherit;
+  text-decoration: none;
+}
+.ln-set:last-child {
+  border-bottom: none;
+}
+.ln-set:hover {
+  background: var(--sand-2);
+}
+.ln-set-date {
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.ln-set-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.ln-tag {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.ln-tag-draft {
+  background: var(--soft-bg);
+  color: var(--soft-text);
+}
+.ln-tag-sent {
+  background: var(--sand);
+  color: var(--ink-2);
+}
+.ln-tag-new {
+  background: var(--plum-tint);
+  color: var(--plum);
+  border: 1px solid var(--plum-line);
+}
+
+/* The dark call-sheet bar over a set */
+.ln-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: var(--stage);
+  color: var(--stage-text);
+}
+.ln-bar-kicker {
+  font-family: var(--cond);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+.ln-bar-title {
+  font-family: var(--serif);
+  font-size: 21px;
+  color: #fff;
+}
+.ln-bar-when {
+  font-family: var(--cond);
+  font-size: 16px;
+}
+
+/* Taking a note */
+.ln-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+}
+.ln-chips,
+.ln-parts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ln-chip-n {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.ln-part {
+  min-height: 30px;
+}
+.ln-kinds {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.ln-kind {
+  min-height: 44px;
+  padding: 6px 4px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  background: var(--sand-2);
+  color: var(--ink);
+  font-family: var(--cond);
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.ln-kind[aria-pressed="true"] {
+  background: var(--stage);
+  border-color: var(--stage);
+  color: #fff;
+}
+.ln-kind:focus-visible,
+.ln-set:focus-visible,
+.ln-card:focus-visible {
+  outline: 2px solid var(--plum);
+  outline-offset: 2px;
+}
+.ln-where {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 10px;
+}
+
+/* Notes in page order */
+.ln-list {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-top: 2px solid var(--ink);
+  border-bottom: 1px solid var(--rule);
+}
+.ln-list-head {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: var(--sand-2);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--cond);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.ln-list-empty {
+  padding: 12px 14px;
+  margin: 0;
+}
+.ln-note {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  align-items: start;
+}
+.ln-note:last-child {
+  border-bottom: none;
+}
+.ln-pg {
+  font-family: var(--cond);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+.ln-pg small {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.ln-note-body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.ln-note-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.ln-code {
+  font-family: var(--cond);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: var(--sand);
+  color: var(--ink-2);
+}
+.ln-said {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+.ln-said .caps {
+  font-family: var(--sans);
+  margin-right: 4px;
+}
+.ln-comment {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-grid;
+  place-items: center;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.btn-icon:hover {
+  background: var(--sand-2);
+  color: var(--ink);
+}
+
+/* Release and who has opened */
+.ln-release {
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.ln-release > .row {
+  padding: 14px;
+}
+.ln-status {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  font-variant-numeric: tabular-nums;
+}
+.ln-opened {
+  font-size: 13px;
+  color: #2f6b3a;
+}
+.ln-release-foot {
+  padding: 10px 14px;
+  margin: 0;
+}
+.ln-confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px;
+  background: var(--soft-bg);
+}
+
+/* The card on My calls */
+.ln-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  margin: 12px 16px 4px;
+  padding: 12px 14px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  color: inherit;
+  text-decoration: none;
+}
+.ln-card > span:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+}
+.ln-card svg {
+  color: var(--plum);
+}
