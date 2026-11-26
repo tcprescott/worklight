@@ -296,7 +296,7 @@
         "type": "object"
       },
       "ApiKey": {
-        "description": "A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.",
+        "description": "A key for the public REST, GraphQL and MCP APIs. It acts as the person who made it.",
         "properties": {
           "createdAt": {
             "title": "Createdat",
@@ -308,6 +308,15 @@
           },
           "keyId": {
             "title": "Keyid",
+            "type": "string"
+          },
+          "kind": {
+            "default": "company",
+            "enum": [
+              "company",
+              "personal"
+            ],
+            "title": "Kind",
             "type": "string"
           },
           "lastUsedAt": {
@@ -339,13 +348,19 @@
             "type": "string"
           },
           "theaterId": {
-            "title": "Theaterid",
-            "type": "string"
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theaterid"
           }
         },
         "required": [
           "keyId",
-          "theaterId",
           "name",
           "prefix",
           "createdBy",
@@ -1790,6 +1805,21 @@
           "email"
         ],
         "title": "CreateInviteBody",
+        "type": "object"
+      },
+      "CreatePersonalKeyBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "CreatePersonalKeyBody",
         "type": "object"
       },
       "CreateSceneBody": {
@@ -6510,6 +6540,96 @@
           }
         },
         "summary": "Update Me"
+      }
+    },
+    "/api/me/api-keys": {
+      "get": {
+        "operationId": "list_keys_api_me_api_keys_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ApiKey"
+                  },
+                  "title": "Response List Keys Api Me Api Keys Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Keys"
+      },
+      "post": {
+        "operationId": "create_key_api_me_api_keys_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePersonalKeyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewApiKey"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Key"
+      }
+    },
+    "/api/me/api-keys/{key_id}": {
+      "delete": {
+        "operationId": "revoke_key_api_me_api_keys__key_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key_id",
+            "required": true,
+            "schema": {
+              "title": "Key Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Revoke Key"
       }
     },
     "/api/me/calendar": {

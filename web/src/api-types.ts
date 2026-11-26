@@ -39,6 +39,41 @@ export interface paths {
         patch: operations["update_me_api_me_patch"];
         trace?: never;
     };
+    "/api/me/api-keys": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Keys */
+        get: operations["list_keys_api_me_api_keys_get"];
+        put?: never;
+        /** Create Key */
+        post: operations["create_key_api_me_api_keys_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/me/api-keys/{key_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Revoke Key */
+        delete: operations["revoke_key_api_me_api_keys__key_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/me/calendar": {
         parameters: {
             query?: never;
@@ -1247,7 +1282,7 @@ export interface components {
         };
         /**
          * ApiKey
-         * @description A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it.
+         * @description A key for the public REST, GraphQL and MCP APIs. It acts as the person who made it.
          */
         ApiKey: {
             /** Createdat */
@@ -1256,6 +1291,12 @@ export interface components {
             createdBy: string;
             /** Keyid */
             keyId: string;
+            /**
+             * Kind
+             * @default company
+             * @enum {string}
+             */
+            kind: "company" | "personal";
             /** Lastusedat */
             lastUsedAt?: string | null;
             /** Name */
@@ -1269,7 +1310,7 @@ export interface components {
              */
             scope: "read" | "write";
             /** Theaterid */
-            theaterId: string;
+            theaterId?: string | null;
         };
         /** Appearance */
         Appearance: {
@@ -1766,6 +1807,11 @@ export interface components {
             role: "staff" | "cast" | "crew";
             /** Title */
             title?: string | null;
+        };
+        /** CreatePersonalKeyBody */
+        CreatePersonalKeyBody: {
+            /** Name */
+            name: string;
         };
         /** CreateSceneBody */
         CreateSceneBody: {
@@ -3320,6 +3366,88 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["User"];
                 };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_keys_api_me_api_keys_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ApiKey"][];
+                };
+            };
+        };
+    };
+    create_key_api_me_api_keys_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreatePersonalKeyBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NewApiKey"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    revoke_key_api_me_api_keys__key_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
             /** @description Validation Error */
             422: {

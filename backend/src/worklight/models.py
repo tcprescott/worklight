@@ -428,13 +428,18 @@ class NoticeRead(Model):
 # ---- API keys --------------------------------------------------------------------------------------
 
 ApiKeyScope = Literal["read", "write"]
+# company: made by a company admin, acts as them across the company. personal: anyone's own read-only key,
+# acting as them in the shows they're in (their calls, their line notes).
+ApiKeyKind = Literal["company", "personal"]
 
 
 class ApiKey(Model):
-    """A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it."""
+    """A key for the public REST, GraphQL and MCP APIs. It acts as the person who made it."""
 
     key_id: str
-    theater_id: str
+    kind: ApiKeyKind = "company"
+    # Company keys only; personal keys reach every show their owner is in.
+    theater_id: str | None = None
     name: str
     scope: ApiKeyScope = "read"
     # The first characters of the secret, so people can tell keys apart. The secret itself is never stored.

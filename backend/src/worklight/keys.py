@@ -27,7 +27,8 @@ MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
 THEATER#<id>   STRIKE#<taskId>   company strike template task
-APIKEY#<hash>  META              secret hash -> theaterId, keyId
+USER#<id>      APIKEY#<keyId>    personal API key (no secret)
+APIKEY#<hash>  META              secret hash -> theaterId or userId, keyId
 RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
 
@@ -151,6 +152,10 @@ def strike_template_task(theater_id: str, task_id: str) -> Key:
 
 def api_key(theater_id: str, key_id: str) -> Key:
     return {"PK": f"THEATER#{theater_id}", "SK": f"APIKEY#{key_id}"}
+
+
+def personal_api_key(user_id: str, key_id: str) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": f"APIKEY#{key_id}"}
 
 
 def api_key_secret(secret_hash: str) -> Key:

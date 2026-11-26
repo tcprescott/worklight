@@ -18,6 +18,7 @@ from pydantic import ValidationError
 from starlette.types import Receive, Scope, Send
 
 from worklight.models import Model
+from worklight.services import accounts as accounts_service
 from worklight.services import breakdown as breakdown_service
 from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
@@ -33,8 +34,10 @@ _principal: ContextVar[KeyPrincipal] = ContextVar("worklight_mcp_principal")
 
 INSTRUCTIONS = (
     "Worklight schedules rehearsals for a community theater company. Dates are YYYY-MM-DD and times HH:MM in "
-    "the show's timezone. Start with list_shows. Conflicts: hard means can't come, soft means would rather "
-    "not, partial means arriving late or leaving early, elsewhere means another show has called them."
+    "the show's timezone. Start with list_shows. A personal key reads only what its owner sees in the app: "
+    "use my_calls and my_line_notes for an actor's own schedule and notes. Conflicts: hard means can't "
+    "come, soft means would rather not, partial means arriving late or leaving early, elsewhere means "
+    "another show has called them."
 )
 
 
@@ -89,7 +92,24 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
     )
     def list_shows() -> str:
         p = who()
-        return _out(theaters_service.get_theater(ctx, p.user, p.key.theater_id).shows)
+        if p.personal:
+            return _out(accounts_service.get_me(ctx, p.user).shows)
+        return _out(theaters_service.get_theater(ctx, p.user, str(p.key.theater_id)).shows)
+
+    @server.tool(
+        description="The calls (rehearsals, performances) that need the key's owner, from today on, in one "
+        "show or all of their shows"
+    )
+    def my_calls(show_id: str | None = None) -> str:
+        p = who()
+        return _out(schedule_service.my_calls(ctx, p.user, scoped(show_id) if show_id else None))
+
+    @server.tool(
+        description="The key owner's own line notes in a show: every released set, newest first, with each "
+        "note's page, what the script says and what they said. Good for running lines with them."
+    )
+    def my_line_notes(show_id: str) -> str:
+        return _out(linenotes_service.my_notes(ctx, who().user, scoped(show_id)))
 
     @server.tool(description="One show's settings: venue, timezone, rehearsal nights, tech week, opening")
     def get_show(show_id: str) -> str:

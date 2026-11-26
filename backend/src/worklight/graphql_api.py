@@ -305,7 +305,9 @@ class Query:
     @strawberry.field(description="The company this API key belongs to, with its shows")
     def theater(self, info: GInfo) -> Theater:
         c = info.context
-        view = theaters_service.get_theater(c.ctx, c.principal.user, c.principal.key.theater_id)
+        if c.principal.personal:
+            raise ServiceError("Personal keys don't reach the company. Ask for a show by its id instead.")
+        view = theaters_service.get_theater(c.ctx, c.principal.user, str(c.principal.key.theater_id))
         return Theater(
             theater_id=strawberry.ID(view.theater.theater_id),
             name=view.theater.name,

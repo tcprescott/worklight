@@ -217,3 +217,83 @@ def test_line_notes_over_mcp(call: Client, mailer: FakeMailer) -> None:
     assert [n["kindLabel"] for n in detail["notes"]] == ["Jumped cue", "Dropped line"]
     released = json.loads(tool("release_line_notes", show_id=show["id"], set_id=set_id)["content"][0]["text"])
     assert released["actorCount"] == 2
+
+
+def test_actor_reads_own_notes_with_a_personal_key(call: Client, mailer: FakeMailer) -> None:
+    show = _show(call, mailer)
+    base = show["base"]
+    set_id = _set(call, show)
+    call.ok(
+        DIRECTOR,
+        "POST",
+        f"{base}/notes/{set_id}/notes",
+        {
+            "notes": [
+                {"actorId": show["maya"], "kind": "dropped", "page": "3", "scriptText": "O hell!"},
+                {"actorId": show["jay"], "kind": "called", "page": "4"},
+            ]
+        },
+    )
+    call.ok(DIRECTOR, "POST", f"{base}/notes/{set_id}/release")
+
+    made = call.ok("maya@example.org", "POST", "/api/me/api-keys", {"name": "Claude"})
+    assert (
+        made["key"]["kind"] == "personal"
+        and made["key"]["scope"] == "read"
+        and "theaterId" not in made["key"]
+    )
+    key = made["secret"]
+    assert [k["name"] for k in call.ok("maya@example.org", "GET", "/api/me/api-keys")] == ["Claude"]
+    # Other people don't see it, and the company list doesn't include it.
+    assert call.ok("jay@example.org", "GET", "/api/me/api-keys") == []
+
+    def tool(name: str, **arguments: Any) -> Any:
+        status, body = call(
+            None,
+            "POST",
+            "/mcp",
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": name, "arguments": arguments},
+            },
+            headers=_as(key),
+        )
+        assert status == 200, body
+        return body["result"]
+
+    shows = json.loads(tool("list_shows")["content"][0]["text"])
+    assert [s["show"]["showId"] for s in shows] == [show["id"]]
+    mine = json.loads(tool("my_line_notes", show_id=show["id"])["content"][0]["text"])
+    assert [[n["actorId"] for n in s["notes"]] for s in mine] == [[show["maya"]]]
+    # Opening them over MCP counts as opening them.
+    actors = {a["userId"]: a for a in call.ok(DIRECTOR, "GET", f"{base}/notes/{set_id}")["actors"]}
+    assert actors[show["maya"]]["openedAt"]
+
+    # Read only, and only as Maya: no drafts, no filing, nothing in other companies.
+    assert tool(
+        "add_line_notes", show_id=show["id"], set_id=set_id, notes=[{"actorId": show["jay"], "kind": "late"}]
+    )["isError"]
+    assert tool("get_line_notes", show_id=show["id"], set_id="nope")["isError"]
+    status, _ = call(None, "GET", f"/api/v1/shows/{show['id']}/notes/{set_id}", headers=_as(key))
+    assert status == 200
+    assert (
+        call(
+            None,
+            "POST",
+            f"/api/v1/shows/{show['id']}/notes",
+            {"date": "2026-11-26", "title": "x"},
+            headers=_as(key),
+        )[0]
+        == 403
+    )
+    other_theater = call.ok("other@example.org", "POST", "/api/theaters", {"name": "Elsewhere"})["theaterId"]
+    assert call(None, "GET", f"/api/v1/theaters/{other_theater}", headers=_as(key))[0] == 404
+
+    # Revoked keys stop working.
+    call.ok("maya@example.org", "DELETE", f"/api/me/api-keys/{made['key']['keyId']}")
+    assert (
+        call(None, "POST", "/mcp", {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}, headers=_as(key))[0]
+        == 401
+    )

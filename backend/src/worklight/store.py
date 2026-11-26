@@ -242,16 +242,23 @@ class DynamoStore:
 
     # ---- API keys -----------------------------------------------------------------------------
 
+    @staticmethod
+    def _api_key_key(key: ApiKey) -> keys.Key:
+        if key.kind == "personal":
+            return keys.personal_api_key(key.created_by, key.key_id)
+        return keys.api_key(str(key.theater_id), key.key_id)
+
     def put_api_key(self, key: ApiKeyRecord) -> None:
         secret_hash = key.secret_hash
+        owner = {"userId": key.created_by} if key.kind == "personal" else {"theaterId": key.theater_id}
         self.db.transact_write_items(
             TransactItems=[
-                self._tx_put(_item(keys.api_key(key.theater_id, key.key_id), "apiKey", key), new=True),
+                self._tx_put(_item(self._api_key_key(key), "apiKey", key), new=True),
                 self._tx_put(
                     {
                         **keys.api_key_secret(secret_hash),
                         "entity": "apiKeySecret",
-                        "theaterId": key.theater_id,
+                        **owner,
                         "keyId": key.key_id,
                     },
                     new=True,
@@ -263,20 +270,28 @@ class DynamoStore:
         items = self._query_all(f"THEATER#{theater_id}", keys.APIKEY_PREFIX)
         return [ApiKeyRecord.model_validate(i) for i in items]
 
+    def list_personal_api_keys(self, user_id: str) -> list[ApiKeyRecord]:
+        items = self._query_all(f"USER#{user_id}", keys.APIKEY_PREFIX)
+        return [ApiKeyRecord.model_validate(i) for i in items]
+
     def get_api_key_by_secret(self, secret_hash: str) -> ApiKeyRecord | None:
         pointer = self._get(keys.api_key_secret(secret_hash))
         if not pointer:
             return None
-        item = self._get(keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"])))
+        if "userId" in pointer:
+            key = keys.personal_api_key(str(pointer["userId"]), str(pointer["keyId"]))
+        else:
+            key = keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"]))
+        item = self._get(key)
         return ApiKeyRecord.model_validate(item) if item else None
 
     def delete_api_key(self, key: ApiKeyRecord) -> None:
-        self._batch_delete([keys.api_key(key.theater_id, key.key_id), keys.api_key_secret(key.secret_hash)])
+        self._batch_delete([self._api_key_key(key), keys.api_key_secret(key.secret_hash)])
 
     def touch_api_key(self, key: ApiKey, at: str) -> None:
         self.db.update_item(
             TableName=self.table,
-            Key=_to_ddb(keys.api_key(key.theater_id, key.key_id)),
+            Key=_to_ddb(self._api_key_key(key)),
             UpdateExpression="SET lastUsedAt = :at",
             ConditionExpression="attribute_exists(PK)",
             ExpressionAttributeValues={":at": {"S": at}},

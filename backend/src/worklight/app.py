@@ -120,6 +120,7 @@ def create_app(ctx: Ctx) -> FastAPI:
         apikeys,
     ):
         app.include_router(module.router(ctx, current_user))
+    app.include_router(apikeys.personal_router(ctx, current_user))
 
     # The public REST API: the same routes under /api/v1, signed in with an API key instead of Cognito.
     # API Gateway sends /api/v1/* here without its JWT authorizer, so these never see Cognito claims.
