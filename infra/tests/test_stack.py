@@ -142,3 +142,19 @@ def test_public_apis_skip_the_cognito_authorizer(template: Template) -> None:
         "AWS::ApiGatewayV2::Stage",
         {"DefaultRouteSettings": {"ThrottlingBurstLimit": 100, "ThrottlingRateLimit": 50}},
     )
+
+
+def test_keeps_safety_info_in_its_own_table_only_the_api_can_reach(template: Template) -> None:
+    tables = template.find_resources("AWS::DynamoDB::GlobalTable")
+    assert len(tables) == 2
+    safety_id = next(k for k in tables if k.startswith("SafetyTable"))
+    functions = template.find_resources("AWS::Lambda::Function")
+    with_env = [
+        k
+        for k, f in functions.items()
+        if "SAFETY_TABLE_NAME" in f["Properties"].get("Environment", {}).get("Variables", {})
+    ]
+    assert len(with_env) == 1 and with_env[0].startswith("ApiFunction")
+    policies = template.find_resources("AWS::IAM::Policy")
+    granted = [k for k, p in policies.items() if safety_id in str(p["Properties"]["PolicyDocument"])]
+    assert len(granted) == 1 and granted[0].startswith("ApiFunction")

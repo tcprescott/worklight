@@ -84,6 +84,9 @@ class Membership(Model):
     joined_at: str | None = None
     # When the person last pressed Send on their conflicts for this show.
     conflicts_submitted_at: str | None = None
+    # Staff only: may read people's medical notes on this show. On for the show's creator; staff with
+    # it (or a company admin) turn it on for others.
+    medical_access: bool = False
 
 
 class NotifyPrefs(Model):
@@ -408,6 +411,8 @@ class Member(Model):
     department: str | None = None
     status: MemberStatus
     conflicts_submitted_at: str | None = None
+    # Only staff see this.
+    medical_access: bool | None = None
 
 
 class InviteSent(Model):
@@ -461,3 +466,101 @@ class TheaterView(Model):
     theater: Theater
     admins: list[Admin]
     shows: list[ShowSummary]
+
+
+# ---- Safety info ---------------------------------------------------------------------------------
+# Kept in a table of its own (see SafetyStore), never in the main table, so its IAM grant and backups are
+# separate. It belongs to the person across shows; staff of a show the person is in can read it only
+# while that show is active, and every read is logged for the person to see.
+
+
+class EmergencyContact(Model):
+    name: str
+    # e.g. "Mother", "Spouse", "Roommate".
+    relationship: str | None = None
+    phone: str
+    alt_phone: str | None = None
+    # A parent or legal guardian of a minor.
+    guardian: bool = False
+
+
+class ApprovedPickup(Model):
+    """An adult a minor may leave rehearsal with."""
+
+    name: str
+    # e.g. "Neighbor, silver minivan".
+    note: str | None = None
+
+
+class MedicalNotes(Model):
+    allergies: str | None = None
+    conditions: str | None = None
+    medications: str | None = None
+    # Anything else staff should know in an emergency.
+    other: str | None = None
+
+    def is_empty(self) -> bool:
+        return not any((self.allergies, self.conditions, self.medications, self.other))
+
+
+class SafetyInfo(Model):
+    user_id: str
+    minor: bool = False
+    contacts: list[EmergencyContact] = []
+    # Only used when minor is set.
+    pickups: list[ApprovedPickup] = []
+    medical: MedicalNotes | None = None
+    updated_at: str
+
+
+SafetyView = Literal["contacts", "medical"]
+
+
+class SafetyAccess(Model):
+    """One staff member looking at one person's safety info, at most one entry per kind per day."""
+
+    user_id: str
+    viewer_id: str
+    viewer_name: str | None = None
+    viewer_title: str | None = None
+    show_id: str
+    show_name: str
+    view: SafetyView
+    # Last time that day.
+    at: str
+    # Epoch seconds; the log is kept for a year.
+    expires_at: int
+
+
+class SafetyAccessView(Model):
+    viewer_name: str | None = None
+    viewer_title: str | None = None
+    show_name: str
+    view: SafetyView
+    at: str
+
+
+class MemberSafety(Model):
+    """A row on a show's Safety page. Medical notes are fetched one person at a time."""
+
+    user_id: str
+    name: str | None = None
+    role: ShowRole
+    title: str | None = None
+    minor: bool = False
+    contacts: list[EmergencyContact] = []
+    pickups: list[ApprovedPickup] = []
+    # Whether the person has medical notes on file. Shown to every staff member, so they know to ask.
+    has_medical: bool = False
+
+
+class ShowSafety(Model):
+    members: list[MemberSafety]
+    # Whether the caller may open medical notes on this show.
+    medical_access: bool
+
+
+class MemberMedical(Model):
+    user_id: str
+    name: str | None = None
+    medical: MedicalNotes | None = None

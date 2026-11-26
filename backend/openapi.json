@@ -267,6 +267,31 @@
         "title": "Appearance",
         "type": "object"
       },
+      "ApprovedPickup": {
+        "description": "An adult a minor may leave rehearsal with.",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ApprovedPickup",
+        "type": "object"
+      },
       "Attendance": {
         "properties": {
           "checkins": {
@@ -1307,6 +1332,59 @@
         "title": "CheckInResult",
         "type": "object"
       },
+      "ContactBody": {
+        "properties": {
+          "altPhone": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Altphone"
+          },
+          "guardian": {
+            "default": false,
+            "title": "Guardian",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "maxLength": 40,
+            "minLength": 1,
+            "title": "Phone",
+            "type": "string"
+          },
+          "relationship": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relationship"
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ],
+        "title": "ContactBody",
+        "type": "object"
+      },
       "CreateApiKeyBody": {
         "properties": {
           "name": {
@@ -2053,6 +2131,51 @@
         "title": "DoorCode",
         "type": "object"
       },
+      "EmergencyContact": {
+        "properties": {
+          "altPhone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Altphone"
+          },
+          "guardian": {
+            "default": false,
+            "title": "Guardian",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "phone": {
+            "title": "Phone",
+            "type": "string"
+          },
+          "relationship": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Relationship"
+          }
+        },
+        "required": [
+          "name",
+          "phone"
+        ],
+        "title": "EmergencyContact",
+        "type": "object"
+      },
       "HTTPValidationError": {
         "properties": {
           "detail": {
@@ -2254,6 +2377,114 @@
         "title": "Me",
         "type": "object"
       },
+      "MedicalBody": {
+        "properties": {
+          "allergies": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allergies"
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "medications": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medications"
+          },
+          "other": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          }
+        },
+        "title": "MedicalBody",
+        "type": "object"
+      },
+      "MedicalNotes": {
+        "properties": {
+          "allergies": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Allergies"
+          },
+          "conditions": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conditions"
+          },
+          "medications": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medications"
+          },
+          "other": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Other"
+          }
+        },
+        "title": "MedicalNotes",
+        "type": "object"
+      },
       "Member": {
         "properties": {
           "conflictsSubmittedAt": {
@@ -2288,6 +2519,17 @@
               }
             ],
             "title": "Email"
+          },
+          "medicalAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medicalaccess"
           },
           "name": {
             "anyOf": [
@@ -2368,6 +2610,112 @@
           "dates"
         ],
         "title": "MemberConflicts",
+        "type": "object"
+      },
+      "MemberMedical": {
+        "properties": {
+          "medical": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MedicalNotes"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "title": "MemberMedical",
+        "type": "object"
+      },
+      "MemberSafety": {
+        "description": "A row on a show's Safety page. Medical notes are fetched one person at a time.",
+        "properties": {
+          "contacts": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/EmergencyContact"
+            },
+            "title": "Contacts",
+            "type": "array"
+          },
+          "hasMedical": {
+            "default": false,
+            "title": "Hasmedical",
+            "type": "boolean"
+          },
+          "minor": {
+            "default": false,
+            "title": "Minor",
+            "type": "boolean"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "pickups": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ApprovedPickup"
+            },
+            "title": "Pickups",
+            "type": "array"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "role"
+        ],
+        "title": "MemberSafety",
         "type": "object"
       },
       "MyCall": {
@@ -2836,6 +3184,34 @@
         "title": "NotifyPrefs",
         "type": "object"
       },
+      "PickupBody": {
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "PickupBody",
+        "type": "object"
+      },
       "PostNoticeBody": {
         "properties": {
           "audience": {
@@ -3119,6 +3495,143 @@
           "minutes"
         ],
         "title": "RunningLateBody",
+        "type": "object"
+      },
+      "SafetyAccessView": {
+        "properties": {
+          "at": {
+            "title": "At",
+            "type": "string"
+          },
+          "showName": {
+            "title": "Showname",
+            "type": "string"
+          },
+          "view": {
+            "enum": [
+              "contacts",
+              "medical"
+            ],
+            "title": "View",
+            "type": "string"
+          },
+          "viewerName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Viewername"
+          },
+          "viewerTitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Viewertitle"
+          }
+        },
+        "required": [
+          "showName",
+          "view",
+          "at"
+        ],
+        "title": "SafetyAccessView",
+        "type": "object"
+      },
+      "SafetyBody": {
+        "properties": {
+          "contacts": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ContactBody"
+            },
+            "maxItems": 5,
+            "title": "Contacts",
+            "type": "array"
+          },
+          "medical": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MedicalBody"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minor": {
+            "default": false,
+            "title": "Minor",
+            "type": "boolean"
+          },
+          "pickups": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/PickupBody"
+            },
+            "maxItems": 10,
+            "title": "Pickups",
+            "type": "array"
+          }
+        },
+        "title": "SafetyBody",
+        "type": "object"
+      },
+      "SafetyInfo": {
+        "properties": {
+          "contacts": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/EmergencyContact"
+            },
+            "title": "Contacts",
+            "type": "array"
+          },
+          "medical": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/MedicalNotes"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "minor": {
+            "default": false,
+            "title": "Minor",
+            "type": "boolean"
+          },
+          "pickups": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ApprovedPickup"
+            },
+            "title": "Pickups",
+            "type": "array"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "updatedAt"
+        ],
+        "title": "SafetyInfo",
         "type": "object"
       },
       "SaveConflictsBody": {
@@ -3604,6 +4117,40 @@
         "title": "ShowDayView",
         "type": "object"
       },
+      "ShowSafetyPage": {
+        "properties": {
+          "medicalAccess": {
+            "title": "Medicalaccess",
+            "type": "boolean"
+          },
+          "members": {
+            "items": {
+              "$ref": "#/components/schemas/MemberSafety"
+            },
+            "title": "Members",
+            "type": "array"
+          },
+          "tonight": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/TonightPickup"
+            },
+            "title": "Tonight",
+            "type": "array"
+          },
+          "tonightDate": {
+            "title": "Tonightdate",
+            "type": "string"
+          }
+        },
+        "required": [
+          "members",
+          "medicalAccess",
+          "tonightDate"
+        ],
+        "title": "ShowSafetyPage",
+        "type": "object"
+      },
       "ShowSummary": {
         "properties": {
           "castCount": {
@@ -3962,6 +4509,24 @@
         "title": "TimedBlock",
         "type": "object"
       },
+      "TonightPickup": {
+        "properties": {
+          "ends": {
+            "title": "Ends",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "ends"
+        ],
+        "title": "TonightPickup",
+        "type": "object"
+      },
       "UpdateCallBody": {
         "properties": {
           "blocks": {
@@ -4247,6 +4812,17 @@
               }
             ],
             "title": "Department"
+          },
+          "medicalAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Medicalaccess"
           },
           "role": {
             "anyOf": [
@@ -5535,6 +6111,91 @@
           }
         },
         "summary": "Test Push"
+      }
+    },
+    "/api/me/safety": {
+      "delete": {
+        "operationId": "delete_mine_api_me_safety_delete",
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Delete Mine"
+      },
+      "get": {
+        "operationId": "get_mine_api_me_safety_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafetyInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Get Mine"
+      },
+      "put": {
+        "operationId": "put_mine_api_me_safety_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SafetyBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SafetyInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Mine"
+      }
+    },
+    "/api/me/safety/views": {
+      "get": {
+        "operationId": "my_views_api_me_safety_views_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SafetyAccessView"
+                  },
+                  "title": "Response My Views Api Me Safety Views Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "My Views"
       }
     },
     "/api/public/calendar/{token}.ics": {
@@ -7106,6 +7767,93 @@
           }
         },
         "summary": "Running Late"
+      }
+    },
+    "/api/shows/{show_id}/safety": {
+      "get": {
+        "operationId": "show_safety_api_shows__show_id__safety_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShowSafetyPage"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Show Safety"
+      }
+    },
+    "/api/shows/{show_id}/safety/{member_id}/medical": {
+      "get": {
+        "operationId": "member_medical_api_shows__show_id__safety__member_id__medical_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "member_id",
+            "required": true,
+            "schema": {
+              "title": "Member Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MemberMedical"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Member Medical"
       }
     },
     "/api/shows/{show_id}/scenes": {

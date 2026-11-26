@@ -12,6 +12,7 @@ from worklight.mailer import Mailer
 from worklight.models import Membership, Show, ShowRole, User
 from worklight.push import Pusher
 from worklight.roles import ShowAction, can_on_show
+from worklight.safety_store import SafetyStore
 from worklight.store import Store
 
 
@@ -54,6 +55,8 @@ class Ctx:
     app_url: str
     # Push channels; empty means push is off for this deployment.
     push: Pusher = field(default_factory=Pusher)
+    # Emergency contacts and medical notes, in their own table. None where a function isn't granted it.
+    safety: SafetyStore | None = None
 
     def link(self, path: str) -> str:
         return f"{self.app_url.rstrip('/')}{path}"

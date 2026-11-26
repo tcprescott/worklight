@@ -13,6 +13,9 @@ ShowAction = Literal[
     "callboard:post",
     "conflicts:read-all",
     "conflicts:edit-own",
+    # Emergency contacts of the people in an active show. Medical notes also need the member's
+    # medicalAccess switch.
+    "safety:read",
 ]
 TheaterAction = Literal["theater:edit", "shows:create", "billing:manage"]
 

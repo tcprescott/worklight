@@ -82,6 +82,20 @@ class WorklightStack(Stack):
             removal_policy=RemovalPolicy.RETAIN,
         )
 
+        # Emergency contacts, medical notes and who looked at them. A table of its own so only the API
+        # function is granted it, and its backups and exports are separate from the main table's.
+        # Encrypted at rest with DynamoDB's default AWS-owned key.
+        safety_table = dynamodb.TableV2(
+            self,
+            "SafetyTable",
+            partition_key=dynamodb.Attribute(name="PK", type=dynamodb.AttributeType.STRING),
+            sort_key=dynamodb.Attribute(name="SK", type=dynamodb.AttributeType.STRING),
+            billing=dynamodb.Billing.on_demand(),
+            time_to_live_attribute="expiresAt",
+            deletion_protection=True,
+            removal_policy=RemovalPolicy.RETAIN,
+        )
+
         # ---- Site (S3 + CloudFront) -------------------------------------------------------------
 
         site_bucket = s3.Bucket(
@@ -221,6 +235,8 @@ class WorklightStack(Stack):
 
         # FastAPI imports more than the small triggers, so the API gets more memory (and CPU) for cold starts.
         api_fn = fn("ApiFunction", "api.handler", sends_email=True, memory=512)
+        safety_table.grant_read_write_data(api_fn)
+        api_fn.add_environment("SAFETY_TABLE_NAME", safety_table.table_name)
         pre_sign_up = fn("PreSignUpFunction", "auth.pre_sign_up", sends_email=False)
         define_challenge = fn("DefineAuthChallengeFunction", "auth.define_auth_challenge", sends_email=False)
         create_challenge = fn("CreateAuthChallengeFunction", "auth.create_auth_challenge", sends_email=True)

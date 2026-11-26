@@ -141,6 +141,7 @@ def create_show(ctx: Ctx, user: User, theater_id: str, body: CreateShowBody) -> 
         title=body.creator_title or "Director",
         department="Production",
         joined_at=now_iso(),
+        medical_access=True,
     )
     ctx.store.create_show(show, creator)
     return show
@@ -196,6 +197,7 @@ def _member_view(m: Membership, user: User | None, sees_email: bool) -> Member:
         department=m.department,
         status=m.status,
         conflicts_submitted_at=m.conflicts_submitted_at,
+        medical_access=(m.medical_access if m.role == "staff" else None) if sees_email else None,
     )
 
 
@@ -284,16 +286,32 @@ class UpdateMemberBody(Model):
     role: ShowRole | None = None
     title: optional_text(60) = None  # type: ignore[valid-type]
     department: optional_text(60) = None  # type: ignore[valid-type]
+    # Staff only. Set by staff who have it themselves, or by a company admin.
+    medical_access: bool | None = None
 
 
 def update_member(ctx: Ctx, user: User, show_id: str, member_id: str, body: UpdateMemberBody) -> Member:
-    editable_show(ctx, show_id, user, "members:invite")
+    access = editable_show(ctx, show_id, user, "members:invite")
     membership = ctx.store.get_membership(show_id, member_id)
     if not membership:
         raise NotFound("That person isn't in this show")
-    fields = {k: getattr(body, k) for k in body.model_fields_set if not (k == "role" and body.role is None)}
+    fields = {
+        k: getattr(body, k)
+        for k in body.model_fields_set
+        if not (k in ("role", "medical_access") and getattr(body, k) is None)
+    }
     if membership.user_id == user.user_id and fields.get("role", "staff") != "staff":
         raise Invalid("You can't remove your own staff access")
+    if "medical_access" in fields and fields["medical_access"] != membership.medical_access:
+        granter = access.membership
+        if not (granter and granter.medical_access) and not ctx.store.is_theater_admin(
+            access.show.theater_id, user.user_id
+        ):
+            raise Forbidden("Only staff who can see medical notes can change who else can")
+        if fields["medical_access"] and fields.get("role", membership.role) != "staff":
+            raise Invalid("Only staff can see medical notes")
+    if fields.get("role", membership.role) != "staff":
+        fields["medical_access"] = False
     membership = membership.model_copy(update=fields)
     ctx.store.put_membership(membership)
     return _member_view(membership, ctx.store.get_user(member_id), True)

@@ -38,6 +38,7 @@ from worklight.localdb import create_table  # noqa: E402
 from worklight.mailer import Email  # noqa: E402
 from worklight.models import PushDevice  # noqa: E402
 from worklight.push import Pusher, PushMessage, WebPushChannel  # noqa: E402
+from worklight.safety_store import SafetyStore, create_safety_table  # noqa: E402
 from worklight.services.base import Ctx  # noqa: E402
 from worklight.services.shows import invite_sign_in_ok  # noqa: E402
 from worklight.store import DynamoStore  # noqa: E402
@@ -108,12 +109,14 @@ class TokenBody(BaseModel):
 def build(seeded: bool, app_url: str) -> Any:
     client = boto3.client("dynamodb", region_name="us-east-1")
     create_table(client)
+    create_safety_table(client)
     outbox = Outbox()
     ctx = Ctx(
         store=DynamoStore("worklight", client),
         mailer=outbox,
         app_url=app_url,
         push=Pusher([DevPush(outbox)]),
+        safety=SafetyStore("worklight-safety", client),
     )
     if seeded:
         seed(ctx)

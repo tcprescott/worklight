@@ -7,6 +7,7 @@ from mangum import Mangum
 from worklight.app import AppDeps, create_app
 from worklight.config import get_app_url, get_pusher, require_env
 from worklight.mailer import SesMailer
+from worklight.safety_store import SafetyStore
 from worklight.store import DynamoStore
 
 _handler: Mangum | None = None
@@ -20,6 +21,7 @@ def handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
             mailer=SesMailer(require_env("FROM_EMAIL")),
             app_url=get_app_url(),
             push=get_pusher(),
+            safety=SafetyStore(require_env("SAFETY_TABLE_NAME")),
         )
         _handler = Mangum(create_app(deps), lifespan="off")
     return _handler(event, context)

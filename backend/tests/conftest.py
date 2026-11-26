@@ -9,6 +9,7 @@ from tests.client import Client
 from tests.fakes import FakeMailer, FakePush
 from worklight import clock
 from worklight.localdb import create_table
+from worklight.safety_store import SafetyStore, create_safety_table
 from worklight.store import DynamoStore
 
 
@@ -21,7 +22,13 @@ def store(monkeypatch: pytest.MonkeyPatch) -> Iterator[DynamoStore]:
     with mock_aws():
         client = boto3.client("dynamodb")
         create_table(client)
+        create_safety_table(client)
         yield DynamoStore("worklight", client)
+
+
+@pytest.fixture
+def safety_store(store: DynamoStore) -> SafetyStore:
+    return SafetyStore("worklight-safety", store.db)
 
 
 @pytest.fixture
