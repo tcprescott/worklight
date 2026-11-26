@@ -1,4 +1,10 @@
 import type {
+  AddStrikeTaskBody,
+  StrikeChecklist,
+  StrikeTask,
+  StrikeTemplate,
+  StrikeTemplateLine,
+  UpdateStrikeTaskBody,
   Act,
   Admin,
   ApiKey,
@@ -202,6 +208,18 @@ export const api = {
   deleteNotice: (showId: string, noticeId: string) => request<void>("DELETE", `${show(showId)}/notices/${e(noticeId)}`),
   markNoticesRead: (showId: string, noticeIds: string[]) =>
     request<void>("POST", `${show(showId)}/notices/read`, { noticeIds }),
+
+  // Strike
+  strike: (showId: string) => request<StrikeChecklist>("GET", `${show(showId)}/strike`),
+  addStrikeTask: (showId: string, input: AddStrikeTaskBody) =>
+    request<StrikeTask>("POST", `${show(showId)}/strike/tasks`, input),
+  updateStrikeTask: (showId: string, taskId: string, input: UpdateStrikeTaskBody) =>
+    request<StrikeTask>("PATCH", `${show(showId)}/strike/tasks/${e(taskId)}`, input),
+  deleteStrikeTask: (showId: string, taskId: string) => request<void>("DELETE", `${show(showId)}/strike/tasks/${e(taskId)}`),
+  copyStrikeTemplate: (showId: string) => request<StrikeChecklist>("POST", `${show(showId)}/strike/copy-template`),
+  strikeTemplate: (theaterId: string) => request<StrikeTemplate>("GET", `/theaters/${e(theaterId)}/strike-template`),
+  saveStrikeTemplate: (theaterId: string, tasks: StrikeTemplateLine[]) =>
+    request<StrikeTemplate>("PUT", `/theaters/${e(theaterId)}/strike-template`, { tasks }),
 
   checkIn: (showId: string, code: string) => request<CheckInResult>("POST", `${show(showId)}/check-in`, { code }),
   runningLate: (showId: string, minutes: number, note?: string) =>

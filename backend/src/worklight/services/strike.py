@@ -44,6 +44,8 @@ class StrikeCallView(Model):
     start: str
     end: str
     location: str | None = None
+    # Cast and crew can see it (it has been published at least once).
+    published: bool = False
 
 
 class StrikeChecklist(Model):
@@ -103,6 +105,7 @@ def get_checklist(ctx: Ctx, user: User, show_id: str) -> StrikeChecklist:
                     start=content.start,
                     end=content.end,
                     location=content.location,
+                    published=c.published is not None,
                 )
             )
     calls.sort(key=lambda c: (c.date, c.start))

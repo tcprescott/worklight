@@ -3696,6 +3696,11 @@
             ],
             "title": "Location"
           },
+          "published": {
+            "default": false,
+            "title": "Published",
+            "type": "boolean"
+          },
           "start": {
             "title": "Start",
             "type": "string"

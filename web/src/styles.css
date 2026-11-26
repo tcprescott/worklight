@@ -418,7 +418,8 @@ p {
   background: var(--surface);
 }
 .tabs a {
-  min-width: 64px;
+  /* Six staff tabs fit a 360px phone during tech and strike. */
+  min-width: 54px;
   min-height: 48px;
   display: flex;
   flex-direction: column;
