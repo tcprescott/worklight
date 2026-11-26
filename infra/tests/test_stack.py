@@ -142,3 +142,20 @@ def test_public_apis_skip_the_cognito_authorizer(template: Template) -> None:
         "AWS::ApiGatewayV2::Stage",
         {"DefaultRouteSettings": {"ThrottlingBurstLimit": 100, "ThrottlingRateLimit": 50}},
     )
+
+
+def test_keeps_photos_in_a_private_bucket_the_api_can_use(template: Template) -> None:
+    template.has_resource_properties(
+        "AWS::S3::Bucket",
+        {
+            "PublicAccessBlockConfiguration": Match.object_like({"BlockPublicAcls": True}),
+            "BucketEncryption": Match.any_value(),
+        },
+    )
+    template.has_resource_properties(
+        "AWS::Lambda::Function",
+        {
+            "Handler": "worklight.handlers.api.handler",
+            "Environment": {"Variables": Match.object_like({"PHOTO_BUCKET": Match.any_value()})},
+        },
+    )

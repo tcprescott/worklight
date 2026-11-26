@@ -20,6 +20,7 @@ from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
 from worklight.services import strike as strike_service
 from worklight.services import theaters as theaters_service
+from worklight.services import wardrobe as wardrobe_service
 from worklight.services.apikeys import KeyPrincipal, principal_for
 from worklight.services.base import Ctx, ServiceError
 
@@ -237,6 +238,23 @@ class StrikeTask:
 
 
 @strawberry.type
+class WardrobeItem:
+    item_id: strawberry.ID
+    kind: str = strawberry.field(description="costume or prop")
+    name: str
+    char_ids: list[strawberry.ID]
+    scene_ids: list[strawberry.ID]
+    status: str = strawberry.field(description="needed, pulled, building or ready")
+    source: str | None = strawberry.field(description="stock, bought, built, rented, borrowed or actor")
+    lender: str | None
+    due_back: str | None
+    returned_at: str | None
+    cost_cents: int | None
+    rental_fee_cents: int | None
+    deposit_cents: int | None
+
+
+@strawberry.type
 class PublishResult:
     published: int
     cancelled: int
@@ -356,6 +374,12 @@ class Query:
         c = info.context
         board = callboard_service.get_callboard(c.ctx, c.principal.user, c.show_id(show_id))
         return [_build(Notice, n) for n in board.notices]
+
+    @strawberry.field(description="The show's costumes and props, with status, source and costs")
+    def costumes_and_props(self, info: GInfo, show_id: strawberry.ID) -> list[WardrobeItem]:
+        c = info.context
+        tracker = wardrobe_service.get_tracker(c.ctx, c.principal.user, c.show_id(show_id))
+        return [_build(WardrobeItem, i) for i in tracker.items]
 
     @strawberry.field(description="The show's strike checklist, area by area, with who has each task")
     def strike_checklist(self, info: GInfo, show_id: strawberry.ID) -> list[StrikeTask]:

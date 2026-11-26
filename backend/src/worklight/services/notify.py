@@ -129,9 +129,7 @@ def send_reminders(ctx: Ctx) -> int:
                         day=content.date,
                         start=entry.start,
                         end=entry.end,
-                        what=", ".join(entry.labels)
-                        or content.title
-                        or ("Strike" if content.type == "strike" else "Rehearsal"),
+                        what=", ".join(entry.labels) or content.title or _default_label(content),
                         where=content.location or show.venue,
                         bring=content.bring,
                         url=ctx.link(f"/shows/{show.show_id}/calls"),
@@ -145,12 +143,14 @@ def send_reminders(ctx: Ctx) -> int:
 # ---- Change emails on publish ---------------------------------------------------------------------
 
 
+def _default_label(content: CallContent) -> str:
+    return {"strike": "Strike", "fitting": "Costume fitting"}.get(content.type, "Rehearsal")
+
+
 def _line(content: CallContent, entry: Called, what: str) -> str:
     times = f"{mailer.pretty_time(entry.start)} to {mailer.pretty_time(entry.end)}"
     when = f"{mailer.pretty_date(content.date)}, {times}"
-    label = (
-        ", ".join(entry.labels) or content.title or ("Strike" if content.type == "strike" else "Rehearsal")
-    )
+    label = ", ".join(entry.labels) or content.title or _default_label(content)
     return f"{when}: {label}{what}"
 
 

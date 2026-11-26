@@ -14,15 +14,20 @@ SHOW#<showId>  CHECKIN#<date>#<userId>    tech week and performance attendance
 SHOW#<showId>  NOTICE#<noticeId>          callboard notice
 SHOW#<showId>  READ#<noticeId>#<userId>   who has read a notice
 SHOW#<showId>  STRIKE#<taskId>            strike checklist task
+SHOW#<showId>  ITEM#<itemId>              costume or prop the show needs
+SHOW#<showId>  NEEDS#<userId>             a person's costume needs and idea pictures for the show
 USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
+USER#<id>      MEASURE                     sizes and body measurements
 EMAIL#<email>  USER              email -> userId lookup
 INVITE#<token> META              pending invite (TTL)
 MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
 THEATER#<id>   STRIKE#<taskId>   company strike template task
+THEATER#<id>   STOCK#<itemId>    costume or prop the company owns
+THEATER#<id>   KEEPER#<userId>   costume/props stock keeper   (GSI1: USER#<userId> / KEEPER#<id>)
 APIKEY#<hash>  META              secret hash -> theaterId, keyId
 RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
@@ -46,6 +51,10 @@ NOTICE_PREFIX = "NOTICE#"
 APIKEY_PREFIX = "APIKEY#"
 READ_PREFIX = "READ#"
 STRIKE_PREFIX = "STRIKE#"
+ITEM_PREFIX = "ITEM#"
+NEEDS_PREFIX = "NEEDS#"
+STOCK_PREFIX = "STOCK#"
+KEEPER_PREFIX = "KEEPER#"
 
 
 def normalize_email(email: str) -> str:
@@ -127,6 +136,31 @@ def strike_task(show_id: str, task_id: str) -> Key:
 
 def strike_template_task(theater_id: str, task_id: str) -> Key:
     return {"PK": f"THEATER#{theater_id}", "SK": f"STRIKE#{task_id}"}
+
+
+def show_item(show_id: str, item_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"ITEM#{item_id}"}
+
+
+def costume_needs(show_id: str, user_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"NEEDS#{user_id}"}
+
+
+def stock_item(theater_id: str, item_id: str) -> Key:
+    return {"PK": f"THEATER#{theater_id}", "SK": f"STOCK#{item_id}"}
+
+
+def keeper(theater_id: str, user_id: str) -> Key:
+    return {
+        "PK": f"THEATER#{theater_id}",
+        "SK": f"KEEPER#{user_id}",
+        "GSI1PK": user_gsi(user_id),
+        "GSI1SK": f"KEEPER#{theater_id}",
+    }
+
+
+def measurements(user_id: str) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": "MEASURE"}
 
 
 def api_key(theater_id: str, key_id: str) -> Key:

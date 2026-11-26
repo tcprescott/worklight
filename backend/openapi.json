@@ -797,7 +797,8 @@
               "tech",
               "dress",
               "performance",
-              "strike"
+              "strike",
+              "fitting"
             ],
             "title": "Type",
             "type": "string"
@@ -942,7 +943,8 @@
               "tech",
               "dress",
               "performance",
-              "strike"
+              "strike",
+              "fitting"
             ],
             "title": "Type",
             "type": "string"
@@ -1109,7 +1111,8 @@
               "tech",
               "dress",
               "performance",
-              "strike"
+              "strike",
+              "fitting"
             ],
             "title": "Type",
             "type": "string"
@@ -1212,6 +1215,45 @@
           "order"
         ],
         "title": "Character",
+        "type": "object"
+      },
+      "CharacterRow": {
+        "properties": {
+          "cast": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Person"
+            },
+            "title": "Cast",
+            "type": "array"
+          },
+          "charId": {
+            "title": "Charid",
+            "type": "string"
+          },
+          "ensemble": {
+            "default": false,
+            "title": "Ensemble",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "charId",
+          "name"
+        ],
+        "title": "CharacterRow",
         "type": "object"
       },
       "CheckIn": {
@@ -1515,7 +1557,8 @@
                   "tech",
                   "dress",
                   "performance",
-                  "strike"
+                  "strike",
+                  "fitting"
                 ],
                 "type": "string"
               },
@@ -1645,6 +1688,176 @@
           "email"
         ],
         "title": "CreateInviteBody",
+        "type": "object"
+      },
+      "CreateItemBody": {
+        "properties": {
+          "charIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Charids",
+            "type": "array"
+          },
+          "costCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Costcents"
+          },
+          "depositCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositcents"
+          },
+          "dueBack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dueback"
+          },
+          "kind": {
+            "enum": [
+              "costume",
+              "prop"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "lenderContact": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lendercontact"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Photoids",
+            "type": "array"
+          },
+          "rentalFeeCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rentalfeecents"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "enum": [
+                  "stock",
+                  "bought",
+                  "built",
+                  "rented",
+                  "borrowed",
+                  "actor"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "default": "needed",
+            "enum": [
+              "needed",
+              "pulled",
+              "building",
+              "ready"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ],
+        "title": "CreateItemBody",
         "type": "object"
       },
       "CreateSceneBody": {
@@ -1865,6 +2078,91 @@
         "title": "CreateShowBody",
         "type": "object"
       },
+      "CreateStockBody": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "kind": {
+            "enum": [
+              "costume",
+              "prop"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "title": "Photoids",
+            "type": "array"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          }
+        },
+        "required": [
+          "kind",
+          "name"
+        ],
+        "title": "CreateStockBody",
+        "type": "object"
+      },
       "CreateTheaterBody": {
         "properties": {
           "name": {
@@ -2074,6 +2372,51 @@
         "title": "DateItem",
         "type": "object"
       },
+      "Deposit": {
+        "properties": {
+          "depositCents": {
+            "title": "Depositcents",
+            "type": "integer"
+          },
+          "dueBack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dueback"
+          },
+          "itemId": {
+            "title": "Itemid",
+            "type": "string"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "name",
+          "depositCents"
+        ],
+        "title": "Deposit",
+        "type": "object"
+      },
       "DoorCode": {
         "properties": {
           "doorCode": {
@@ -2085,6 +2428,39 @@
           "doorCode"
         ],
         "title": "DoorCode",
+        "type": "object"
+      },
+      "Fitting": {
+        "properties": {
+          "callId": {
+            "title": "Callid",
+            "type": "string"
+          },
+          "date": {
+            "title": "Date",
+            "type": "string"
+          },
+          "end": {
+            "title": "End",
+            "type": "string"
+          },
+          "start": {
+            "title": "Start",
+            "type": "string"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "callId",
+          "userId",
+          "date",
+          "start",
+          "end"
+        ],
+        "title": "Fitting",
         "type": "object"
       },
       "HTTPValidationError": {
@@ -2217,6 +2593,306 @@
         "title": "InviteSent",
         "type": "object"
       },
+      "ItemView": {
+        "properties": {
+          "charIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Charids",
+            "type": "array"
+          },
+          "costCents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Costcents"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "depositBackAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositbackat"
+          },
+          "depositCents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositcents"
+          },
+          "dueBack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dueback"
+          },
+          "itemId": {
+            "title": "Itemid",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "costume",
+              "prop"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "lenderContact": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lendercontact"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Photoids",
+            "type": "array"
+          },
+          "photos": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Photo"
+            },
+            "title": "Photos",
+            "type": "array"
+          },
+          "rentalFeeCents": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rentalfeecents"
+          },
+          "returnedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returnedat"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "showId": {
+            "title": "Showid",
+            "type": "string"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "enum": [
+                  "stock",
+                  "bought",
+                  "built",
+                  "rented",
+                  "borrowed",
+                  "actor"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "default": "needed",
+            "enum": [
+              "needed",
+              "pulled",
+              "building",
+              "ready"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "stockItemId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stockitemid"
+          },
+          "stockName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stockname"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "showId",
+          "theaterId",
+          "kind",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "ItemView",
+        "type": "object"
+      },
+      "KeeperView": {
+        "properties": {
+          "costumes": {
+            "title": "Costumes",
+            "type": "boolean"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "props": {
+            "title": "Props",
+            "type": "boolean"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "email",
+          "costumes",
+          "props"
+        ],
+        "title": "KeeperView",
+        "type": "object"
+      },
+      "KindCounts": {
+        "properties": {
+          "building": {
+            "default": 0,
+            "title": "Building",
+            "type": "integer"
+          },
+          "needed": {
+            "default": 0,
+            "title": "Needed",
+            "type": "integer"
+          },
+          "pulled": {
+            "default": 0,
+            "title": "Pulled",
+            "type": "integer"
+          },
+          "ready": {
+            "default": 0,
+            "title": "Ready",
+            "type": "integer"
+          },
+          "total": {
+            "default": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "title": "KindCounts",
+        "type": "object"
+      },
       "MarkBody": {
         "properties": {
           "status": {
@@ -2262,6 +2938,14 @@
       "Me": {
         "description": "What the signed-in user sees on their home page.",
         "properties": {
+          "keeps": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/MyKeeper"
+            },
+            "title": "Keeps",
+            "type": "array"
+          },
           "shows": {
             "items": {
               "$ref": "#/components/schemas/MyShow"
@@ -2288,6 +2972,393 @@
         "title": "Me",
         "type": "object"
       },
+      "MeasurementSheet": {
+        "properties": {
+          "canEdit": {
+            "title": "Canedit",
+            "type": "boolean"
+          },
+          "measured": {
+            "title": "Measured",
+            "type": "integer"
+          },
+          "measurements": {
+            "$ref": "#/components/schemas/Measurements"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "needs": {
+            "$ref": "#/components/schemas/Needs"
+          },
+          "parts": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Parts",
+            "type": "array"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "sizesFilled": {
+            "title": "Sizesfilled",
+            "type": "integer"
+          },
+          "updatedByName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedbyname"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "role",
+          "measurements",
+          "needs",
+          "measured",
+          "sizesFilled",
+          "canEdit"
+        ],
+        "title": "MeasurementSheet",
+        "type": "object"
+      },
+      "Measurements": {
+        "description": "A person's sizes and body measurements. They follow the person from show to show.\n\nLengths are inches. Numbers 1 to 16 match the usual measurement sheet's diagram.",
+        "properties": {
+          "acrossShoulders": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acrossshoulders"
+          },
+          "belowKnee": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Belowknee"
+          },
+          "bra": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bra"
+          },
+          "chest": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chest"
+          },
+          "hat": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hat"
+          },
+          "head": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Head"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "hip": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hip"
+          },
+          "inseam": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inseam"
+          },
+          "napeToFloor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetofloor"
+          },
+          "napeToShoulder": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetoshoulder"
+          },
+          "napeToWaist": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetowaist"
+          },
+          "neck": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Neck"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "outseam": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outseam"
+          },
+          "shirt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shirt"
+          },
+          "shoe": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shoe"
+          },
+          "suitDress": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suitdress"
+          },
+          "toElbow": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toelbow"
+          },
+          "toWrist": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Towrist"
+          },
+          "trouser": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trouser"
+          },
+          "underbust": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Underbust"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "updatedBy": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedby"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          },
+          "waist": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waist"
+          },
+          "waistToFloor": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waisttofloor"
+          },
+          "weight": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight"
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "title": "Measurements",
+        "type": "object"
+      },
       "Member": {
         "properties": {
           "conflictsSubmittedAt": {
@@ -2300,6 +3371,17 @@
               }
             ],
             "title": "Conflictssubmittedat"
+          },
+          "costumeAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Costumeaccess"
           },
           "department": {
             "anyOf": [
@@ -2333,6 +3415,17 @@
               }
             ],
             "title": "Name"
+          },
+          "propsAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propsaccess"
           },
           "role": {
             "enum": [
@@ -2402,6 +3495,42 @@
           "dates"
         ],
         "title": "MemberConflicts",
+        "type": "object"
+      },
+      "Money": {
+        "properties": {
+          "boughtCents": {
+            "title": "Boughtcents",
+            "type": "integer"
+          },
+          "deposits": {
+            "items": {
+              "$ref": "#/components/schemas/Deposit"
+            },
+            "title": "Deposits",
+            "type": "array"
+          },
+          "depositsOutCents": {
+            "title": "Depositsoutcents",
+            "type": "integer"
+          },
+          "rentalCents": {
+            "title": "Rentalcents",
+            "type": "integer"
+          },
+          "spentCents": {
+            "title": "Spentcents",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "spentCents",
+          "boughtCents",
+          "rentalCents",
+          "depositsOutCents",
+          "deposits"
+        ],
+        "title": "Money",
         "type": "object"
       },
       "MyCall": {
@@ -2532,7 +3661,8 @@
               "tech",
               "dress",
               "performance",
-              "strike"
+              "strike",
+              "fitting"
             ],
             "title": "Type",
             "type": "string"
@@ -2575,6 +3705,136 @@
           "dates"
         ],
         "title": "MyConflicts",
+        "type": "object"
+      },
+      "MyItem": {
+        "properties": {
+          "characters": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "itemId": {
+            "title": "Itemid",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "costume",
+              "prop"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "photos": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Photo"
+            },
+            "title": "Photos",
+            "type": "array"
+          },
+          "sceneIds": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Sceneids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "itemId",
+          "kind",
+          "name",
+          "characters",
+          "sceneIds"
+        ],
+        "title": "MyItem",
+        "type": "object"
+      },
+      "MyItems": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MyItem"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "measured": {
+            "default": 0,
+            "title": "Measured",
+            "type": "integer"
+          },
+          "measurementsUpdatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Measurementsupdatedat"
+          },
+          "nextFitting": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Fitting"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/SceneRef"
+            },
+            "title": "Scenes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "scenes"
+        ],
+        "title": "MyItems",
+        "type": "object"
+      },
+      "MyKeeper": {
+        "description": "A company whose costume or prop stock I look after.",
+        "properties": {
+          "costumes": {
+            "title": "Costumes",
+            "type": "boolean"
+          },
+          "props": {
+            "title": "Props",
+            "type": "boolean"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "theaterId",
+          "theaterName",
+          "costumes",
+          "props"
+        ],
+        "title": "MyKeeper",
         "type": "object"
       },
       "MyShow": {
@@ -2651,6 +3911,42 @@
           "role"
         ],
         "title": "MyTheater",
+        "type": "object"
+      },
+      "Needs": {
+        "properties": {
+          "needs": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Needs"
+          },
+          "photos": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Photo"
+            },
+            "title": "Photos",
+            "type": "array"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          }
+        },
+        "title": "Needs",
         "type": "object"
       },
       "NewApiKey": {
@@ -2856,6 +4152,48 @@
         "title": "NotifyPrefs",
         "type": "object"
       },
+      "Person": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "title": "Person",
+        "type": "object"
+      },
+      "Photo": {
+        "properties": {
+          "photoId": {
+            "title": "Photoid",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "photoId",
+          "url"
+        ],
+        "title": "Photo",
+        "type": "object"
+      },
       "PostNoticeBody": {
         "properties": {
           "audience": {
@@ -2945,6 +4283,86 @@
           "callIds"
         ],
         "title": "PublishResult",
+        "type": "object"
+      },
+      "PullBody": {
+        "properties": {
+          "charIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 50,
+            "title": "Charids",
+            "type": "array"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "sceneIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 200,
+            "title": "Sceneids",
+            "type": "array"
+          },
+          "stockItemId": {
+            "title": "Stockitemid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "stockItemId"
+        ],
+        "title": "PullBody",
+        "type": "object"
+      },
+      "PutKeeperBody": {
+        "properties": {
+          "costumes": {
+            "default": false,
+            "title": "Costumes",
+            "type": "boolean"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "props": {
+            "default": false,
+            "title": "Props",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "email"
+        ],
+        "title": "PutKeeperBody",
         "type": "object"
       },
       "PutTemplateBody": {
@@ -3140,6 +4558,366 @@
         "title": "SaveConflictsBody",
         "type": "object"
       },
+      "SaveSheetBody": {
+        "description": "Leave a field out to keep it; send null to clear it.",
+        "properties": {
+          "acrossShoulders": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Acrossshoulders"
+          },
+          "belowKnee": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Belowknee"
+          },
+          "bra": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bra"
+          },
+          "chest": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Chest"
+          },
+          "hat": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hat"
+          },
+          "head": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Head"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Height"
+          },
+          "hip": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hip"
+          },
+          "inseam": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inseam"
+          },
+          "napeToFloor": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetofloor"
+          },
+          "napeToShoulder": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetoshoulder"
+          },
+          "napeToWaist": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Napetowaist"
+          },
+          "neck": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Neck"
+          },
+          "needs": {
+            "anyOf": [
+              {
+                "maxLength": 2000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Needs"
+          },
+          "needsPhotoIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Needsphotoids"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "outseam": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Outseam"
+          },
+          "shirt": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shirt"
+          },
+          "shoe": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Shoe"
+          },
+          "suitDress": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Suitdress"
+          },
+          "toElbow": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Toelbow"
+          },
+          "toWrist": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Towrist"
+          },
+          "trouser": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trouser"
+          },
+          "underbust": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Underbust"
+          },
+          "waist": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waist"
+          },
+          "waistToFloor": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0.0,
+                "maximum": 150.0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Waisttofloor"
+          },
+          "weight": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Weight"
+          }
+        },
+        "title": "SaveSheetBody",
+        "type": "object"
+      },
       "Scene": {
         "properties": {
           "actId": {
@@ -3192,6 +4970,29 @@
           "order"
         ],
         "title": "Scene",
+        "type": "object"
+      },
+      "SceneRef": {
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "number": {
+            "title": "Number",
+            "type": "string"
+          },
+          "sceneId": {
+            "title": "Sceneid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "sceneId",
+          "number",
+          "name"
+        ],
+        "title": "SceneRef",
         "type": "object"
       },
       "SceneSuggestion": {
@@ -3334,6 +5135,79 @@
           "editing"
         ],
         "title": "ScheduleView",
+        "type": "object"
+      },
+      "SheetRow": {
+        "properties": {
+          "hasNeeds": {
+            "default": false,
+            "title": "Hasneeds",
+            "type": "boolean"
+          },
+          "hasNotes": {
+            "default": false,
+            "title": "Hasnotes",
+            "type": "boolean"
+          },
+          "measured": {
+            "title": "Measured",
+            "type": "integer"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "parts": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Parts",
+            "type": "array"
+          },
+          "role": {
+            "enum": [
+              "staff",
+              "cast",
+              "crew"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "sizesFilled": {
+            "title": "Sizesfilled",
+            "type": "integer"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updatedat"
+          },
+          "userId": {
+            "title": "Userid",
+            "type": "string"
+          }
+        },
+        "required": [
+          "userId",
+          "role",
+          "measured",
+          "sizesFilled"
+        ],
+        "title": "SheetRow",
         "type": "object"
       },
       "Show": {
@@ -3605,6 +5479,16 @@
       },
       "ShowView": {
         "properties": {
+          "costumeAccess": {
+            "default": false,
+            "title": "Costumeaccess",
+            "type": "boolean"
+          },
+          "propsAccess": {
+            "default": false,
+            "title": "Propsaccess",
+            "type": "boolean"
+          },
           "role": {
             "enum": [
               "staff",
@@ -3669,6 +5553,200 @@
           "end"
         ],
         "title": "SlotBody",
+        "type": "object"
+      },
+      "Stock": {
+        "properties": {
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/StockItemView"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "rights": {
+            "$ref": "#/components/schemas/StockRights"
+          },
+          "theaterName": {
+            "title": "Theatername",
+            "type": "string"
+          }
+        },
+        "required": [
+          "theaterName",
+          "items",
+          "categories",
+          "rights"
+        ],
+        "title": "Stock",
+        "type": "object"
+      },
+      "StockItemView": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "createdAt": {
+            "title": "Createdat",
+            "type": "string"
+          },
+          "inShowId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inshowid"
+          },
+          "inShowItemId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inshowitemid"
+          },
+          "inShowName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Inshowname"
+          },
+          "itemId": {
+            "title": "Itemid",
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "costume",
+              "prop"
+            ],
+            "title": "Kind",
+            "type": "string"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Photoids",
+            "type": "array"
+          },
+          "photos": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/Photo"
+            },
+            "title": "Photos",
+            "type": "array"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          },
+          "theaterId": {
+            "title": "Theaterid",
+            "type": "string"
+          },
+          "updatedAt": {
+            "title": "Updatedat",
+            "type": "string"
+          }
+        },
+        "required": [
+          "itemId",
+          "theaterId",
+          "kind",
+          "name",
+          "createdAt",
+          "updatedAt"
+        ],
+        "title": "StockItemView",
+        "type": "object"
+      },
+      "StockRights": {
+        "properties": {
+          "editCostumes": {
+            "default": false,
+            "title": "Editcostumes",
+            "type": "boolean"
+          },
+          "editProps": {
+            "default": false,
+            "title": "Editprops",
+            "type": "boolean"
+          },
+          "viewCostumes": {
+            "default": false,
+            "title": "Viewcostumes",
+            "type": "boolean"
+          },
+          "viewProps": {
+            "default": false,
+            "title": "Viewprops",
+            "type": "boolean"
+          }
+        },
+        "title": "StockRights",
         "type": "object"
       },
       "StrikeCallView": {
@@ -3823,6 +5901,17 @@
             "title": "Order",
             "type": "integer"
           },
+          "returnKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returnkey"
+          },
           "showId": {
             "title": "Showid",
             "type": "string"
@@ -3930,6 +6019,25 @@
           "order": {
             "title": "Order",
             "type": "integer"
+          },
+          "returnItems": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Returnitems",
+            "type": "array"
+          },
+          "returnKey": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returnkey"
           },
           "showId": {
             "title": "Showid",
@@ -4223,6 +6331,81 @@
         "title": "TimedBlock",
         "type": "object"
       },
+      "Tracker": {
+        "properties": {
+          "canEditCostumes": {
+            "title": "Caneditcostumes",
+            "type": "boolean"
+          },
+          "canEditProps": {
+            "title": "Caneditprops",
+            "type": "boolean"
+          },
+          "canSeeMeasurements": {
+            "title": "Canseemeasurements",
+            "type": "boolean"
+          },
+          "characters": {
+            "items": {
+              "$ref": "#/components/schemas/CharacterRow"
+            },
+            "title": "Characters",
+            "type": "array"
+          },
+          "costumes": {
+            "$ref": "#/components/schemas/KindCounts"
+          },
+          "fittings": {
+            "items": {
+              "$ref": "#/components/schemas/Fitting"
+            },
+            "title": "Fittings",
+            "type": "array"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/ItemView"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "lenders": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Lenders",
+            "type": "array"
+          },
+          "money": {
+            "$ref": "#/components/schemas/Money"
+          },
+          "props": {
+            "$ref": "#/components/schemas/KindCounts"
+          },
+          "scenes": {
+            "items": {
+              "$ref": "#/components/schemas/SceneRef"
+            },
+            "title": "Scenes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "items",
+          "characters",
+          "scenes",
+          "fittings",
+          "costumes",
+          "props",
+          "money",
+          "lenders",
+          "canEditCostumes",
+          "canEditProps",
+          "canSeeMeasurements"
+        ],
+        "title": "Tracker",
+        "type": "object"
+      },
       "UpdateCallBody": {
         "properties": {
           "blocks": {
@@ -4392,7 +6575,8 @@
                   "tech",
                   "dress",
                   "performance",
-                  "strike"
+                  "strike",
+                  "fitting"
                 ],
                 "type": "string"
               },
@@ -4466,6 +6650,232 @@
         "title": "UpdateCharacterBody",
         "type": "object"
       },
+      "UpdateItemBody": {
+        "properties": {
+          "charIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 50,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Charids"
+          },
+          "costCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Costcents"
+          },
+          "depositBack": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositback"
+          },
+          "depositCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Depositcents"
+          },
+          "dueBack": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Dueback"
+          },
+          "kind": {
+            "anyOf": [
+              {
+                "enum": [
+                  "costume",
+                  "prop"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Kind"
+          },
+          "lender": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lender"
+          },
+          "lenderContact": {
+            "anyOf": [
+              {
+                "maxLength": 200,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lendercontact"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photoids"
+          },
+          "rentalFeeCents": {
+            "anyOf": [
+              {
+                "maximum": 10000000.0,
+                "minimum": 0.0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rentalfeecents"
+          },
+          "returned": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Returned"
+          },
+          "sceneIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 200,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sceneids"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "enum": [
+                  "stock",
+                  "bought",
+                  "built",
+                  "rented",
+                  "borrowed",
+                  "actor"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "needed",
+                  "pulled",
+                  "building",
+                  "ready"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          }
+        },
+        "title": "UpdateItemBody",
+        "type": "object"
+      },
       "UpdateMeBody": {
         "properties": {
           "name": {
@@ -4497,6 +6907,17 @@
       },
       "UpdateMemberBody": {
         "properties": {
+          "costumeAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Costumeaccess"
+          },
           "department": {
             "anyOf": [
               {
@@ -4509,6 +6930,17 @@
               }
             ],
             "title": "Department"
+          },
+          "propsAccess": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Propsaccess"
           },
           "role": {
             "anyOf": [
@@ -4834,6 +7266,92 @@
           }
         },
         "title": "UpdateShowBody",
+        "type": "object"
+      },
+      "UpdateStockBody": {
+        "properties": {
+          "category": {
+            "anyOf": [
+              {
+                "maxLength": 60,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category"
+          },
+          "location": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location"
+          },
+          "name": {
+            "anyOf": [
+              {
+                "maxLength": 120,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "maxLength": 1000,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "photoIds": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "maxItems": 20,
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Photoids"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "maxLength": 40,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Size"
+          }
+        },
+        "title": "UpdateStockBody",
         "type": "object"
       },
       "UpdateTaskBody": {
@@ -6725,6 +9243,153 @@
         "summary": "Join Show"
       }
     },
+    "/api/shows/{show_id}/measurements": {
+      "get": {
+        "operationId": "list_sheets_api_shows__show_id__measurements_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SheetRow"
+                  },
+                  "title": "Response List Sheets Api Shows  Show Id  Measurements Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Sheets"
+      }
+    },
+    "/api/shows/{show_id}/measurements/{user_id}": {
+      "get": {
+        "operationId": "get_sheet_api_shows__show_id__measurements__user_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasurementSheet"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Sheet"
+      },
+      "patch": {
+        "operationId": "save_sheet_api_shows__show_id__measurements__user_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveSheetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MeasurementSheet"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Save Sheet"
+      }
+    },
     "/api/shows/{show_id}/members": {
       "get": {
         "operationId": "list_members_api_shows__show_id__members_get",
@@ -7088,6 +9753,63 @@
           }
         },
         "summary": "Update Notice"
+      }
+    },
+    "/api/shows/{show_id}/photos": {
+      "post": {
+        "description": "Anyone in the show can add a picture (cast add costume ideas); it's only kept once it's put on\nan item or a measurement form.",
+        "operationId": "upload_show_photo_api_shows__show_id__photos_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "image/jpeg": {
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Photo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Show Photo"
       }
     },
     "/api/shows/{show_id}/remind": {
@@ -8069,6 +10791,279 @@
         "summary": "Tech Calls"
       }
     },
+    "/api/shows/{show_id}/wardrobe": {
+      "get": {
+        "operationId": "get_tracker_api_shows__show_id__wardrobe_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tracker"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Tracker"
+      }
+    },
+    "/api/shows/{show_id}/wardrobe/items": {
+      "post": {
+        "operationId": "create_item_api_shows__show_id__wardrobe_items_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateItemBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Item"
+      }
+    },
+    "/api/shows/{show_id}/wardrobe/items/{item_id}": {
+      "delete": {
+        "operationId": "delete_item_api_shows__show_id__wardrobe_items__item_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "title": "Item Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Item"
+      },
+      "patch": {
+        "operationId": "update_item_api_shows__show_id__wardrobe_items__item_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "title": "Item Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateItemBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Item"
+      }
+    },
+    "/api/shows/{show_id}/wardrobe/mine": {
+      "get": {
+        "operationId": "my_items_api_shows__show_id__wardrobe_mine_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MyItems"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "My Items"
+      }
+    },
+    "/api/shows/{show_id}/wardrobe/pull": {
+      "post": {
+        "operationId": "pull_api_shows__show_id__wardrobe_pull_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "show_id",
+            "required": true,
+            "schema": {
+              "title": "Show Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PullBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ItemView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Pull"
+      }
+    },
     "/api/theaters": {
       "post": {
         "operationId": "create_theater_api_theaters_post",
@@ -8382,6 +11377,208 @@
         "summary": "Revoke Key"
       }
     },
+    "/api/theaters/{theater_id}/keepers": {
+      "get": {
+        "operationId": "list_keepers_api_theaters__theater_id__keepers_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/KeeperView"
+                  },
+                  "title": "Response List Keepers Api Theaters  Theater Id  Keepers Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Keepers"
+      },
+      "put": {
+        "operationId": "put_keeper_api_theaters__theater_id__keepers_put",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PutKeeperBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/KeeperView"
+                  },
+                  "title": "Response Put Keeper Api Theaters  Theater Id  Keepers Put",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Put Keeper"
+      }
+    },
+    "/api/theaters/{theater_id}/keepers/{user_id}": {
+      "delete": {
+        "operationId": "remove_keeper_api_theaters__theater_id__keepers__user_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "title": "User Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/KeeperView"
+                  },
+                  "title": "Response Remove Keeper Api Theaters  Theater Id  Keepers  User Id  Delete",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Remove Keeper"
+      }
+    },
+    "/api/theaters/{theater_id}/photos": {
+      "post": {
+        "operationId": "upload_stock_photo_api_theaters__theater_id__photos_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "image/jpeg": {
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            },
+            "image/png": {
+              "schema": {
+                "format": "binary",
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Photo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload Stock Photo"
+      }
+    },
     "/api/theaters/{theater_id}/shows": {
       "post": {
         "operationId": "create_show_api_theaters__theater_id__shows_post",
@@ -8429,6 +11626,189 @@
           }
         },
         "summary": "Create Show"
+      }
+    },
+    "/api/theaters/{theater_id}/stock": {
+      "get": {
+        "operationId": "get_stock_api_theaters__theater_id__stock_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Stock"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Stock"
+      },
+      "post": {
+        "operationId": "create_stock_api_theaters__theater_id__stock_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStockBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockItemView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Create Stock"
+      }
+    },
+    "/api/theaters/{theater_id}/stock/{item_id}": {
+      "delete": {
+        "operationId": "delete_stock_api_theaters__theater_id__stock__item_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "title": "Item Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Stock"
+      },
+      "patch": {
+        "operationId": "update_stock_api_theaters__theater_id__stock__item_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "theater_id",
+            "required": true,
+            "schema": {
+              "title": "Theater Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "item_id",
+            "required": true,
+            "schema": {
+              "title": "Item Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateStockBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StockItemView"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Update Stock"
       }
     },
     "/api/theaters/{theater_id}/strike-template": {

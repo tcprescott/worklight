@@ -84,6 +84,9 @@ class Membership(Model):
     joined_at: str | None = None
     # When the person last pressed Send on their conflicts for this show.
     conflicts_submitted_at: str | None = None
+    # Ticked by staff: manages the show's costumes (and sees cast measurements), or its props.
+    costume_access: bool = False
+    props_access: bool = False
 
 
 class NotifyPrefs(Model):
@@ -209,7 +212,9 @@ class MyConflicts(Model):
 
 # ---- Scheduling ----------------------------------------------------------------------------------
 
-CallType = Literal["rehearsal", "music", "choreography", "run", "tech", "dress", "performance", "strike"]
+CallType = Literal[
+    "rehearsal", "music", "choreography", "run", "tech", "dress", "performance", "strike", "fitting"
+]
 CallStatus = Literal["draft", "published"]
 # Who a call covers besides the people in its scenes.
 CallGroup = Literal["everyone", "cast", "crew"]
@@ -309,7 +314,127 @@ class StrikeTask(Model):
     assignee_ids: list[str] = []
     done_at: str | None = None
     done_by: str | None = None
+    # Set on the tasks Worklight keeps for returning costumes and props: "restock" for company stock, or
+    # "lender:<name>" for everything rented or borrowed from one place. Ticking it off marks those returned.
+    return_key: str | None = None
     created_at: str
+    updated_at: str
+
+
+# ---- Costumes and props --------------------------------------------------------------------------
+
+ItemKind = Literal["costume", "prop"]
+# needed = still to find, pulled = found (from stock, a rental...), building = being made or altered.
+ItemStatus = Literal["needed", "pulled", "building", "ready"]
+# Where it comes from. "actor" means the actor's own clothes or things.
+ItemSource = Literal["stock", "bought", "built", "rented", "borrowed", "actor"]
+
+
+class ShowItem(Model):
+    """One costume piece or prop a show needs, who wears or uses it, and in which scenes."""
+
+    item_id: str
+    show_id: str
+    theater_id: str
+    kind: ItemKind
+    name: str
+    # The characters it's for. None for things nobody in particular carries (set dressing and the like).
+    char_ids: list[str] = []
+    scene_ids: list[str] = []
+    status: ItemStatus = "needed"
+    source: ItemSource | None = None
+    # Pulled from the company's stock.
+    stock_item_id: str | None = None
+    # Rented or borrowed: from whom, how to reach them, and when it has to go back.
+    lender: str | None = None
+    lender_contact: str | None = None
+    due_back: str | None = None
+    # Back with its lender (or in company stock) after the show.
+    returned_at: str | None = None
+    # Money in cents: what it cost to buy or build, the rental fee, and any deposit paid.
+    cost_cents: int | None = None
+    rental_fee_cents: int | None = None
+    deposit_cents: int | None = None
+    deposit_back_at: str | None = None
+    notes: str | None = None
+    photo_ids: list[str] = []
+    created_at: str
+    updated_at: str
+
+
+class StockItem(Model):
+    """Something the company owns and keeps between shows."""
+
+    item_id: str
+    theater_id: str
+    kind: ItemKind
+    name: str
+    # e.g. "Dresses", "Hats", "Hand props".
+    category: str | None = None
+    size: str | None = None
+    # Where it's kept, e.g. "Bin 14" or "Loft, left rack".
+    location: str | None = None
+    notes: str | None = None
+    photo_ids: list[str] = []
+    # Pulled for this show (and its item there) until it's back.
+    in_show_id: str | None = None
+    in_show_item_id: str | None = None
+    created_at: str
+    updated_at: str
+
+
+class Keeper(Model):
+    """Someone who looks after the company's costume and/or prop stock, named by a company admin."""
+
+    theater_id: str
+    user_id: str
+    costumes: bool = False
+    props: bool = False
+
+
+class Measurements(Model):
+    """A person's sizes and body measurements. They follow the person from show to show.
+
+    Lengths are inches. Numbers 1 to 16 match the usual measurement sheet's diagram."""
+
+    user_id: str
+    height: str | None = None
+    weight: str | None = None
+    shoe: str | None = None
+    suit_dress: str | None = None
+    shirt: str | None = None
+    trouser: str | None = None
+    bra: str | None = None
+    hat: str | None = None
+    head: float | None = None  # 1
+    neck: float | None = None  # 2 base of neck
+    chest: float | None = None  # 3 chest or bust
+    underbust: float | None = None  # 4 ribcage or underbust
+    waist: float | None = None  # 5
+    hip: float | None = None  # 6 at the fullest point
+    below_knee: float | None = None  # 7
+    inseam: float | None = None  # 8 inseam to floor
+    outseam: float | None = None  # 9 outseam to floor
+    nape_to_waist: float | None = None  # 10
+    nape_to_floor: float | None = None  # 11
+    nape_to_shoulder: float | None = None  # 12 centre back nape to shoulder
+    to_elbow: float | None = None  # 13
+    to_wrist: float | None = None  # 14
+    across_shoulders: float | None = None  # 15 back shoulder seams
+    waist_to_floor: float | None = None  # 16
+    # Allergies (wool, detergent, dyes), piercings, tattoos, anything else the costume team should know.
+    notes: str | None = None
+    updated_at: str | None = None
+    updated_by: str | None = None
+
+
+class CostumeNeeds(Model):
+    """For one person in one show: costume, hair and accessory needs, with idea pictures."""
+
+    show_id: str
+    user_id: str
+    needs: str | None = None
+    photo_ids: list[str] = []
     updated_at: str
 
 
@@ -379,12 +504,22 @@ class MyTheater(Model):
     role: TheaterRole
 
 
+class MyKeeper(Model):
+    """A company whose costume or prop stock I look after."""
+
+    theater_id: str
+    theater_name: str
+    costumes: bool
+    props: bool
+
+
 class Me(Model):
     """What the signed-in user sees on their home page."""
 
     user: User
     theaters: list[MyTheater]
     shows: list[MyShow]
+    keeps: list[MyKeeper] = []
 
 
 class ShowView(Model):
@@ -394,6 +529,9 @@ class ShowView(Model):
     title: str | None = None
     # True for company admins who aren't in the show themselves.
     via_admin: bool = False
+    # Ticked by staff: manages costumes (and sees measurements) or props.
+    costume_access: bool = False
+    props_access: bool = False
 
 
 class Member(Model):
@@ -406,6 +544,9 @@ class Member(Model):
     department: str | None = None
     status: MemberStatus
     conflicts_submitted_at: str | None = None
+    # Only staff see these.
+    costume_access: bool | None = None
+    props_access: bool | None = None
 
 
 class InviteSent(Model):

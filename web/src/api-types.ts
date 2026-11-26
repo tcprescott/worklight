@@ -488,6 +488,41 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/measurements": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Sheets */
+        get: operations["list_sheets_api_shows__show_id__measurements_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/measurements/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Sheet */
+        get: operations["get_sheet_api_shows__show_id__measurements__user_id__get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Save Sheet */
+        patch: operations["save_sheet_api_shows__show_id__measurements__user_id__patch"];
+        trace?: never;
+    };
     "/api/shows/{show_id}/members": {
         parameters: {
             query?: never;
@@ -574,6 +609,27 @@ export interface paths {
         head?: never;
         /** Update Notice */
         patch: operations["update_notice_api_shows__show_id__notices__notice_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Upload Show Photo
+         * @description Anyone in the show can add a picture (cast add costume ideas); it's only kept once it's put on
+         *     an item or a measurement form.
+         */
+        post: operations["upload_show_photo_api_shows__show_id__photos_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/api/shows/{show_id}/remind": {
@@ -851,6 +907,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/shows/{show_id}/wardrobe": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Tracker */
+        get: operations["get_tracker_api_shows__show_id__wardrobe_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/wardrobe/items": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Create Item */
+        post: operations["create_item_api_shows__show_id__wardrobe_items_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/wardrobe/items/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Item */
+        delete: operations["delete_item_api_shows__show_id__wardrobe_items__item_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Item */
+        patch: operations["update_item_api_shows__show_id__wardrobe_items__item_id__patch"];
+        trace?: never;
+    };
+    "/api/shows/{show_id}/wardrobe/mine": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** My Items */
+        get: operations["my_items_api_shows__show_id__wardrobe_mine_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/shows/{show_id}/wardrobe/pull": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Pull */
+        post: operations["pull_api_shows__show_id__wardrobe_pull_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/theaters": {
         parameters: {
             query?: never;
@@ -954,6 +1096,58 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/theaters/{theater_id}/keepers": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List Keepers */
+        get: operations["list_keepers_api_theaters__theater_id__keepers_get"];
+        /** Put Keeper */
+        put: operations["put_keeper_api_theaters__theater_id__keepers_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/keepers/{user_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Remove Keeper */
+        delete: operations["remove_keeper_api_theaters__theater_id__keepers__user_id__delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/photos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Upload Stock Photo */
+        post: operations["upload_stock_photo_api_theaters__theater_id__photos_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/theaters/{theater_id}/shows": {
         parameters: {
             query?: never;
@@ -969,6 +1163,42 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/stock": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Stock */
+        get: operations["get_stock_api_theaters__theater_id__stock_get"];
+        put?: never;
+        /** Create Stock */
+        post: operations["create_stock_api_theaters__theater_id__stock_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/theaters/{theater_id}/stock/{item_id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** Delete Stock */
+        delete: operations["delete_stock_api_theaters__theater_id__stock__item_id__delete"];
+        options?: never;
+        head?: never;
+        /** Update Stock */
+        patch: operations["update_stock_api_theaters__theater_id__stock__item_id__patch"];
         trace?: never;
     };
     "/api/theaters/{theater_id}/strike-template": {
@@ -1262,7 +1492,7 @@ export interface components {
              * @default rehearsal
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting";
             /** Updatedat */
             updatedAt: string;
             /**
@@ -1317,7 +1547,7 @@ export interface components {
              * @default rehearsal
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting";
             /**
              * Userids
              * @default []
@@ -1385,7 +1615,7 @@ export interface components {
              * Type
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting";
             /**
              * Unpublishedchanges
              * @default false
@@ -1431,6 +1661,28 @@ export interface components {
             order: number;
             /** Showid */
             showId: string;
+        };
+        /** CharacterRow */
+        CharacterRow: {
+            /**
+             * Cast
+             * @default []
+             */
+            cast: components["schemas"]["Person"][];
+            /** Charid */
+            charId: string;
+            /**
+             * Ensemble
+             * @default false
+             */
+            ensemble: boolean;
+            /** Name */
+            name: string;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
         };
         /**
          * CheckIn
@@ -1511,7 +1763,7 @@ export interface components {
             /** Title */
             title?: string | null;
             /** Type */
-            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike") | null;
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting") | null;
             /** Userids */
             userIds?: string[] | null;
         };
@@ -1551,6 +1803,53 @@ export interface components {
             role: "staff" | "cast" | "crew";
             /** Title */
             title?: string | null;
+        };
+        /** CreateItemBody */
+        CreateItemBody: {
+            /**
+             * Charids
+             * @default []
+             */
+            charIds: string[];
+            /** Costcents */
+            costCents?: number | null;
+            /** Depositcents */
+            depositCents?: number | null;
+            /** Dueback */
+            dueBack?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "costume" | "prop";
+            /** Lender */
+            lender?: string | null;
+            /** Lendercontact */
+            lenderContact?: string | null;
+            /** Name */
+            name: string;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Photoids
+             * @default []
+             */
+            photoIds: string[];
+            /** Rentalfeecents */
+            rentalFeeCents?: number | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Source */
+            source?: ("stock" | "bought" | "built" | "rented" | "borrowed" | "actor") | null;
+            /**
+             * Status
+             * @default needed
+             * @enum {string}
+             */
+            status: "needed" | "pulled" | "building" | "ready";
         };
         /** CreateSceneBody */
         CreateSceneBody: {
@@ -1603,6 +1902,29 @@ export interface components {
             timezone: string;
             /** Venue */
             venue?: string | null;
+        };
+        /** CreateStockBody */
+        CreateStockBody: {
+            /** Category */
+            category?: string | null;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "costume" | "prop";
+            /** Location */
+            location?: string | null;
+            /** Name */
+            name: string;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Photoids
+             * @default []
+             */
+            photoIds: string[];
+            /** Size */
+            size?: string | null;
         };
         /** CreateTheaterBody */
         CreateTheaterBody: {
@@ -1664,10 +1986,36 @@ export interface components {
             /** Note */
             note?: string | null;
         };
+        /** Deposit */
+        Deposit: {
+            /** Depositcents */
+            depositCents: number;
+            /** Dueback */
+            dueBack?: string | null;
+            /** Itemid */
+            itemId: string;
+            /** Lender */
+            lender?: string | null;
+            /** Name */
+            name: string;
+        };
         /** DoorCode */
         DoorCode: {
             /** Doorcode */
             doorCode: string;
+        };
+        /** Fitting */
+        Fitting: {
+            /** Callid */
+            callId: string;
+            /** Date */
+            date: string;
+            /** End */
+            end: string;
+            /** Start */
+            start: string;
+            /** Userid */
+            userId: string;
         };
         /** HTTPValidationError */
         HTTPValidationError: {
@@ -1721,6 +2069,117 @@ export interface components {
             /** Userid */
             userId: string;
         };
+        /** ItemView */
+        ItemView: {
+            /**
+             * Charids
+             * @default []
+             */
+            charIds: string[];
+            /** Costcents */
+            costCents?: number | null;
+            /** Createdat */
+            createdAt: string;
+            /** Depositbackat */
+            depositBackAt?: string | null;
+            /** Depositcents */
+            depositCents?: number | null;
+            /** Dueback */
+            dueBack?: string | null;
+            /** Itemid */
+            itemId: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "costume" | "prop";
+            /** Lender */
+            lender?: string | null;
+            /** Lendercontact */
+            lenderContact?: string | null;
+            /** Name */
+            name: string;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Photoids
+             * @default []
+             */
+            photoIds: string[];
+            /**
+             * Photos
+             * @default []
+             */
+            photos: components["schemas"]["Photo"][];
+            /** Rentalfeecents */
+            rentalFeeCents?: number | null;
+            /** Returnedat */
+            returnedAt?: string | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Showid */
+            showId: string;
+            /** Source */
+            source?: ("stock" | "bought" | "built" | "rented" | "borrowed" | "actor") | null;
+            /**
+             * Status
+             * @default needed
+             * @enum {string}
+             */
+            status: "needed" | "pulled" | "building" | "ready";
+            /** Stockitemid */
+            stockItemId?: string | null;
+            /** Stockname */
+            stockName?: string | null;
+            /** Theaterid */
+            theaterId: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** KeeperView */
+        KeeperView: {
+            /** Costumes */
+            costumes: boolean;
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
+            /** Props */
+            props: boolean;
+            /** Userid */
+            userId: string;
+        };
+        /** KindCounts */
+        KindCounts: {
+            /**
+             * Building
+             * @default 0
+             */
+            building: number;
+            /**
+             * Needed
+             * @default 0
+             */
+            needed: number;
+            /**
+             * Pulled
+             * @default 0
+             */
+            pulled: number;
+            /**
+             * Ready
+             * @default 0
+             */
+            ready: number;
+            /**
+             * Total
+             * @default 0
+             */
+            total: number;
+        };
         /** MarkBody */
         MarkBody: {
             /** Status */
@@ -1736,22 +2195,122 @@ export interface components {
          * @description What the signed-in user sees on their home page.
          */
         Me: {
+            /**
+             * Keeps
+             * @default []
+             */
+            keeps: components["schemas"]["MyKeeper"][];
             /** Shows */
             shows: components["schemas"]["MyShow"][];
             /** Theaters */
             theaters: components["schemas"]["MyTheater"][];
             user: components["schemas"]["User"];
         };
+        /** MeasurementSheet */
+        MeasurementSheet: {
+            /** Canedit */
+            canEdit: boolean;
+            /** Measured */
+            measured: number;
+            measurements: components["schemas"]["Measurements"];
+            /** Name */
+            name?: string | null;
+            needs: components["schemas"]["Needs"];
+            /**
+             * Parts
+             * @default []
+             */
+            parts: string[];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Sizesfilled */
+            sizesFilled: number;
+            /** Updatedbyname */
+            updatedByName?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /**
+         * Measurements
+         * @description A person's sizes and body measurements. They follow the person from show to show.
+         *
+         *     Lengths are inches. Numbers 1 to 16 match the usual measurement sheet's diagram.
+         */
+        Measurements: {
+            /** Acrossshoulders */
+            acrossShoulders?: number | null;
+            /** Belowknee */
+            belowKnee?: number | null;
+            /** Bra */
+            bra?: string | null;
+            /** Chest */
+            chest?: number | null;
+            /** Hat */
+            hat?: string | null;
+            /** Head */
+            head?: number | null;
+            /** Height */
+            height?: string | null;
+            /** Hip */
+            hip?: number | null;
+            /** Inseam */
+            inseam?: number | null;
+            /** Napetofloor */
+            napeToFloor?: number | null;
+            /** Napetoshoulder */
+            napeToShoulder?: number | null;
+            /** Napetowaist */
+            napeToWaist?: number | null;
+            /** Neck */
+            neck?: number | null;
+            /** Notes */
+            notes?: string | null;
+            /** Outseam */
+            outseam?: number | null;
+            /** Shirt */
+            shirt?: string | null;
+            /** Shoe */
+            shoe?: string | null;
+            /** Suitdress */
+            suitDress?: string | null;
+            /** Toelbow */
+            toElbow?: number | null;
+            /** Towrist */
+            toWrist?: number | null;
+            /** Trouser */
+            trouser?: string | null;
+            /** Underbust */
+            underbust?: number | null;
+            /** Updatedat */
+            updatedAt?: string | null;
+            /** Updatedby */
+            updatedBy?: string | null;
+            /** Userid */
+            userId: string;
+            /** Waist */
+            waist?: number | null;
+            /** Waisttofloor */
+            waistToFloor?: number | null;
+            /** Weight */
+            weight?: string | null;
+        };
         /** Member */
         Member: {
             /** Conflictssubmittedat */
             conflictsSubmittedAt?: string | null;
+            /** Costumeaccess */
+            costumeAccess?: boolean | null;
             /** Department */
             department?: string | null;
             /** Email */
             email?: string | null;
             /** Name */
             name?: string | null;
+            /** Propsaccess */
+            propsAccess?: boolean | null;
             /**
              * Role
              * @enum {string}
@@ -1775,6 +2334,19 @@ export interface components {
             userId: string;
             /** Weekly */
             weekly: components["schemas"]["WeeklyConflict"][];
+        };
+        /** Money */
+        Money: {
+            /** Boughtcents */
+            boughtCents: number;
+            /** Deposits */
+            deposits: components["schemas"]["Deposit"][];
+            /** Depositsoutcents */
+            depositsOutCents: number;
+            /** Rentalcents */
+            rentalCents: number;
+            /** Spentcents */
+            spentCents: number;
         };
         /** MyCall */
         MyCall: {
@@ -1830,7 +2402,7 @@ export interface components {
              * Type
              * @enum {string}
              */
-            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike";
+            type: "rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting";
         };
         /** MyConflicts */
         MyConflicts: {
@@ -1838,6 +2410,56 @@ export interface components {
             dates: components["schemas"]["DateConflict"][];
             /** Weekly */
             weekly: components["schemas"]["WeeklyConflict"][];
+        };
+        /** MyItem */
+        MyItem: {
+            /** Characters */
+            characters: string[];
+            /** Itemid */
+            itemId: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "costume" | "prop";
+            /** Name */
+            name: string;
+            /**
+             * Photos
+             * @default []
+             */
+            photos: components["schemas"]["Photo"][];
+            /** Sceneids */
+            sceneIds: string[];
+        };
+        /** MyItems */
+        MyItems: {
+            /** Items */
+            items: components["schemas"]["MyItem"][];
+            /**
+             * Measured
+             * @default 0
+             */
+            measured: number;
+            /** Measurementsupdatedat */
+            measurementsUpdatedAt?: string | null;
+            nextFitting?: components["schemas"]["Fitting"] | null;
+            /** Scenes */
+            scenes: components["schemas"]["SceneRef"][];
+        };
+        /**
+         * MyKeeper
+         * @description A company whose costume or prop stock I look after.
+         */
+        MyKeeper: {
+            /** Costumes */
+            costumes: boolean;
+            /** Props */
+            props: boolean;
+            /** Theaterid */
+            theaterId: string;
+            /** Theatername */
+            theaterName: string;
         };
         /** MyShow */
         MyShow: {
@@ -1868,6 +2490,18 @@ export interface components {
              */
             role: "admin";
             theater: components["schemas"]["Theater"];
+        };
+        /** Needs */
+        Needs: {
+            /** Needs */
+            needs?: string | null;
+            /**
+             * Photos
+             * @default []
+             */
+            photos: components["schemas"]["Photo"][];
+            /** Updatedat */
+            updatedAt?: string | null;
         };
         /** NewApiKey */
         NewApiKey: {
@@ -1967,6 +2601,20 @@ export interface components {
              */
             noticeEmails: boolean;
         };
+        /** Person */
+        Person: {
+            /** Name */
+            name?: string | null;
+            /** Userid */
+            userId: string;
+        };
+        /** Photo */
+        Photo: {
+            /** Photoid */
+            photoId: string;
+            /** Url */
+            url: string;
+        };
         /** PostNoticeBody */
         PostNoticeBody: {
             /**
@@ -2010,6 +2658,40 @@ export interface components {
             notified: number;
             /** Published */
             published: number;
+        };
+        /** PullBody */
+        PullBody: {
+            /**
+             * Charids
+             * @default []
+             */
+            charIds: string[];
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Sceneids
+             * @default []
+             */
+            sceneIds: string[];
+            /** Stockitemid */
+            stockItemId: string;
+        };
+        /** PutKeeperBody */
+        PutKeeperBody: {
+            /**
+             * Costumes
+             * @default false
+             */
+            costumes: boolean;
+            /** Email */
+            email: string;
+            /** Name */
+            name?: string | null;
+            /**
+             * Props
+             * @default false
+             */
+            props: boolean;
         };
         /** PutTemplateBody */
         PutTemplateBody: {
@@ -2085,6 +2767,66 @@ export interface components {
              */
             weekly: components["schemas"]["WeeklyItem"][];
         };
+        /**
+         * SaveSheetBody
+         * @description Leave a field out to keep it; send null to clear it.
+         */
+        SaveSheetBody: {
+            /** Acrossshoulders */
+            acrossShoulders?: number | null;
+            /** Belowknee */
+            belowKnee?: number | null;
+            /** Bra */
+            bra?: string | null;
+            /** Chest */
+            chest?: number | null;
+            /** Hat */
+            hat?: string | null;
+            /** Head */
+            head?: number | null;
+            /** Height */
+            height?: string | null;
+            /** Hip */
+            hip?: number | null;
+            /** Inseam */
+            inseam?: number | null;
+            /** Napetofloor */
+            napeToFloor?: number | null;
+            /** Napetoshoulder */
+            napeToShoulder?: number | null;
+            /** Napetowaist */
+            napeToWaist?: number | null;
+            /** Neck */
+            neck?: number | null;
+            /** Needs */
+            needs?: string | null;
+            /** Needsphotoids */
+            needsPhotoIds?: string[] | null;
+            /** Notes */
+            notes?: string | null;
+            /** Outseam */
+            outseam?: number | null;
+            /** Shirt */
+            shirt?: string | null;
+            /** Shoe */
+            shoe?: string | null;
+            /** Suitdress */
+            suitDress?: string | null;
+            /** Toelbow */
+            toElbow?: number | null;
+            /** Towrist */
+            toWrist?: number | null;
+            /** Trouser */
+            trouser?: string | null;
+            /** Underbust */
+            underbust?: number | null;
+            /** Waist */
+            waist?: number | null;
+            /** Waisttofloor */
+            waistToFloor?: number | null;
+            /** Weight */
+            weight?: string | null;
+        };
         /** Scene */
         Scene: {
             /** Actid */
@@ -2106,6 +2848,15 @@ export interface components {
             sceneId: string;
             /** Showid */
             showId: string;
+        };
+        /** SceneRef */
+        SceneRef: {
+            /** Name */
+            name: string;
+            /** Number */
+            number: string;
+            /** Sceneid */
+            sceneId: string;
         };
         /** SceneSuggestion */
         SceneSuggestion: {
@@ -2164,6 +2915,39 @@ export interface components {
             end: string;
             /** Start */
             start: string;
+        };
+        /** SheetRow */
+        SheetRow: {
+            /**
+             * Hasneeds
+             * @default false
+             */
+            hasNeeds: boolean;
+            /**
+             * Hasnotes
+             * @default false
+             */
+            hasNotes: boolean;
+            /** Measured */
+            measured: number;
+            /** Name */
+            name?: string | null;
+            /**
+             * Parts
+             * @default []
+             */
+            parts: string[];
+            /**
+             * Role
+             * @enum {string}
+             */
+            role: "staff" | "cast" | "crew";
+            /** Sizesfilled */
+            sizesFilled: number;
+            /** Updatedat */
+            updatedAt?: string | null;
+            /** Userid */
+            userId: string;
         };
         /** Show */
         Show: {
@@ -2262,6 +3046,16 @@ export interface components {
         /** ShowView */
         ShowView: {
             /**
+             * Costumeaccess
+             * @default false
+             */
+            costumeAccess: boolean;
+            /**
+             * Propsaccess
+             * @default false
+             */
+            propsAccess: boolean;
+            /**
              * Role
              * @enum {string}
              */
@@ -2285,6 +3079,81 @@ export interface components {
             start: string;
             /** Weekday */
             weekday: number;
+        };
+        /** Stock */
+        Stock: {
+            /** Categories */
+            categories: string[];
+            /** Items */
+            items: components["schemas"]["StockItemView"][];
+            rights: components["schemas"]["StockRights"];
+            /** Theatername */
+            theaterName: string;
+        };
+        /** StockItemView */
+        StockItemView: {
+            /** Category */
+            category?: string | null;
+            /** Createdat */
+            createdAt: string;
+            /** Inshowid */
+            inShowId?: string | null;
+            /** Inshowitemid */
+            inShowItemId?: string | null;
+            /** Inshowname */
+            inShowName?: string | null;
+            /** Itemid */
+            itemId: string;
+            /**
+             * Kind
+             * @enum {string}
+             */
+            kind: "costume" | "prop";
+            /** Location */
+            location?: string | null;
+            /** Name */
+            name: string;
+            /** Notes */
+            notes?: string | null;
+            /**
+             * Photoids
+             * @default []
+             */
+            photoIds: string[];
+            /**
+             * Photos
+             * @default []
+             */
+            photos: components["schemas"]["Photo"][];
+            /** Size */
+            size?: string | null;
+            /** Theaterid */
+            theaterId: string;
+            /** Updatedat */
+            updatedAt: string;
+        };
+        /** StockRights */
+        StockRights: {
+            /**
+             * Editcostumes
+             * @default false
+             */
+            editCostumes: boolean;
+            /**
+             * Editprops
+             * @default false
+             */
+            editProps: boolean;
+            /**
+             * Viewcostumes
+             * @default false
+             */
+            viewCostumes: boolean;
+            /**
+             * Viewprops
+             * @default false
+             */
+            viewProps: boolean;
         };
         /** StrikeCallView */
         StrikeCallView: {
@@ -2346,6 +3215,8 @@ export interface components {
             note?: string | null;
             /** Order */
             order: number;
+            /** Returnkey */
+            returnKey?: string | null;
             /** Showid */
             showId: string;
             /** Taskid */
@@ -2386,6 +3257,13 @@ export interface components {
             note?: string | null;
             /** Order */
             order: number;
+            /**
+             * Returnitems
+             * @default []
+             */
+            returnItems: string[];
+            /** Returnkey */
+            returnKey?: string | null;
             /** Showid */
             showId: string;
             /** Taskid */
@@ -2489,6 +3367,28 @@ export interface components {
              */
             warnings: components["schemas"]["Warning"][];
         };
+        /** Tracker */
+        Tracker: {
+            /** Caneditcostumes */
+            canEditCostumes: boolean;
+            /** Caneditprops */
+            canEditProps: boolean;
+            /** Canseemeasurements */
+            canSeeMeasurements: boolean;
+            /** Characters */
+            characters: components["schemas"]["CharacterRow"][];
+            costumes: components["schemas"]["KindCounts"];
+            /** Fittings */
+            fittings: components["schemas"]["Fitting"][];
+            /** Items */
+            items: components["schemas"]["ItemView"][];
+            /** Lenders */
+            lenders: string[];
+            money: components["schemas"]["Money"];
+            props: components["schemas"]["KindCounts"];
+            /** Scenes */
+            scenes: components["schemas"]["SceneRef"][];
+        };
         /** UpdateCallBody */
         UpdateCallBody: {
             /** Blocks */
@@ -2516,7 +3416,7 @@ export interface components {
             /** Title */
             title?: string | null;
             /** Type */
-            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike") | null;
+            type?: ("rehearsal" | "music" | "choreography" | "run" | "tech" | "dress" | "performance" | "strike" | "fitting") | null;
             /** Userids */
             userIds?: string[] | null;
         };
@@ -2529,6 +3429,41 @@ export interface components {
             /** Name */
             name?: string | null;
         };
+        /** UpdateItemBody */
+        UpdateItemBody: {
+            /** Charids */
+            charIds?: string[] | null;
+            /** Costcents */
+            costCents?: number | null;
+            /** Depositback */
+            depositBack?: boolean | null;
+            /** Depositcents */
+            depositCents?: number | null;
+            /** Dueback */
+            dueBack?: string | null;
+            /** Kind */
+            kind?: ("costume" | "prop") | null;
+            /** Lender */
+            lender?: string | null;
+            /** Lendercontact */
+            lenderContact?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /** Photoids */
+            photoIds?: string[] | null;
+            /** Rentalfeecents */
+            rentalFeeCents?: number | null;
+            /** Returned */
+            returned?: boolean | null;
+            /** Sceneids */
+            sceneIds?: string[] | null;
+            /** Source */
+            source?: ("stock" | "bought" | "built" | "rented" | "borrowed" | "actor") | null;
+            /** Status */
+            status?: ("needed" | "pulled" | "building" | "ready") | null;
+        };
         /** UpdateMeBody */
         UpdateMeBody: {
             /** Name */
@@ -2537,8 +3472,12 @@ export interface components {
         };
         /** UpdateMemberBody */
         UpdateMemberBody: {
+            /** Costumeaccess */
+            costumeAccess?: boolean | null;
             /** Department */
             department?: string | null;
+            /** Propsaccess */
+            propsAccess?: boolean | null;
             /** Role */
             role?: ("staff" | "cast" | "crew") | null;
             /** Title */
@@ -2596,6 +3535,21 @@ export interface components {
             timezone?: string | null;
             /** Venue */
             venue?: string | null;
+        };
+        /** UpdateStockBody */
+        UpdateStockBody: {
+            /** Category */
+            category?: string | null;
+            /** Location */
+            location?: string | null;
+            /** Name */
+            name?: string | null;
+            /** Notes */
+            notes?: string | null;
+            /** Photoids */
+            photoIds?: string[] | null;
+            /** Size */
+            size?: string | null;
         };
         /** UpdateTaskBody */
         UpdateTaskBody: {
@@ -3836,6 +4790,105 @@ export interface operations {
             };
         };
     };
+    list_sheets_api_shows__show_id__measurements_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SheetRow"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_sheet_api_shows__show_id__measurements__user_id__get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeasurementSheet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    save_sheet_api_shows__show_id__measurements__user_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SaveSheetBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MeasurementSheet"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     list_members_api_shows__show_id__members_get: {
         parameters: {
             query?: never;
@@ -4085,6 +5138,42 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Notice"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_show_photo_api_shows__show_id__photos_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "image/jpeg": string;
+                "image/png": string;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Photo"];
                 };
             };
             /** @description Validation Error */
@@ -4736,6 +5825,204 @@ export interface operations {
             };
         };
     };
+    get_tracker_api_shows__show_id__wardrobe_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Tracker"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_item_api_shows__show_id__wardrobe_items_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateItemBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_item_api_shows__show_id__wardrobe_items__item_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_item_api_shows__show_id__wardrobe_items__item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateItemBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    my_items_api_shows__show_id__wardrobe_mine_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["MyItems"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    pull_api_shows__show_id__wardrobe_pull_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                show_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PullBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ItemView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_theater_api_theaters_post: {
         parameters: {
             query?: never;
@@ -4963,6 +6250,140 @@ export interface operations {
             };
         };
     };
+    list_keepers_api_theaters__theater_id__keepers_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeeperView"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    put_keeper_api_theaters__theater_id__keepers_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PutKeeperBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeeperView"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    remove_keeper_api_theaters__theater_id__keepers__user_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                user_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["KeeperView"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    upload_stock_photo_api_theaters__theater_id__photos_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "image/jpeg": string;
+                "image/png": string;
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Photo"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     create_show_api_theaters__theater_id__shows_post: {
         parameters: {
             query?: never;
@@ -4985,6 +6406,138 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["Show"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_stock_api_theaters__theater_id__stock_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Stock"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    create_stock_api_theaters__theater_id__stock_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateStockBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockItemView"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    delete_stock_api_theaters__theater_id__stock__item_id__delete: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    update_stock_api_theaters__theater_id__stock__item_id__patch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                theater_id: string;
+                item_id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateStockBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["StockItemView"];
                 };
             };
             /** @description Validation Error */

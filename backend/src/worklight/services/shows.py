@@ -156,6 +156,8 @@ def get_show(ctx: Ctx, user: User, show_id: str) -> ShowView:
         role=access.role,
         title=access.membership.title if access.membership else "Company admin",
         via_admin=access.via_admin,
+        costume_access=bool(access.membership and access.membership.costume_access),
+        props_access=bool(access.membership and access.membership.props_access),
     )
 
 
@@ -196,6 +198,8 @@ def _member_view(m: Membership, user: User | None, sees_email: bool) -> Member:
         department=m.department,
         status=m.status,
         conflicts_submitted_at=m.conflicts_submitted_at,
+        costume_access=m.costume_access if sees_email else None,
+        props_access=m.props_access if sees_email else None,
     )
 
 
@@ -284,6 +288,9 @@ class UpdateMemberBody(Model):
     role: ShowRole | None = None
     title: optional_text(60) = None  # type: ignore[valid-type]
     department: optional_text(60) = None  # type: ignore[valid-type]
+    # Manages the show's costumes (and sees cast measurements) / its props.
+    costume_access: bool | None = None
+    props_access: bool | None = None
 
 
 def update_member(ctx: Ctx, user: User, show_id: str, member_id: str, body: UpdateMemberBody) -> Member:
@@ -291,7 +298,11 @@ def update_member(ctx: Ctx, user: User, show_id: str, member_id: str, body: Upda
     membership = ctx.store.get_membership(show_id, member_id)
     if not membership:
         raise NotFound("That person isn't in this show")
-    fields = {k: getattr(body, k) for k in body.model_fields_set if not (k == "role" and body.role is None)}
+    fields = {
+        k: getattr(body, k)
+        for k in body.model_fields_set
+        if not (k in ("role", "costume_access", "props_access") and getattr(body, k) is None)
+    }
     if membership.user_id == user.user_id and fields.get("role", "staff") != "staff":
         raise Invalid("You can't remove your own staff access")
     membership = membership.model_copy(update=fields)

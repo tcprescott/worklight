@@ -93,6 +93,16 @@ class WorklightStack(Stack):
             auto_delete_objects=True,
         )
 
+        # Costume and prop pictures. Private: the API hands out short-lived links to people who may see them.
+        photo_bucket = s3.Bucket(
+            self,
+            "PhotoBucket",
+            block_public_access=s3.BlockPublicAccess.BLOCK_ALL,
+            enforce_ssl=True,
+            encryption=s3.BucketEncryption.S3_MANAGED,
+            removal_policy=RemovalPolicy.RETAIN,
+        )
+
         http_api = apigw.HttpApi(self, "Api", create_default_stage=True)
 
         # Client-side routes such as /join/abc load the app shell. Done per request on the site's behavior
@@ -157,6 +167,7 @@ class WorklightStack(Stack):
             "TABLE_NAME": table.table_name,
             "FROM_EMAIL": s.from_email,
             "APP_URL_PARAM": app_url_param.parameter_name,
+            "PHOTO_BUCKET": photo_bucket.bucket_name,
         }
 
         def fn(
@@ -205,6 +216,8 @@ class WorklightStack(Stack):
 
         # FastAPI imports more than the small triggers, so the API gets more memory (and CPU) for cold starts.
         api_fn = fn("ApiFunction", "api.handler", sends_email=True, memory=512)
+        photo_bucket.grant_read_write(api_fn)
+        photo_bucket.grant_delete(api_fn)
         pre_sign_up = fn("PreSignUpFunction", "auth.pre_sign_up", sends_email=False)
         define_challenge = fn("DefineAuthChallengeFunction", "auth.define_auth_challenge", sends_email=False)
         create_challenge = fn("CreateAuthChallengeFunction", "auth.create_auth_challenge", sends_email=True)
