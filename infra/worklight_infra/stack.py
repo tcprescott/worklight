@@ -136,6 +136,9 @@ class WorklightStack(Stack):
                 "/api/*": api_behavior,
                 # The MCP endpoint lives at the root so assistants can be given https://<site>/mcp.
                 "/mcp": api_behavior,
+                # Apps such as Claude sign people in through these (OAuth discovery, registration, tokens).
+                "/.well-known/*": api_behavior,
+                "/oauth/*": api_behavior,
             },
         )
 
@@ -338,6 +341,9 @@ class WorklightStack(Stack):
             ("/api/v1/{proxy+}", [apigw.HttpMethod.ANY]),
             ("/api/graphql", [apigw.HttpMethod.POST]),
             ("/mcp", [apigw.HttpMethod.POST, apigw.HttpMethod.GET, apigw.HttpMethod.DELETE]),
+            # OAuth for apps: public by design; the app checks codes, tokens and PKCE itself.
+            ("/.well-known/{proxy+}", [apigw.HttpMethod.GET]),
+            ("/oauth/{proxy+}", [apigw.HttpMethod.POST]),
         ):
             http_api.add_routes(path=key_path, methods=key_methods, integration=key_integration)
         # Throttle every route so a runaway client can't run up the bill.

@@ -19,6 +19,7 @@ from worklight.rest import (
     conflicts,
     linenotes,
     notify,
+    oauth,
     people,
     schedule,
     shows,
@@ -121,6 +122,9 @@ def create_app(ctx: Ctx) -> FastAPI:
     ):
         app.include_router(module.router(ctx, current_user))
     app.include_router(apikeys.personal_router(ctx, current_user))
+    app.include_router(oauth.router(ctx, current_user))
+    # Apps such as Claude sign people in here (OAuth discovery, registration, tokens).
+    app.include_router(oauth.public_router(ctx))
 
     # The public REST API: the same routes under /api/v1, signed in with an API key instead of Cognito.
     # API Gateway sends /api/v1/* here without its JWT authorizer, so these never see Cognito claims.

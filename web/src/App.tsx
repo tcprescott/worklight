@@ -8,6 +8,7 @@ import { MyCalls } from "./pages/actor/MyCalls";
 import { MyConflicts } from "./pages/actor/MyConflicts";
 import { ShowHome } from "./pages/actor/ShowHome";
 import { AuthCallback } from "./pages/AuthCallback";
+import { Connect } from "./pages/Connect";
 import { Breakdown } from "./pages/director/Breakdown";
 import { CompanyHome } from "./pages/director/CompanyHome";
 import { People } from "./pages/director/People";
@@ -39,7 +40,12 @@ export function App() {
   if (path === "/auth/callback") return <AuthCallback />;
   const join = match("/join/{token}", path);
   if (join) return <Join token={join.token!} />;
-  if (!isSignedIn()) return <SignIn next={path === "/sign-in" ? "/" : path + search} />;
+  if (!isSignedIn()) {
+    const heading = path === "/connect" ? "Sign in to connect an app" : undefined;
+    return <SignIn next={path === "/sign-in" ? "/" : path + search} heading={heading} />;
+  }
+  // An app such as Claude asking to sign in as you: a page of its own, outside the app's shell.
+  if (path === "/connect") return <Connect search={search} />;
 
   return (
     <SessionProvider>

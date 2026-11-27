@@ -27,6 +27,9 @@ from worklight.models import (
     Model,
     Notice,
     NoticeRead,
+    OAuthClient,
+    OAuthCode,
+    OAuthToken,
     PushDevice,
     Scene,
     Show,
@@ -244,13 +247,13 @@ class DynamoStore:
 
     @staticmethod
     def _api_key_key(key: ApiKey) -> keys.Key:
-        if key.kind == "personal":
+        if key.kind != "company":
             return keys.personal_api_key(key.created_by, key.key_id)
         return keys.api_key(str(key.theater_id), key.key_id)
 
     def put_api_key(self, key: ApiKeyRecord) -> None:
         secret_hash = key.secret_hash
-        owner = {"userId": key.created_by} if key.kind == "personal" else {"theaterId": key.theater_id}
+        owner = {"userId": key.created_by} if key.kind != "company" else {"theaterId": key.theater_id}
         self.db.transact_write_items(
             TransactItems=[
                 self._tx_put(_item(self._api_key_key(key), "apiKey", key), new=True),
@@ -274,6 +277,10 @@ class DynamoStore:
         items = self._query_all(f"USER#{user_id}", keys.APIKEY_PREFIX)
         return [ApiKeyRecord.model_validate(i) for i in items]
 
+    def get_personal_api_key(self, user_id: str, key_id: str) -> ApiKeyRecord | None:
+        item = self._get(keys.personal_api_key(user_id, key_id))
+        return ApiKeyRecord.model_validate(item) if item else None
+
     def get_api_key_by_secret(self, secret_hash: str) -> ApiKeyRecord | None:
         pointer = self._get(keys.api_key_secret(secret_hash))
         if not pointer:
@@ -296,6 +303,69 @@ class DynamoStore:
             ConditionExpression="attribute_exists(PK)",
             ExpressionAttributeValues={":at": {"S": at}},
         )
+
+    def rotate_api_key_secret(self, key: ApiKeyRecord, new_hash: str) -> bool:
+        """Swaps a key's secret (a connection's refresh token). False if the old one was already used."""
+        try:
+            self.db.transact_write_items(
+                TransactItems=[
+                    {
+                        "Delete": {
+                            "TableName": self.table,
+                            "Key": _to_ddb(keys.api_key_secret(key.secret_hash)),
+                            "ConditionExpression": "attribute_exists(PK)",
+                        }
+                    },
+                    self._tx_put(
+                        {
+                            **keys.api_key_secret(new_hash),
+                            "entity": "apiKeySecret",
+                            "userId": key.created_by,
+                            "keyId": key.key_id,
+                        },
+                        new=True,
+                    ),
+                    {
+                        "Update": {
+                            "TableName": self.table,
+                            "Key": _to_ddb(self._api_key_key(key)),
+                            "UpdateExpression": "SET secretHash = :h",
+                            "ConditionExpression": "attribute_exists(PK)",
+                            "ExpressionAttributeValues": {":h": {"S": new_hash}},
+                        }
+                    },
+                ]
+            )
+        except self.db.exceptions.TransactionCanceledException:
+            return False
+        return True
+
+    # ---- OAuth sign-in for apps ---------------------------------------------------------------
+
+    def put_oauth_client(self, client: OAuthClient) -> None:
+        self._put_item(keys.oauth_client(client.client_id), "oauthClient", client)
+
+    def get_oauth_client(self, client_id: str) -> OAuthClient | None:
+        item = self._get(keys.oauth_client(client_id))
+        return OAuthClient.model_validate(item) if item else None
+
+    def put_oauth_code(self, code: OAuthCode) -> None:
+        self._put_item(keys.oauth_code(code.code_hash), "oauthCode", code)
+
+    def take_oauth_code(self, code_hash: str) -> OAuthCode | None:
+        """Deletes a code and returns it, so each code works once."""
+        res = self.db.delete_item(
+            TableName=self.table, Key=_to_ddb(keys.oauth_code(code_hash)), ReturnValues="ALL_OLD"
+        )
+        item = res.get("Attributes")
+        return OAuthCode.model_validate(_from_ddb(item)) if item else None
+
+    def put_oauth_token(self, token: OAuthToken) -> None:
+        self._put_item(keys.oauth_token(token.token_hash), "oauthToken", token)
+
+    def get_oauth_token(self, token_hash: str) -> OAuthToken | None:
+        item = self._get(keys.oauth_token(token_hash))
+        return OAuthToken.model_validate(item) if item else None
 
     def count_request(self, key_id: str, minute: int, expires_at: int) -> int:
         """Adds one to this key's count for the minute and returns the new count."""

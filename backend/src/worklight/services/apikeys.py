@@ -92,7 +92,8 @@ def list_personal_keys(ctx: Ctx, user: User) -> list[ApiKey]:
 
 
 def create_personal_key(ctx: Ctx, user: User, body: CreatePersonalKeyBody) -> NewApiKey:
-    if len(ctx.store.list_personal_api_keys(user.user_id)) >= MAX_PERSONAL_KEYS:
+    personal = [k for k in ctx.store.list_personal_api_keys(user.user_id) if k.kind == "personal"]
+    if len(personal) >= MAX_PERSONAL_KEYS:
         raise Invalid(f"You can have at most {MAX_PERSONAL_KEYS} personal keys. Revoke one you don't use.")
     secret = SECRET_PREFIX + new_token()
     record = ApiKeyRecord(
@@ -125,14 +126,16 @@ class KeyPrincipal:
 
     @property
     def can_write(self) -> bool:
-        return self.key.kind == "company" and self.key.scope == "write"
+        # A signed-in app may try anything its person can; the services check their role in the show.
+        return self.key.kind in ("company", "connection") and self.key.scope == "write"
 
     @property
     def personal(self) -> bool:
-        return self.key.kind == "personal"
+        """Acts as one person across their own shows (a personal key or a signed-in app)."""
+        return self.key.kind != "company"
 
     def require_write(self) -> None:
-        if self.personal:
+        if self.key.kind == "personal":
             raise Forbidden("Personal keys can only read. Make changes in the Worklight app.")
         if not self.can_write:
             raise Forbidden("This API key can only read. Make a read and write key to change things.")
@@ -154,13 +157,22 @@ class KeyPrincipal:
 
 
 def principal_for(ctx: Ctx, authorization: str | None) -> KeyPrincipal:
-    """Checks an Authorization: Bearer wl_... header, counts the request, and returns who it is."""
+    """Checks an Authorization: Bearer header (an API key, or a signed-in app's access token), counts the
+    request, and returns who it is."""
+    from worklight.services import oauth
+
     scheme, _, secret = (authorization or "").partition(" ")
     secret = secret.strip()
-    if scheme.lower() != "bearer" or not secret.startswith(SECRET_PREFIX):
-        raise Unauthorized("Send an API key as Authorization: Bearer wl_...")
-    record = ctx.store.get_api_key_by_secret(sha256(secret))
-    if not record:
+    if scheme.lower() != "bearer" or not secret.startswith((SECRET_PREFIX, oauth.ACCESS_PREFIX)):
+        raise Unauthorized("Sign in with Worklight, or send an API key as Authorization: Bearer wl_...")
+    if secret.startswith(oauth.ACCESS_PREFIX):
+        record = oauth.connection_for_access_token(ctx, secret)
+        if not record:
+            raise Unauthorized("That sign-in has expired or was disconnected. Sign in again.")
+    else:
+        record = ctx.store.get_api_key_by_secret(sha256(secret))
+    # A connection's stored secret is its refresh token, which only works at /oauth/token.
+    if not record or (record.kind == "connection" and not secret.startswith(oauth.ACCESS_PREFIX)):
         raise Unauthorized("That API key isn't valid. It may have been revoked.")
     user = ctx.store.get_user(record.created_by)
     if not user:

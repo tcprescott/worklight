@@ -4,6 +4,9 @@ import type { components } from "./api-types";
 type Schemas = components["schemas"];
 
 export type Me = Schemas["Me"];
+export type AuthorizeRequest = Schemas["AuthorizeRequest"];
+export type ConnectInfo = Schemas["ConnectInfo"];
+export type AuthorizeResult = Schemas["AuthorizeResult"];
 export type MyShow = Schemas["MyShow"];
 export type User = Schemas["User"];
 export type Member = Schemas["Member"];

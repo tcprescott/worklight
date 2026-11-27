@@ -1,4 +1,5 @@
-"""MCP at /mcp (stateless Streamable HTTP, JSON responses), signed in with an API key.
+"""MCP at /mcp (stateless Streamable HTTP, JSON responses). Apps sign in with a Worklight account (see
+worklight.services.oauth) or send an API key.
 
 Lets an assistant read a company's shows, breakdowns, conflicts and schedule, suggest scenes for a night,
 and (with a read and write key) build, publish and announce. Each HTTP request gets its own short-lived
@@ -34,10 +35,10 @@ _principal: ContextVar[KeyPrincipal] = ContextVar("worklight_mcp_principal")
 
 INSTRUCTIONS = (
     "Worklight schedules rehearsals for a community theater company. Dates are YYYY-MM-DD and times HH:MM in "
-    "the show's timezone. Start with list_shows. A personal key reads only what its owner sees in the app: "
-    "use my_calls and my_line_notes for an actor's own schedule and notes. Conflicts: hard means can't "
-    "come, soft means would rather not, partial means arriving late or leaving early, elsewhere means "
-    "another show has called them."
+    "the show's timezone. Start with list_shows. When signed in as a person, you can do what they can "
+    "do in the app: use my_calls and my_line_notes for an actor's own schedule and notes. Conflicts: hard "
+    "means can't come, soft means would rather not, partial means arriving late or leaving early, "
+    "elsewhere means another show has called them."
 )
 
 
@@ -97,16 +98,16 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
         return _out(theaters_service.get_theater(ctx, p.user, str(p.key.theater_id)).shows)
 
     @server.tool(
-        description="The calls (rehearsals, performances) that need the key's owner, from today on, in one "
-        "show or all of their shows"
+        description="The calls (rehearsals, performances) that need the signed-in person, from today on, "
+        "in one show or all of their shows"
     )
     def my_calls(show_id: str | None = None) -> str:
         p = who()
         return _out(schedule_service.my_calls(ctx, p.user, scoped(show_id) if show_id else None))
 
     @server.tool(
-        description="The key owner's own line notes in a show: every released set, newest first, with each "
-        "note's page, what the script says and what they said. Good for running lines with them."
+        description="The signed-in person's own line notes in a show: every released set, newest first, "
+        "with each note's page, what the script says and what they said. Good for running lines with them."
     )
     def my_line_notes(show_id: str) -> str:
         return _out(linenotes_service.my_notes(ctx, who().user, scoped(show_id)))
@@ -293,7 +294,10 @@ class McpEndpoint:
         try:
             principal = principal_for(ctx, headers.get("authorization"))
         except ServiceError as err:
-            await _json(send, err.status, {"error": err.message})
+            # Tells an app where to sign the person in (RFC 9728), so connecting needs only the address.
+            metadata = f"{ctx.app_url.rstrip('/')}/.well-known/oauth-protected-resource"
+            challenge = f'Bearer resource_metadata="{metadata}"' if err.status == 401 else None
+            await _json(send, err.status, {"error": err.message}, challenge)
             return
         token = _principal.set(principal)
         try:
@@ -310,13 +314,10 @@ class McpEndpoint:
             _principal.reset(token)
 
 
-async def _json(send: Send, status: int, body: dict[str, Any]) -> None:
+async def _json(send: Send, status: int, body: dict[str, Any], challenge: str | None = None) -> None:
     raw = json.dumps(body).encode()
-    await send(
-        {
-            "type": "http.response.start",
-            "status": status,
-            "headers": [(b"content-type", b"application/json"), (b"content-length", str(len(raw)).encode())],
-        }
-    )
+    headers = [(b"content-type", b"application/json"), (b"content-length", str(len(raw)).encode())]
+    if challenge:
+        headers.append((b"www-authenticate", challenge.encode()))
+    await send({"type": "http.response.start", "status": status, "headers": headers})
     await send({"type": "http.response.body", "body": raw})

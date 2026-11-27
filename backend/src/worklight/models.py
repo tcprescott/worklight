@@ -430,7 +430,9 @@ class NoticeRead(Model):
 ApiKeyScope = Literal["read", "write"]
 # company: made by a company admin, acts as them across the company. personal: anyone's own read-only key,
 # acting as them in the shows they're in (their calls, their line notes).
-ApiKeyKind = Literal["company", "personal"]
+# company: an admin's key for one company. personal: a read-only key someone made for themselves.
+# connection: an app (such as Claude) someone signed in to with their Worklight account.
+ApiKeyKind = Literal["company", "personal", "connection"]
 
 
 class ApiKey(Model):
@@ -450,8 +452,38 @@ class ApiKey(Model):
 
 
 class ApiKeyRecord(ApiKey):
-    # SHA-256 of the secret, to find the key from a request and to delete its lookup item.
+    # SHA-256 of the secret, to find the key from a request and to delete its lookup item. For a connection,
+    # the secret is its current refresh token.
     secret_hash: str
+
+
+class OAuthClient(Model):
+    """An app that registered itself to sign people in (OAuth dynamic client registration)."""
+
+    client_id: str
+    client_name: str
+    redirect_uris: list[str]
+    created_at: str
+
+
+class OAuthCode(Model):
+    """A one-time authorization code, waiting to be swapped for tokens. Expires in minutes."""
+
+    code_hash: str
+    client_id: str
+    user_id: str
+    redirect_uri: str
+    code_challenge: str
+    expires_at: int
+
+
+class OAuthToken(Model):
+    """A short-lived access token for a connection. Only its hash is stored."""
+
+    token_hash: str
+    user_id: str
+    key_id: str
+    expires_at: int
 
 
 # ---- API shapes --------------------------------------------------------------------------------

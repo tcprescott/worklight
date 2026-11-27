@@ -27,8 +27,11 @@ MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
 THEATER#<id>   STRIKE#<taskId>   company strike template task
-USER#<id>      APIKEY#<keyId>    personal API key (no secret)
+USER#<id>      APIKEY#<keyId>    personal API key or signed-in connection (no secret)
 APIKEY#<hash>  META              secret hash -> theaterId or userId, keyId
+OAUTHCLIENT#<id>  META            app that registered to sign people in
+OAUTHCODE#<hash>  META            one-time authorization code (TTL)
+OAUTHTOKEN#<hash> META            access token -> userId, connection keyId (TTL)
 RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
 
@@ -160,6 +163,18 @@ def personal_api_key(user_id: str, key_id: str) -> Key:
 
 def api_key_secret(secret_hash: str) -> Key:
     return {"PK": f"APIKEY#{secret_hash}", "SK": "META"}
+
+
+def oauth_client(client_id: str) -> Key:
+    return {"PK": f"OAUTHCLIENT#{client_id}", "SK": "META"}
+
+
+def oauth_code(code_hash: str) -> Key:
+    return {"PK": f"OAUTHCODE#{code_hash}", "SK": "META"}
+
+
+def oauth_token(token_hash: str) -> Key:
+    return {"PK": f"OAUTHTOKEN#{token_hash}", "SK": "META"}
 
 
 def rate(key_id: str, minute: int) -> Key:

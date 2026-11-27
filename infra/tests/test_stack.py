@@ -87,6 +87,8 @@ def test_serves_the_site_and_api_from_one_cloudfront_distribution(template: Temp
                     "CacheBehaviors": [
                         Match.object_like({"PathPattern": "/api/*"}),
                         Match.object_like({"PathPattern": "/mcp"}),
+                        Match.object_like({"PathPattern": "/.well-known/*"}),
+                        Match.object_like({"PathPattern": "/oauth/*"}),
                     ]
                 }
             )
@@ -134,7 +136,13 @@ def test_runs_call_reminders_hourly(template: Template) -> None:
 
 
 def test_public_apis_skip_the_cognito_authorizer(template: Template) -> None:
-    for route in ("ANY /api/v1/{proxy+}", "POST /api/graphql", "POST /mcp"):
+    for route in (
+        "ANY /api/v1/{proxy+}",
+        "POST /api/graphql",
+        "POST /mcp",
+        "GET /.well-known/{proxy+}",
+        "POST /oauth/{proxy+}",
+    ):
         template.has_resource_properties(
             "AWS::ApiGatewayV2::Route", {"RouteKey": route, "AuthorizationType": "NONE"}
         )

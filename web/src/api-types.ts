@@ -281,6 +281,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/oauth/authorize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Authorize */
+        post: operations["authorize_api_oauth_authorize_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/oauth/connect-info": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Connect Info */
+        post: operations["connect_info_api_oauth_connect_info_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/public/calendar/{token}.ics": {
         parameters: {
             query?: never;
@@ -1296,7 +1330,7 @@ export interface components {
              * @default company
              * @enum {string}
              */
-            kind: "company" | "personal";
+            kind: "company" | "personal" | "connection";
             /** Lastusedat */
             lastUsedAt?: string | null;
             /** Name */
@@ -1367,6 +1401,72 @@ export interface components {
             role: "staff" | "cast" | "crew";
             /** Userid */
             userId: string;
+        };
+        /** AuthorizeBody */
+        AuthorizeBody: {
+            /** Approve */
+            approve: boolean;
+            /** Clientid */
+            clientId: string;
+            /**
+             * Codechallenge
+             * @default
+             */
+            codeChallenge: string;
+            /**
+             * Codechallengemethod
+             * @default
+             */
+            codeChallengeMethod: string;
+            /** Redirecturi */
+            redirectUri: string;
+            /** Resource */
+            resource?: string | null;
+            /**
+             * Responsetype
+             * @default code
+             */
+            responseType: string;
+            /** Scope */
+            scope?: string | null;
+            /** State */
+            state?: string | null;
+        };
+        /**
+         * AuthorizeRequest
+         * @description What the app asked for, as the /connect page received it in its address.
+         */
+        AuthorizeRequest: {
+            /** Clientid */
+            clientId: string;
+            /**
+             * Codechallenge
+             * @default
+             */
+            codeChallenge: string;
+            /**
+             * Codechallengemethod
+             * @default
+             */
+            codeChallengeMethod: string;
+            /** Redirecturi */
+            redirectUri: string;
+            /** Resource */
+            resource?: string | null;
+            /**
+             * Responsetype
+             * @default code
+             */
+            responseType: string;
+            /** Scope */
+            scope?: string | null;
+            /** State */
+            state?: string | null;
+        };
+        /** AuthorizeResult */
+        AuthorizeResult: {
+            /** Redirectto */
+            redirectTo: string;
         };
         /**
          * Block
@@ -1730,6 +1830,16 @@ export interface components {
              * @default 0
              */
             minutesLate: number;
+        };
+        /**
+         * ConnectInfo
+         * @description What the /connect page shows: who is asking, and where they'll go back to.
+         */
+        ConnectInfo: {
+            /** Clientname */
+            clientName: string;
+            /** Redirecthost */
+            redirectHost: string;
         };
         /** CreateApiKeyBody */
         CreateApiKeyBody: {
@@ -3863,6 +3973,72 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["TestPushResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    authorize_api_oauth_authorize_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthorizeBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthorizeResult"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    connect_info_api_oauth_connect_info_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AuthorizeRequest"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConnectInfo"];
                 };
             };
             /** @description Validation Error */

@@ -8,7 +8,7 @@ import "./director/api-keys.css";
 
 const day = (iso: string) => new Date(iso).toLocaleDateString([], { month: "short", day: "numeric" });
 
-/** Account: read-only keys of your own, so an assistant like Claude can read your calls and line notes. */
+/** Account: apps signed in as you (such as Claude), and read-only keys for tools that can't sign in. */
 export function PersonalKeys(props: { onSaved: (message: string) => void }) {
   const { data: keys, error, reload, setData } = useAsync(() => api.myApiKeys(), []);
   const [name, setName] = useState("");
@@ -34,11 +34,14 @@ export function PersonalKeys(props: { onSaved: (message: string) => void }) {
     }
   };
 
-  const revoke = async (k: ApiKey) => {
+  const connections = (keys ?? []).filter((k) => k.kind === "connection");
+  const personal = (keys ?? []).filter((k) => k.kind !== "connection");
+
+  const revoke = async (k: ApiKey, done = "Revoked") => {
     try {
       await api.revokeMyApiKey(k.keyId);
       setData((keys ?? []).filter((x) => x.keyId !== k.keyId));
-      props.onSaved(`Revoked ${k.name}`);
+      props.onSaved(`${done} ${k.name}`);
     } catch (err) {
       setFormError((err as Error).message);
     } finally {
@@ -51,14 +54,14 @@ export function PersonalKeys(props: { onSaved: (message: string) => void }) {
       <div className="stack-sm">
         <h2 className="title-sm">Connect Claude</h2>
         <p className="small muted">
-          Make a key so Claude (or another assistant) can read your calls and your line notes, and help you run lines. It can only read,
-          and only what you can see here.
+          Claude (or another assistant) can read your calls and line notes and help you run lines. It does what you can do here, as
+          you.
         </p>
       </div>
       <div className="field">
-        MCP address
+        Connector address
         <code className="actor-readonly">{origin}/mcp</code>
-        <span className="hint">Add it as a connector and send the key as Authorization: Bearer wl_…</span>
+        <span className="hint">In Claude, add a custom connector with this address. It will ask you to sign in to Worklight.</span>
       </div>
 
       {error ? (
@@ -71,9 +74,41 @@ export function PersonalKeys(props: { onSaved: (message: string) => void }) {
       ) : !keys ? (
         <Loading label="Loading keys..." />
       ) : (
-        keys.length > 0 && (
+        <>
+          {connections.length > 0 && (
+            <div className="ak-list" aria-label="Connected apps">
+              {connections.map((k) => (
+                <div key={k.keyId} className="ak-row">
+                  <span className="ak-name">
+                    <span className="ak-name-text">{k.name}</span>
+                  </span>
+                  <span className="ak-meta">Connected {day(k.createdAt)}</span>
+                  <span className="ak-used">{k.lastUsedAt ? `Used ${day(k.lastUsedAt)}` : "Never used"}</span>
+                  {revoking === k.keyId ? (
+                    <span className="row">
+                      <button type="button" className="btn btn-sm btn-danger" onClick={() => void revoke(k, "Disconnected")}>
+                        Disconnect now
+                      </button>
+                      <button type="button" className="btn btn-sm" onClick={() => setRevoking(undefined)}>
+                        Keep
+                      </button>
+                    </span>
+                  ) : (
+                    <button type="button" className="btn ak-revoke" onClick={() => setRevoking(k.keyId)}>
+                      Disconnect
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="stack-sm">
+            <h3 className="caps">Personal keys</h3>
+            <p className="small muted">For tools that can't sign in. A key can only read.</p>
+          </div>
+          {personal.length > 0 && (
           <div className="ak-list" aria-label="Your keys">
-            {keys.map((k) => (
+            {personal.map((k) => (
               <div key={k.keyId} className="ak-row">
                 <span className="ak-name">
                   <span className="ak-name-text">{k.name}</span>
@@ -98,7 +133,8 @@ export function PersonalKeys(props: { onSaved: (message: string) => void }) {
               </div>
             ))}
           </div>
-        )
+          )}
+        </>
       )}
 
       <form

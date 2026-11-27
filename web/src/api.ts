@@ -1,4 +1,7 @@
 import type {
+  AuthorizeRequest,
+  AuthorizeResult,
+  ConnectInfo,
   CreateLineNoteSetBody,
   LineNote,
   LineNoteSet,
@@ -134,6 +137,8 @@ export const api = {
   myApiKeys: () => request<ApiKey[]>("GET", "/me/api-keys"),
   createMyApiKey: (name: string) => request<NewApiKey>("POST", "/me/api-keys", { name }),
   revokeMyApiKey: (keyId: string) => request<void>("DELETE", `/me/api-keys/${e(keyId)}`),
+  connectInfo: (req: AuthorizeRequest) => request<ConnectInfo>("POST", "/oauth/connect-info", req),
+  authorizeApp: (req: AuthorizeRequest, approve: boolean) => request<AuthorizeResult>("POST", "/oauth/authorize", { ...req, approve }),
   apiKeys: (theaterId: string) => request<ApiKey[]>("GET", `/theaters/${e(theaterId)}/api-keys`),
   createApiKey: (theaterId: string, body: CreateApiKeyBody) =>
     request<NewApiKey>("POST", `/theaters/${e(theaterId)}/api-keys`, body),

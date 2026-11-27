@@ -314,7 +314,8 @@
             "default": "company",
             "enum": [
               "company",
-              "personal"
+              "personal",
+              "connection"
             ],
             "title": "Kind",
             "type": "string"
@@ -552,6 +553,157 @@
           "role"
         ],
         "title": "AttendancePerson",
+        "type": "object"
+      },
+      "AuthorizeBody": {
+        "properties": {
+          "approve": {
+            "title": "Approve",
+            "type": "boolean"
+          },
+          "clientId": {
+            "title": "Clientid",
+            "type": "string"
+          },
+          "codeChallenge": {
+            "default": "",
+            "title": "Codechallenge",
+            "type": "string"
+          },
+          "codeChallengeMethod": {
+            "default": "",
+            "title": "Codechallengemethod",
+            "type": "string"
+          },
+          "redirectUri": {
+            "title": "Redirecturi",
+            "type": "string"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource"
+          },
+          "responseType": {
+            "default": "code",
+            "title": "Responsetype",
+            "type": "string"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scope"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          }
+        },
+        "required": [
+          "clientId",
+          "redirectUri",
+          "approve"
+        ],
+        "title": "AuthorizeBody",
+        "type": "object"
+      },
+      "AuthorizeRequest": {
+        "description": "What the app asked for, as the /connect page received it in its address.",
+        "properties": {
+          "clientId": {
+            "title": "Clientid",
+            "type": "string"
+          },
+          "codeChallenge": {
+            "default": "",
+            "title": "Codechallenge",
+            "type": "string"
+          },
+          "codeChallengeMethod": {
+            "default": "",
+            "title": "Codechallengemethod",
+            "type": "string"
+          },
+          "redirectUri": {
+            "title": "Redirecturi",
+            "type": "string"
+          },
+          "resource": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Resource"
+          },
+          "responseType": {
+            "default": "code",
+            "title": "Responsetype",
+            "type": "string"
+          },
+          "scope": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Scope"
+          },
+          "state": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "State"
+          }
+        },
+        "required": [
+          "clientId",
+          "redirectUri"
+        ],
+        "title": "AuthorizeRequest",
+        "type": "object"
+      },
+      "AuthorizeResult": {
+        "properties": {
+          "redirectTo": {
+            "title": "Redirectto",
+            "type": "string"
+          }
+        },
+        "required": [
+          "redirectTo"
+        ],
+        "title": "AuthorizeResult",
         "type": "object"
       },
       "Block": {
@@ -1498,6 +1650,25 @@
           "checkin"
         ],
         "title": "CheckInResult",
+        "type": "object"
+      },
+      "ConnectInfo": {
+        "description": "What the /connect page shows: who is asking, and where they'll go back to.",
+        "properties": {
+          "clientName": {
+            "title": "Clientname",
+            "type": "string"
+          },
+          "redirectHost": {
+            "title": "Redirecthost",
+            "type": "string"
+          }
+        },
+        "required": [
+          "clientName",
+          "redirectHost"
+        ],
+        "title": "ConnectInfo",
         "type": "object"
       },
       "CreateApiKeyBody": {
@@ -7112,6 +7283,82 @@
           }
         },
         "summary": "Test Push"
+      }
+    },
+    "/api/oauth/authorize": {
+      "post": {
+        "operationId": "authorize_api_oauth_authorize_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorizeBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthorizeResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Authorize"
+      }
+    },
+    "/api/oauth/connect-info": {
+      "post": {
+        "operationId": "connect_info_api_oauth_connect_info_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthorizeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectInfo"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Connect Info"
       }
     },
     "/api/public/calendar/{token}.ics": {
