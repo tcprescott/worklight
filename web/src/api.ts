@@ -1,4 +1,14 @@
 import type {
+  AuthorizeRequest,
+  AuthorizeResult,
+  ConnectInfo,
+  CreateLineNoteSetBody,
+  LineNote,
+  LineNoteSet,
+  LineNoteSetDetail,
+  LineNotesHome,
+  NoteFields,
+  ReleaseResult,
   AddStrikeTaskBody,
   StrikeChecklist,
   StrikeTask,
@@ -124,6 +134,10 @@ export const api = {
     request<Admin[]>("DELETE", `/theaters/${e(theaterId)}/admins/${e(userId)}`),
 
   // Company API keys (admins only). The secret comes back once, when the key is made.
+  myConnections: () => request<ApiKey[]>("GET", "/me/connections"),
+  disconnect: (keyId: string) => request<void>("DELETE", `/me/connections/${e(keyId)}`),
+  connectInfo: (req: AuthorizeRequest) => request<ConnectInfo>("POST", "/oauth/connect-info", req),
+  authorizeApp: (req: AuthorizeRequest, approve: boolean) => request<AuthorizeResult>("POST", "/oauth/authorize", { ...req, approve }),
   apiKeys: (theaterId: string) => request<ApiKey[]>("GET", `/theaters/${e(theaterId)}/api-keys`),
   createApiKey: (theaterId: string, body: CreateApiKeyBody) =>
     request<NewApiKey>("POST", `/theaters/${e(theaterId)}/api-keys`, body),
@@ -215,6 +229,19 @@ export const api = {
   deleteNotice: (showId: string, noticeId: string) => request<void>("DELETE", `${show(showId)}/notices/${e(noticeId)}`),
   markNoticesRead: (showId: string, noticeIds: string[]) =>
     request<void>("POST", `${show(showId)}/notices/read`, { noticeIds }),
+
+  // Line notes
+  lineNotes: (showId: string) => request<LineNotesHome>("GET", `${show(showId)}/notes`),
+  createLineNoteSet: (showId: string, input: CreateLineNoteSetBody) =>
+    request<LineNoteSet>("POST", `${show(showId)}/notes`, input),
+  lineNoteSet: (showId: string, setId: string) => request<LineNoteSetDetail>("GET", `${show(showId)}/notes/${e(setId)}`),
+  deleteLineNoteSet: (showId: string, setId: string) => request<void>("DELETE", `${show(showId)}/notes/${e(setId)}`),
+  addLineNotes: (showId: string, setId: string, notes: NoteFields[]) =>
+    request<LineNote[]>("POST", `${show(showId)}/notes/${e(setId)}/notes`, { notes }),
+  deleteLineNote: (showId: string, setId: string, noteId: string) =>
+    request<void>("DELETE", `${show(showId)}/notes/${e(setId)}/notes/${e(noteId)}`),
+  releaseLineNotes: (showId: string, setId: string) =>
+    request<ReleaseResult>("POST", `${show(showId)}/notes/${e(setId)}/release`),
 
   // Strike
   strike: (showId: string) => request<StrikeChecklist>("GET", `${show(showId)}/strike`),

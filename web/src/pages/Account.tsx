@@ -6,6 +6,7 @@ import { FormError, useToast } from "../ui";
 import type { NotifyPrefs, PushDevice } from "../types";
 import { pushSupport, thisDeviceId, turnOffPush, turnOnPush } from "../lib/push";
 import { CalendarLinks } from "./actor/CalendarLinks";
+import { ConnectClaude } from "./ConnectClaude";
 import "./actor/actor.css";
 
 export function Account() {
@@ -70,6 +71,7 @@ export function Account() {
           </div>
           <CalendarLinks />
         </div>
+        <ConnectClaude onSaved={showToast} />
       </main>
       {toast}
     </CompanyShell>

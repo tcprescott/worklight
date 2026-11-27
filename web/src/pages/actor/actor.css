@@ -1463,3 +1463,16 @@ button.actor-level {
   align-items: center;
   gap: 10px;
 }
+
+/* /connect: what an app will be able to do */
+.connect-list {
+  margin: 0;
+  padding: 14px 16px 14px 34px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 8px;
+  line-height: 1.4;
+}

@@ -1,7 +1,8 @@
 """API keys for the public REST (/api/v1), GraphQL (/api/graphql) and MCP (/mcp) APIs.
 
-A key belongs to one company and acts as the admin who created it, limited to that company's shows. Read
-keys can only read. The secret is shown once; only its SHA-256 is stored."""
+A company key belongs to one company and acts as the admin who created it, limited to that company's shows.
+Read keys can only read. The secret is shown once; only its SHA-256 is stored. People connect apps such as
+Claude by signing in instead (see worklight.services.oauth); those connections are listed and removed here."""
 
 from dataclasses import dataclass
 from typing import Annotated
@@ -9,7 +10,15 @@ from typing import Annotated
 from worklight import clock
 from worklight.ids import new_id, new_token, now_iso, sha256
 from worklight.models import ApiKey, ApiKeyRecord, ApiKeyScope, Model, Show, User
-from worklight.services.base import Ctx, Forbidden, NotFound, ServiceError, Unauthorized, text
+from worklight.services.base import (
+    Ctx,
+    Forbidden,
+    NotFound,
+    ServiceError,
+    Unauthorized,
+    show_access,
+    text,
+)
 
 SECRET_PREFIX = "wl_"
 # Requests per key per minute.
@@ -69,6 +78,19 @@ def revoke_key(ctx: Ctx, user: User, theater_id: str, key_id: str) -> None:
     ctx.store.delete_api_key(record)
 
 
+def list_connections(ctx: Ctx, user: User) -> list[ApiKey]:
+    """Apps signed in as this person."""
+    found = ctx.store.list_connections(user.user_id)
+    return [ApiKey.model_validate(k.model_dump(exclude={"secret_hash"})) for k in found]
+
+
+def disconnect(ctx: Ctx, user: User, key_id: str) -> None:
+    record = ctx.store.get_connection(user.user_id, key_id)
+    if not record:
+        raise NotFound("That app isn't connected")
+    ctx.store.delete_api_key(record)
+
+
 @dataclass(frozen=True)
 class KeyPrincipal:
     """Who an API request is: the key, and the admin it acts as."""
@@ -78,36 +100,57 @@ class KeyPrincipal:
 
     @property
     def can_write(self) -> bool:
-        return self.key.scope == "write"
+        # A signed-in app may try anything its person can; the services check their role in the show.
+        return self.key.kind in ("company", "connection") and self.key.scope == "write"
+
+    @property
+    def personal(self) -> bool:
+        """Acts as one person across their own shows (an app they signed in to)."""
+        return self.key.kind != "company"
 
     def require_write(self) -> None:
         if not self.can_write:
             raise Forbidden("This API key can only read. Make a read and write key to change things.")
 
     def show(self, ctx: Ctx, show_id: str) -> Show:
-        """The show, if it belongs to the key's company (a key never reaches another company)."""
+        """The show, if reachable: in the key's company, or (a signed-in app) one its person is in."""
         show = ctx.store.get_show(show_id)
+        if self.personal:
+            if not show or show_access(ctx, show_id, self.user).role is None:
+                raise NotFound("Show not found")
+            return show
         if not show or show.theater_id != self.key.theater_id:
             raise NotFound("Show not found")
         return show
 
     def theater(self, theater_id: str) -> None:
-        if theater_id != self.key.theater_id:
+        if self.personal or theater_id != self.key.theater_id:
             raise NotFound("Company not found")
 
 
 def principal_for(ctx: Ctx, authorization: str | None) -> KeyPrincipal:
-    """Checks an Authorization: Bearer wl_... header, counts the request, and returns who it is."""
+    """Checks an Authorization: Bearer header (an API key, or a signed-in app's access token), counts the
+    request, and returns who it is."""
+    from worklight.services import oauth
+
     scheme, _, secret = (authorization or "").partition(" ")
     secret = secret.strip()
-    if scheme.lower() != "bearer" or not secret.startswith(SECRET_PREFIX):
-        raise Unauthorized("Send an API key as Authorization: Bearer wl_...")
-    record = ctx.store.get_api_key_by_secret(sha256(secret))
-    if not record:
+    if scheme.lower() != "bearer" or not secret.startswith((SECRET_PREFIX, oauth.ACCESS_PREFIX)):
+        raise Unauthorized("Sign in with Worklight, or send an API key as Authorization: Bearer wl_...")
+    if secret.startswith(oauth.ACCESS_PREFIX):
+        record = oauth.connection_for_access_token(ctx, secret)
+        if not record:
+            raise Unauthorized("That sign-in has expired or was disconnected. Sign in again.")
+    else:
+        record = ctx.store.get_api_key_by_secret(sha256(secret))
+    # A connection's stored secret is its refresh token, which only works at /oauth/token.
+    if not record or (record.kind == "connection" and not secret.startswith(oauth.ACCESS_PREFIX)):
         raise Unauthorized("That API key isn't valid. It may have been revoked.")
-    # The key stops working if the admin who made it is no longer an admin.
     user = ctx.store.get_user(record.created_by)
-    if not user or not ctx.store.is_theater_admin(record.theater_id, user.user_id):
+    if not user:
+        raise Unauthorized("That API key isn't valid. It may have been revoked.")
+    # A company key stops working if the admin who made it is no longer an admin.
+    if record.kind == "company" and not ctx.store.is_theater_admin(str(record.theater_id), user.user_id):
         raise Unauthorized("That API key's owner is no longer a company admin. Make a new key.")
     now = int(clock.now().timestamp())
     minute = now // 60

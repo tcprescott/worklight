@@ -198,6 +198,21 @@ def notice_email(to: str, show_name: str, author: str, title: str, body: str, ur
     )
 
 
+def line_notes_email(
+    to: str, show_name: str, title: str, date: str, count: int, sender: str, url: str
+) -> Email:
+    """Says notes are waiting, without the notes themselves: they open in the app, just for the actor."""
+    plural = "s" if count != 1 else ""
+    when = _pretty_date(date)
+    intro = f"{sender} sent you {count} line note{plural} from {title} ({when}). They're just for you."
+    return Email(
+        to=to,
+        subject=f"{show_name}: your line notes from {title}",
+        text=f"{intro}\n\n{url}",
+        html=_layout(f"Your line notes from {title}", escape(intro), "Read my notes", url),
+    )
+
+
 def pretty_time(hhmm: str) -> str:
     return _pretty_time(hhmm)
 

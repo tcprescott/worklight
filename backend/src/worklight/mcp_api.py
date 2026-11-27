@@ -1,4 +1,5 @@
-"""MCP at /mcp (stateless Streamable HTTP, JSON responses), signed in with an API key.
+"""MCP at /mcp (stateless Streamable HTTP, JSON responses). Apps sign in with a Worklight account (see
+worklight.services.oauth) or send an API key.
 
 Lets an assistant read a company's shows, breakdowns, conflicts and schedule, suggest scenes for a night,
 and (with a read and write key) build, publish and announce. Each HTTP request gets its own short-lived
@@ -18,9 +19,11 @@ from pydantic import ValidationError
 from starlette.types import Receive, Scope, Send
 
 from worklight.models import Model
+from worklight.services import accounts as accounts_service
 from worklight.services import breakdown as breakdown_service
 from worklight.services import callboard as callboard_service
 from worklight.services import conflicts as conflicts_service
+from worklight.services import linenotes as linenotes_service
 from worklight.services import schedule as schedule_service
 from worklight.services import shows as shows_service
 from worklight.services import strike as strike_service
@@ -32,8 +35,10 @@ _principal: ContextVar[KeyPrincipal] = ContextVar("worklight_mcp_principal")
 
 INSTRUCTIONS = (
     "Worklight schedules rehearsals for a community theater company. Dates are YYYY-MM-DD and times HH:MM in "
-    "the show's timezone. Start with list_shows. Conflicts: hard means can't come, soft means would rather "
-    "not, partial means arriving late or leaving early, elsewhere means another show has called them."
+    "the show's timezone. Start with list_shows. When signed in as a person, you can do what they can "
+    "do in the app: use my_calls and my_line_notes for an actor's own schedule and notes. Conflicts: hard "
+    "means can't come, soft means would rather not, partial means arriving late or leaving early, "
+    "elsewhere means another show has called them."
 )
 
 
@@ -88,7 +93,24 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
     )
     def list_shows() -> str:
         p = who()
-        return _out(theaters_service.get_theater(ctx, p.user, p.key.theater_id).shows)
+        if p.personal:
+            return _out(accounts_service.get_me(ctx, p.user).shows)
+        return _out(theaters_service.get_theater(ctx, p.user, str(p.key.theater_id)).shows)
+
+    @server.tool(
+        description="The calls (rehearsals, performances) that need the signed-in person, from today on, "
+        "in one show or all of their shows"
+    )
+    def my_calls(show_id: str | None = None) -> str:
+        p = who()
+        return _out(schedule_service.my_calls(ctx, p.user, scoped(show_id) if show_id else None))
+
+    @server.tool(
+        description="The signed-in person's own line notes in a show: every released set, newest first, "
+        "with each note's page, what the script says and what they said. Good for running lines with them."
+    )
+    def my_line_notes(show_id: str) -> str:
+        return _out(linenotes_service.my_notes(ctx, who().user, scoped(show_id)))
 
     @server.tool(description="One show's settings: venue, timezone, rehearsal nights, tech week, opening")
     def get_show(show_id: str) -> str:
@@ -199,6 +221,63 @@ def build_server(ctx: Ctx) -> MCPServer[Any]:
         body = strike_service.UpdateTaskBody.model_validate(fields)
         return _out(strike_service.update_task(ctx, p.user, scoped(show_id), task_id, body))
 
+    @server.tool(
+        description="Line notes for the show: each run's set of notes, whether it has been released to the "
+        "actors, and the cast (user ids and the parts they play) that notes can go to"
+    )
+    def list_line_notes(show_id: str) -> str:
+        return _out(linenotes_service.get_home(ctx, who().user, scoped(show_id)))
+
+    @server.tool(
+        description="One run's line notes in page order, with who each note is for and, once released, "
+        "which actors have opened theirs"
+    )
+    def get_line_notes(show_id: str, set_id: str) -> str:
+        return _out(linenotes_service.get_set(ctx, who().user, scoped(show_id), set_id))
+
+    @server.tool(
+        description="Files line notes as drafts (nothing is sent until staff release them). Turn rough notes "
+        "into one entry each: kind is dropped, paraphrase, added, called (called for line), jumped (jumped a "
+        "cue), late (late entrance) or other. Name the actor by char_id (from get_breakdown) or actor_id. "
+        "page is the script page; script_text is what the script says and said_text what the actor said. "
+        "Leave set_id out to start a new set, which then needs date and title (e.g. 'Run of Act III'). "
+        "Read the parsed notes back to the person before filing if anything was unclear."
+    )
+    def add_line_notes(
+        show_id: str,
+        notes: list[dict[str, Any]],
+        set_id: str | None = None,
+        date: str | None = None,
+        title: str | None = None,
+    ) -> str:
+        p = write()
+        sid = scoped(show_id)
+        body = linenotes_service.AddNotesBody.model_validate({"notes": notes})
+        if not set_id:
+            if not date or not title:
+                raise ToolError("Give set_id to add to an existing set, or date and title to start one")
+            made = linenotes_service.create_set(
+                ctx, p.user, sid, linenotes_service.CreateSetBody(date=date, title=title)
+            )
+            set_id = made.set_id
+            try:
+                added = linenotes_service.add_notes(ctx, p.user, sid, set_id, body)
+            except ServiceError:
+                # Don't leave an empty set behind when the notes themselves were wrong.
+                ctx.store.delete_line_note_set(sid, set_id)
+                raise
+        else:
+            added = linenotes_service.add_notes(ctx, p.user, sid, set_id, body)
+        return _out({"setId": set_id, "added": [n.to_item() for n in added]})
+
+    @server.tool(
+        description="Releases a set of line notes: each actor with notes gets one email and push with a link "
+        "to their own notes. Can't be undone, so confirm with the person first."
+    )
+    def release_line_notes(show_id: str, set_id: str) -> str:
+        p = write()
+        return _out(linenotes_service.release_set(ctx, p.user, scoped(show_id), set_id))
+
     return mcp
 
 
@@ -215,7 +294,10 @@ class McpEndpoint:
         try:
             principal = principal_for(ctx, headers.get("authorization"))
         except ServiceError as err:
-            await _json(send, err.status, {"error": err.message})
+            # Tells an app where to sign the person in (RFC 9728), so connecting needs only the address.
+            metadata = f"{ctx.app_url.rstrip('/')}/.well-known/oauth-protected-resource"
+            challenge = f'Bearer resource_metadata="{metadata}"' if err.status == 401 else None
+            await _json(send, err.status, {"error": err.message}, challenge)
             return
         token = _principal.set(principal)
         try:
@@ -232,13 +314,10 @@ class McpEndpoint:
             _principal.reset(token)
 
 
-async def _json(send: Send, status: int, body: dict[str, Any]) -> None:
+async def _json(send: Send, status: int, body: dict[str, Any], challenge: str | None = None) -> None:
     raw = json.dumps(body).encode()
-    await send(
-        {
-            "type": "http.response.start",
-            "status": status,
-            "headers": [(b"content-type", b"application/json"), (b"content-length", str(len(raw)).encode())],
-        }
-    )
+    headers = [(b"content-type", b"application/json"), (b"content-length", str(len(raw)).encode())]
+    if challenge:
+        headers.append((b"www-authenticate", challenge.encode()))
+    await send({"type": "http.response.start", "status": status, "headers": headers})
     await send({"type": "http.response.body", "body": raw})

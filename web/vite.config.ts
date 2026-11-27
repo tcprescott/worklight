@@ -21,6 +21,8 @@ export default defineConfig({
     },
   ],
   server: {
-    proxy: target ? { "/api": { target, changeOrigin: true } } : undefined,
+    proxy: target
+      ? Object.fromEntries(["/api", "/mcp", "/oauth", "/.well-known"].map((p) => [p, { target, changeOrigin: true }]))
+      : undefined,
   },
 });

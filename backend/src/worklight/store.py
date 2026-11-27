@@ -19,11 +19,17 @@ from worklight.models import (
     CheckIn,
     DateConflict,
     Invite,
+    LineNote,
+    LineNoteRead,
+    LineNoteSet,
     MagicLinkRecord,
     Membership,
     Model,
     Notice,
     NoticeRead,
+    OAuthClient,
+    OAuthCode,
+    OAuthToken,
     PushDevice,
     Scene,
     Show,
@@ -102,6 +108,9 @@ class ShowPartition:
     notices: list[Notice] = field(default_factory=list)
     reads: list[NoticeRead] = field(default_factory=list)
     strike_tasks: list[StrikeTask] = field(default_factory=list)
+    line_note_sets: list[LineNoteSet] = field(default_factory=list)
+    line_notes: list[LineNote] = field(default_factory=list)
+    line_note_reads: list[LineNoteRead] = field(default_factory=list)
 
 
 class DynamoStore:
@@ -236,16 +245,23 @@ class DynamoStore:
 
     # ---- API keys -----------------------------------------------------------------------------
 
+    @staticmethod
+    def _api_key_key(key: ApiKey) -> keys.Key:
+        if key.kind != "company":
+            return keys.connection_key(key.created_by, key.key_id)
+        return keys.api_key(str(key.theater_id), key.key_id)
+
     def put_api_key(self, key: ApiKeyRecord) -> None:
         secret_hash = key.secret_hash
+        owner = {"userId": key.created_by} if key.kind != "company" else {"theaterId": key.theater_id}
         self.db.transact_write_items(
             TransactItems=[
-                self._tx_put(_item(keys.api_key(key.theater_id, key.key_id), "apiKey", key), new=True),
+                self._tx_put(_item(self._api_key_key(key), "apiKey", key), new=True),
                 self._tx_put(
                     {
                         **keys.api_key_secret(secret_hash),
                         "entity": "apiKeySecret",
-                        "theaterId": key.theater_id,
+                        **owner,
                         "keyId": key.key_id,
                     },
                     new=True,
@@ -257,24 +273,99 @@ class DynamoStore:
         items = self._query_all(f"THEATER#{theater_id}", keys.APIKEY_PREFIX)
         return [ApiKeyRecord.model_validate(i) for i in items]
 
+    def list_connections(self, user_id: str) -> list[ApiKeyRecord]:
+        items = self._query_all(f"USER#{user_id}", keys.APIKEY_PREFIX)
+        return [ApiKeyRecord.model_validate(i) for i in items]
+
+    def get_connection(self, user_id: str, key_id: str) -> ApiKeyRecord | None:
+        item = self._get(keys.connection_key(user_id, key_id))
+        return ApiKeyRecord.model_validate(item) if item else None
+
     def get_api_key_by_secret(self, secret_hash: str) -> ApiKeyRecord | None:
         pointer = self._get(keys.api_key_secret(secret_hash))
         if not pointer:
             return None
-        item = self._get(keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"])))
+        if "userId" in pointer:
+            key = keys.connection_key(str(pointer["userId"]), str(pointer["keyId"]))
+        else:
+            key = keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"]))
+        item = self._get(key)
         return ApiKeyRecord.model_validate(item) if item else None
 
     def delete_api_key(self, key: ApiKeyRecord) -> None:
-        self._batch_delete([keys.api_key(key.theater_id, key.key_id), keys.api_key_secret(key.secret_hash)])
+        self._batch_delete([self._api_key_key(key), keys.api_key_secret(key.secret_hash)])
 
     def touch_api_key(self, key: ApiKey, at: str) -> None:
         self.db.update_item(
             TableName=self.table,
-            Key=_to_ddb(keys.api_key(key.theater_id, key.key_id)),
+            Key=_to_ddb(self._api_key_key(key)),
             UpdateExpression="SET lastUsedAt = :at",
             ConditionExpression="attribute_exists(PK)",
             ExpressionAttributeValues={":at": {"S": at}},
         )
+
+    def rotate_api_key_secret(self, key: ApiKeyRecord, new_hash: str) -> bool:
+        """Swaps a key's secret (a connection's refresh token). False if the old one was already used."""
+        try:
+            self.db.transact_write_items(
+                TransactItems=[
+                    {
+                        "Delete": {
+                            "TableName": self.table,
+                            "Key": _to_ddb(keys.api_key_secret(key.secret_hash)),
+                            "ConditionExpression": "attribute_exists(PK)",
+                        }
+                    },
+                    self._tx_put(
+                        {
+                            **keys.api_key_secret(new_hash),
+                            "entity": "apiKeySecret",
+                            "userId": key.created_by,
+                            "keyId": key.key_id,
+                        },
+                        new=True,
+                    ),
+                    {
+                        "Update": {
+                            "TableName": self.table,
+                            "Key": _to_ddb(self._api_key_key(key)),
+                            "UpdateExpression": "SET secretHash = :h",
+                            "ConditionExpression": "attribute_exists(PK)",
+                            "ExpressionAttributeValues": {":h": {"S": new_hash}},
+                        }
+                    },
+                ]
+            )
+        except self.db.exceptions.TransactionCanceledException:
+            return False
+        return True
+
+    # ---- OAuth sign-in for apps ---------------------------------------------------------------
+
+    def put_oauth_client(self, client: OAuthClient) -> None:
+        self._put_item(keys.oauth_client(client.client_id), "oauthClient", client)
+
+    def get_oauth_client(self, client_id: str) -> OAuthClient | None:
+        item = self._get(keys.oauth_client(client_id))
+        return OAuthClient.model_validate(item) if item else None
+
+    def put_oauth_code(self, code: OAuthCode) -> None:
+        self._put_item(keys.oauth_code(code.code_hash), "oauthCode", code)
+
+    def take_oauth_code(self, code_hash: str) -> OAuthCode | None:
+        """Deletes a code and returns it, so each code works once."""
+        res = self.db.delete_item(
+            TableName=self.table, Key=_to_ddb(keys.oauth_code(code_hash)), ReturnValues="ALL_OLD"
+        )
+        item = res.get("Attributes")
+        return OAuthCode.model_validate(_from_ddb(item)) if item else None
+
+    def put_oauth_token(self, token: OAuthToken) -> None:
+        self._put_item(keys.oauth_token(token.token_hash), "oauthToken", token)
+
+    def get_oauth_token(self, token_hash: str) -> OAuthToken | None:
+        item = self._get(keys.oauth_token(token_hash))
+        return OAuthToken.model_validate(item) if item else None
 
     def count_request(self, key_id: str, minute: int, expires_at: int) -> int:
         """Adds one to this key's count for the minute and returns the new count."""
@@ -412,6 +503,12 @@ class DynamoStore:
                 part.reads.append(NoticeRead.model_validate(data))
             elif sk.startswith(keys.STRIKE_PREFIX):
                 part.strike_tasks.append(StrikeTask.model_validate(data))
+            elif sk.startswith(keys.NOTESET_PREFIX):
+                part.line_note_sets.append(LineNoteSet.model_validate(data))
+            elif sk.startswith(keys.LINENOTE_PREFIX):
+                part.line_notes.append(LineNote.model_validate(data))
+            elif sk.startswith(keys.NOTEREAD_PREFIX):
+                part.line_note_reads.append(LineNoteRead.model_validate(data))
         part.acts.sort(key=lambda a: a.order)
         part.scenes.sort(key=lambda s: s.order)
         part.characters.sort(key=lambda c: c.order)
@@ -563,6 +660,46 @@ class DynamoStore:
 
     def put_notice_read(self, read: NoticeRead) -> None:
         self._put_item(keys.notice_read(read.show_id, read.notice_id, read.user_id), "noticeRead", read)
+
+    # ---- line notes ---------------------------------------------------------------------------
+
+    def list_line_note_sets(self, show_id: str) -> list[LineNoteSet]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], keys.NOTESET_PREFIX)
+        return [LineNoteSet.model_validate(i) for i in items]
+
+    def get_line_note_set(self, show_id: str, set_id: str) -> LineNoteSet | None:
+        item = self._get(keys.line_note_set(show_id, set_id))
+        return LineNoteSet.model_validate(item) if item else None
+
+    def put_line_note_set(self, note_set: LineNoteSet) -> None:
+        self._put_item(keys.line_note_set(note_set.show_id, note_set.set_id), "lineNoteSet", note_set)
+
+    def list_line_notes(self, show_id: str, set_id: str) -> list[LineNote]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], f"{keys.LINENOTE_PREFIX}{set_id}#")
+        return [LineNote.model_validate(i) for i in items]
+
+    def put_line_notes(self, notes: list[LineNote]) -> None:
+        self._batch_put([(keys.line_note(n.show_id, n.set_id, n.note_id), "lineNote", n) for n in notes])
+
+    def delete_line_note(self, show_id: str, set_id: str, note_id: str) -> None:
+        self._delete(keys.line_note(show_id, set_id, note_id))
+
+    def list_line_note_reads(self, show_id: str, set_id: str) -> list[LineNoteRead]:
+        items = self._query_all(keys.show_pointer(show_id)["PK"], f"{keys.NOTEREAD_PREFIX}{set_id}#")
+        return [LineNoteRead.model_validate(i) for i in items]
+
+    def put_line_note_read(self, read: LineNoteRead) -> None:
+        self._put_item(keys.line_note_read(read.show_id, read.set_id, read.user_id), "lineNoteRead", read)
+
+    def delete_line_note_set(self, show_id: str, set_id: str) -> None:
+        """The set, every note in it, and who opened it."""
+        doomed = [keys.line_note(show_id, set_id, n.note_id) for n in self.list_line_notes(show_id, set_id)]
+        doomed += [
+            keys.line_note_read(show_id, set_id, r.user_id)
+            for r in self.list_line_note_reads(show_id, set_id)
+        ]
+        self._batch_delete(doomed)
+        self._delete(keys.line_note_set(show_id, set_id))
 
     # ---- strike -------------------------------------------------------------------------------
 

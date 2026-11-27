@@ -418,8 +418,8 @@ p {
   background: var(--surface);
 }
 .tabs a {
-  /* Six staff tabs fit a 360px phone during tech and strike. */
-  min-width: 54px;
+  /* Seven staff tabs fit a 360px phone during tech and strike. */
+  min-width: 44px;
   min-height: 48px;
   display: flex;
   flex-direction: column;
@@ -971,4 +971,23 @@ p {
 .phone-page .tabs {
   max-width: 480px;
   margin: 0 auto;
+}
+
+/* A checkbox with a label and hint beside it, in forms. */
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+}
+.check-row input {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--plum);
+}
+.check-row .hint {
+  display: block;
+  color: var(--muted);
+  font-size: 13px;
 }

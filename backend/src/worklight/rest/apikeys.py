@@ -26,3 +26,20 @@ def router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
         return Response(status_code=204)
 
     return r
+
+
+def connections_router(ctx: Ctx, current_user: UserDep, base: str = "/api") -> APIRouter:
+    """Apps, such as Claude, that someone signed in to with their Worklight account."""
+    r = APIRouter(prefix=base + "/me/connections")
+    CurrentUser = Annotated[User, Depends(current_user)]
+
+    @r.get("", response_model=list[ApiKey], response_model_exclude_none=True)
+    def list_connections(user: CurrentUser) -> list[ApiKey]:
+        return service.list_connections(ctx, user)
+
+    @r.delete("/{key_id}", status_code=204)
+    def disconnect(key_id: str, user: CurrentUser) -> Response:
+        service.disconnect(ctx, user, key_id)
+        return Response(status_code=204)
+
+    return r

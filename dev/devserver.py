@@ -20,6 +20,7 @@ from dataclasses import asdict
 from datetime import date
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 import boto3
 import uvicorn
@@ -127,7 +128,7 @@ def build(seeded: bool, app_url: str) -> Any:
     def magic_link(body: EmailBody) -> dict[str, str]:
         """Stands in for Cognito's custom auth: "emails" a link that signs in as this address."""
         email = normalize_email(body.email)
-        url = f"{app_url}/auth/magic?email={email}&code=dev&next={body.next}"
+        url = f"{app_url}/auth/magic?{urlencode({'email': email, 'code': 'dev', 'next': body.next})}"
         outbox.send(
             Email(to=email, subject="Your Worklight sign-in link", text=f"Sign in:\n\n{url}", html=url)
         )

@@ -14,6 +14,9 @@ SHOW#<showId>  CHECKIN#<date>#<userId>    tech week and performance attendance
 SHOW#<showId>  NOTICE#<noticeId>          callboard notice
 SHOW#<showId>  READ#<noticeId>#<userId>   who has read a notice
 SHOW#<showId>  STRIKE#<taskId>            strike checklist task
+SHOW#<showId>  NOTESET#<setId>            line notes from one run
+SHOW#<showId>  LINENOTE#<setId>#<noteId>  one line note for one actor
+SHOW#<showId>  NOTEREAD#<setId>#<userId>  when an actor opened their notes from a set
 USER#<id>      PROFILE           user
 USER#<id>      CONFLICT#WEEKLY#<weekday>   usual-week conflict rule
 USER#<id>      CONFLICT#DATE#<date>        answer for one date
@@ -24,7 +27,11 @@ MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
 THEATER#<id>   STRIKE#<taskId>   company strike template task
-APIKEY#<hash>  META              secret hash -> theaterId, keyId
+USER#<id>      APIKEY#<keyId>    app signed in as this person (no secret)
+APIKEY#<hash>  META              secret hash -> theaterId or userId, keyId
+OAUTHCLIENT#<id>  META            app that registered to sign people in
+OAUTHCODE#<hash>  META            one-time authorization code (TTL)
+OAUTHTOKEN#<hash> META            access token -> userId, connection keyId (TTL)
 RATE#<keyId>#<minute>  META      API key request count for one minute (TTL)
 """
 
@@ -47,6 +54,9 @@ NOTICE_PREFIX = "NOTICE#"
 APIKEY_PREFIX = "APIKEY#"
 READ_PREFIX = "READ#"
 STRIKE_PREFIX = "STRIKE#"
+NOTESET_PREFIX = "NOTESET#"
+LINENOTE_PREFIX = "LINENOTE#"
+NOTEREAD_PREFIX = "NOTEREAD#"
 DEVICE_PREFIX = "DEVICE#"
 
 
@@ -127,6 +137,18 @@ def strike_task(show_id: str, task_id: str) -> Key:
     return {"PK": f"SHOW#{show_id}", "SK": f"STRIKE#{task_id}"}
 
 
+def line_note_set(show_id: str, set_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"NOTESET#{set_id}"}
+
+
+def line_note(show_id: str, set_id: str, note_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"LINENOTE#{set_id}#{note_id}"}
+
+
+def line_note_read(show_id: str, set_id: str, user_id: str) -> Key:
+    return {"PK": f"SHOW#{show_id}", "SK": f"NOTEREAD#{set_id}#{user_id}"}
+
+
 def strike_template_task(theater_id: str, task_id: str) -> Key:
     return {"PK": f"THEATER#{theater_id}", "SK": f"STRIKE#{task_id}"}
 
@@ -135,8 +157,24 @@ def api_key(theater_id: str, key_id: str) -> Key:
     return {"PK": f"THEATER#{theater_id}", "SK": f"APIKEY#{key_id}"}
 
 
+def connection_key(user_id: str, key_id: str) -> Key:
+    return {"PK": f"USER#{user_id}", "SK": f"APIKEY#{key_id}"}
+
+
 def api_key_secret(secret_hash: str) -> Key:
     return {"PK": f"APIKEY#{secret_hash}", "SK": "META"}
+
+
+def oauth_client(client_id: str) -> Key:
+    return {"PK": f"OAUTHCLIENT#{client_id}", "SK": "META"}
+
+
+def oauth_code(code_hash: str) -> Key:
+    return {"PK": f"OAUTHCODE#{code_hash}", "SK": "META"}
+
+
+def oauth_token(token_hash: str) -> Key:
+    return {"PK": f"OAUTHTOKEN#{token_hash}", "SK": "META"}
 
 
 def rate(key_id: str, minute: int) -> Key:

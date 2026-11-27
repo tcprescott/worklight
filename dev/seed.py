@@ -21,7 +21,7 @@ from worklight.models import (
     User,
     WeeklyConflict,
 )
-from worklight.services import schedule, strike
+from worklight.services import linenotes, schedule, shows, strike
 from worklight.services.base import Ctx, user_for_email
 
 # (name, part or title, role, department, status) where status is invited, joined or ready.
@@ -320,6 +320,7 @@ def seed(ctx: Ctx) -> None:
     seed_schedule(ctx, jordan, users)
     seed_callboard(ctx, jordan, users)
     seed_strike(ctx, jordan, users)
+    seed_line_notes(ctx, jordan, users)
 
 
 def seed_schedule(ctx: Ctx, director: User, users: dict[str, User]) -> None:
@@ -503,3 +504,85 @@ def seed_strike(ctx: Ctx, director: User, users: dict[str, User]) -> None:
             assignee_ids=[users[n].user_id for n in names], done=True if i == 0 else None
         )
         strike.update_task(ctx, director, "midsummer", tasks[i].task_id, body)
+
+
+def seed_line_notes(ctx: Ctx, director: User, users: dict[str, User]) -> None:
+    """Priya's released notes from a run of Act 1 (Maya has read hers), and Ana's draft from last night."""
+    part = ctx.store.load_show("midsummer")
+    chars = {c.name: c.char_id for c in part.characters}
+    scenes = {s.number: s.scene_id for s in part.scenes}
+    priya = users["Priya Nair"]
+    ana = users["Ana Ruiz"]
+    shows.update_member(ctx, director, "midsummer", ana.user_id, shows.UpdateMemberBody(note_taker=True))
+
+    def note(char: str, kind: str, page: str, scene: str, **text: str) -> linenotes.NoteFields:
+        return linenotes.NoteFields.model_validate(
+            {"charId": chars[char], "kind": kind, "page": page, "sceneId": scenes[scene], **text}
+        )
+
+    first = linenotes.create_set(
+        ctx, priya, "midsummer", linenotes.CreateSetBody(date="2026-11-20", title="Run of Act 1")
+    )
+    linenotes.add_notes(
+        ctx,
+        priya,
+        "midsummer",
+        first.set_id,
+        linenotes.AddNotesBody(
+            notes=[
+                note(
+                    "Hermia",
+                    "paraphrase",
+                    "6",
+                    "1.1",
+                    scriptText="I would my father looked but with my eyes.",
+                    saidText="I wish my father looked but with my eyes.",
+                ),
+                note("Hermia", "dropped", "8", "1.1", scriptText="O hell! to choose love by another's eyes."),
+                note(
+                    "Bottom",
+                    "added",
+                    "14",
+                    "1.2",
+                    scriptText="Let me play the lion too.",
+                    saidText="Oh, let me play the lion too.",
+                ),
+                note(
+                    "Bottom",
+                    "called",
+                    "15",
+                    "1.2",
+                    scriptText="I will roar, that I will do any man's heart good to hear me.",
+                ),
+                note(
+                    "Lysander", "jumped", "9", "1.1", comment="Came in on Hermia's line before she finished."
+                ),
+            ]
+        ),
+    )
+    linenotes.release_set(ctx, director, "midsummer", first.set_id)
+    linenotes.get_set(ctx, users["Maya Chen"], "midsummer", first.set_id)
+
+    draft = linenotes.create_set(
+        ctx, ana, "midsummer", linenotes.CreateSetBody(date="2026-11-25", title="Run of Acts 2 and 3")
+    )
+    linenotes.add_notes(
+        ctx,
+        ana,
+        "midsummer",
+        draft.set_id,
+        linenotes.AddNotesBody(
+            notes=[
+                note(
+                    "Puck",
+                    "paraphrase",
+                    "22",
+                    "2.1",
+                    scriptText="I'll put a girdle round about the earth",
+                    saidText="I'll put a girdle round the earth",
+                ),
+                note("Oberon", "late", "20", "2.1", comment="Missed the stage left entrance."),
+                note("Titania", "dropped", "21", "2.1", scriptText="These are the forgeries of jealousy"),
+            ]
+        ),
+    )

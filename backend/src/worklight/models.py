@@ -84,6 +84,8 @@ class Membership(Model):
     joined_at: str | None = None
     # When the person last pressed Send on their conflicts for this show.
     conflicts_submitted_at: str | None = None
+    # Crew only: may take line notes (as drafts that staff release), e.g. an ASM on book.
+    note_taker: bool = False
 
 
 class NotifyPrefs(Model):
@@ -345,6 +347,59 @@ class StrikeTask(Model):
     updated_at: str
 
 
+# ---- Line notes ----------------------------------------------------------------------------------
+
+# Dropped a line, paraphrased it, added words, called for line, jumped a cue, came in late, anything else.
+LineNoteKind = Literal["dropped", "paraphrase", "added", "called", "jumped", "late", "other"]
+
+
+class LineNoteSet(Model):
+    """The line notes from one run or rehearsal. Drafts until staff release them to the actors."""
+
+    set_id: str
+    show_id: str
+    date: str
+    # e.g. "Run of Act III".
+    title: str
+    call_id: str | None = None
+    created_by: str
+    created_at: str
+    updated_at: str
+    released_at: str | None = None
+    released_by: str | None = None
+
+
+class LineNote(Model):
+    """One note for one actor. Only that actor (and staff and note-takers) ever see it."""
+
+    note_id: str
+    show_id: str
+    set_id: str
+    actor_id: str
+    # The part it's about, when the actor plays more than one (or to label it).
+    char_id: str | None = None
+    kind: LineNoteKind
+    # Script page as printed, e.g. "42" or "42a".
+    page: str | None = None
+    scene_id: str | None = None
+    # What the script says, and what the actor said instead.
+    script_text: str | None = None
+    said_text: str | None = None
+    comment: str | None = None
+    created_by: str
+    created_at: str
+    updated_at: str
+
+
+class LineNoteRead(Model):
+    """When an actor first opened their notes from a set."""
+
+    show_id: str
+    set_id: str
+    user_id: str
+    at: str
+
+
 # ---- Callboard -----------------------------------------------------------------------------------
 
 NoticeAudience = Literal["everyone", "cast", "crew"]
@@ -373,13 +428,18 @@ class NoticeRead(Model):
 # ---- API keys --------------------------------------------------------------------------------------
 
 ApiKeyScope = Literal["read", "write"]
+# company: made by a company admin, acts as them across the company.
+# connection: an app (such as Claude) someone signed in to with their Worklight account; acts as them.
+ApiKeyKind = Literal["company", "connection"]
 
 
 class ApiKey(Model):
-    """A company's key for the public REST, GraphQL and MCP APIs. It acts as the admin who made it."""
+    """A key for the public REST, GraphQL and MCP APIs. It acts as the person who made it."""
 
     key_id: str
-    theater_id: str
+    kind: ApiKeyKind = "company"
+    # Company keys only; a connection reaches every show its person is in.
+    theater_id: str | None = None
     name: str
     scope: ApiKeyScope = "read"
     # The first characters of the secret, so people can tell keys apart. The secret itself is never stored.
@@ -390,8 +450,38 @@ class ApiKey(Model):
 
 
 class ApiKeyRecord(ApiKey):
-    # SHA-256 of the secret, to find the key from a request and to delete its lookup item.
+    # SHA-256 of the secret, to find the key from a request and to delete its lookup item. For a connection,
+    # the secret is its current refresh token.
     secret_hash: str
+
+
+class OAuthClient(Model):
+    """An app that registered itself to sign people in (OAuth dynamic client registration)."""
+
+    client_id: str
+    client_name: str
+    redirect_uris: list[str]
+    created_at: str
+
+
+class OAuthCode(Model):
+    """A one-time authorization code, waiting to be swapped for tokens. Expires in minutes."""
+
+    code_hash: str
+    client_id: str
+    user_id: str
+    redirect_uri: str
+    code_challenge: str
+    expires_at: int
+
+
+class OAuthToken(Model):
+    """A short-lived access token for a connection. Only its hash is stored."""
+
+    token_hash: str
+    user_id: str
+    key_id: str
+    expires_at: int
 
 
 # ---- API shapes --------------------------------------------------------------------------------
@@ -438,6 +528,7 @@ class Member(Model):
     department: str | None = None
     status: MemberStatus
     conflicts_submitted_at: str | None = None
+    note_taker: bool = False
 
 
 class InviteSent(Model):
