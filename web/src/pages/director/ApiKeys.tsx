@@ -214,7 +214,7 @@ function NewKeyDialog(props: { theaterId: string; onClose: () => void; onCreated
   );
 }
 
-export function SecretReveal(props: { name: string; secret: string; onDone: () => void }) {
+function SecretReveal(props: { name: string; secret: string; onDone: () => void }) {
   const [copied, setCopied] = useState(false);
   const [copyError, setCopyError] = useState(false);
   const copy = async () => {

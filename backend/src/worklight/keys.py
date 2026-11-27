@@ -27,7 +27,7 @@ MAGIC#<email>  META              pending magic-link code hash (TTL)
 FEED#<token>   META              calendar feed token -> userId
 THEATER#<id>   APIKEY#<keyId>    API key (no secret)
 THEATER#<id>   STRIKE#<taskId>   company strike template task
-USER#<id>      APIKEY#<keyId>    personal API key or signed-in connection (no secret)
+USER#<id>      APIKEY#<keyId>    app signed in as this person (no secret)
 APIKEY#<hash>  META              secret hash -> theaterId or userId, keyId
 OAUTHCLIENT#<id>  META            app that registered to sign people in
 OAUTHCODE#<hash>  META            one-time authorization code (TTL)
@@ -157,7 +157,7 @@ def api_key(theater_id: str, key_id: str) -> Key:
     return {"PK": f"THEATER#{theater_id}", "SK": f"APIKEY#{key_id}"}
 
 
-def personal_api_key(user_id: str, key_id: str) -> Key:
+def connection_key(user_id: str, key_id: str) -> Key:
     return {"PK": f"USER#{user_id}", "SK": f"APIKEY#{key_id}"}
 
 

@@ -196,7 +196,7 @@ def test_actor_signs_in_and_reads_only_their_notes(call: Client, mailer: FakeMai
     assert {n["actorId"] for n in detail["notes"]} == {show["maya"]}
 
     # The connection shows up in Account, and refreshing rotates the refresh token.
-    connections = call.ok("maya@example.org", "GET", "/api/me/api-keys")
+    connections = call.ok("maya@example.org", "GET", "/api/me/connections")
     assert [(k["kind"], k["name"]) for k in connections] == [("connection", "Claude")]
     status, fresh = _token(
         call, grant_type="refresh_token", refresh_token=tokens["refresh_token"], client_id=tokens["client_id"]
@@ -210,7 +210,7 @@ def test_actor_signs_in_and_reads_only_their_notes(call: Client, mailer: FakeMai
     )
 
     # Disconnecting ends every token at once.
-    call.ok("maya@example.org", "DELETE", f"/api/me/api-keys/{connections[0]['keyId']}")
+    call.ok("maya@example.org", "DELETE", f"/api/me/connections/{connections[0]['keyId']}")
     tools_list = {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
     assert call(None, "POST", "/mcp", tools_list, headers=_as(fresh["access_token"]))[0] == 401
     assert _token(call, grant_type="refresh_token", refresh_token=fresh["refresh_token"])[0] == 400

@@ -267,7 +267,7 @@ def _from_code(ctx: Ctx, form: dict[str, str]) -> dict[str, Any]:
     user = ctx.store.get_user(found.user_id)
     if not client or not user:
         raise bad
-    mine = [k for k in ctx.store.list_personal_api_keys(user.user_id) if k.kind == "connection"]
+    mine = [k for k in ctx.store.list_connections(user.user_id) if k.kind == "connection"]
     if len(mine) >= MAX_CONNECTIONS:
         # Make room by dropping the connection used longest ago.
         oldest = min(mine, key=lambda k: k.last_used_at or k.created_at)
@@ -315,7 +315,7 @@ def revoke(ctx: Ctx, form: dict[str, str]) -> None:
     elif value.startswith(ACCESS_PREFIX):
         found = ctx.store.get_oauth_token(sha256(value))
         if found:
-            record = ctx.store.get_personal_api_key(found.user_id, found.key_id)
+            record = ctx.store.get_connection(found.user_id, found.key_id)
             if record and record.kind == "connection":
                 ctx.store.delete_api_key(record)
 
@@ -325,5 +325,5 @@ def connection_for_access_token(ctx: Ctx, value: str) -> ApiKeyRecord | None:
     found = ctx.store.get_oauth_token(sha256(value))
     if not found or found.expires_at < _now():
         return None
-    item = ctx.store.get_personal_api_key(found.user_id, found.key_id)
+    item = ctx.store.get_connection(found.user_id, found.key_id)
     return item if item and item.kind == "connection" else None

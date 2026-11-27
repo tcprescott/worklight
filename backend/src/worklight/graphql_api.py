@@ -306,7 +306,7 @@ class Query:
     def theater(self, info: GInfo) -> Theater:
         c = info.context
         if c.principal.personal:
-            raise ServiceError("Personal keys don't reach the company. Ask for a show by its id instead.")
+            raise ServiceError("A signed-in app doesn't reach the company. Ask for a show by its id instead.")
         view = theaters_service.get_theater(c.ctx, c.principal.user, str(c.principal.key.theater_id))
         return Theater(
             theater_id=strawberry.ID(view.theater.theater_id),

@@ -428,11 +428,9 @@ class NoticeRead(Model):
 # ---- API keys --------------------------------------------------------------------------------------
 
 ApiKeyScope = Literal["read", "write"]
-# company: made by a company admin, acts as them across the company. personal: anyone's own read-only key,
-# acting as them in the shows they're in (their calls, their line notes).
-# company: an admin's key for one company. personal: a read-only key someone made for themselves.
-# connection: an app (such as Claude) someone signed in to with their Worklight account.
-ApiKeyKind = Literal["company", "personal", "connection"]
+# company: made by a company admin, acts as them across the company.
+# connection: an app (such as Claude) someone signed in to with their Worklight account; acts as them.
+ApiKeyKind = Literal["company", "connection"]
 
 
 class ApiKey(Model):
@@ -440,7 +438,7 @@ class ApiKey(Model):
 
     key_id: str
     kind: ApiKeyKind = "company"
-    # Company keys only; personal keys reach every show their owner is in.
+    # Company keys only; a connection reaches every show its person is in.
     theater_id: str | None = None
     name: str
     scope: ApiKeyScope = "read"

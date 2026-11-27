@@ -134,9 +134,8 @@ export const api = {
     request<Admin[]>("DELETE", `/theaters/${e(theaterId)}/admins/${e(userId)}`),
 
   // Company API keys (admins only). The secret comes back once, when the key is made.
-  myApiKeys: () => request<ApiKey[]>("GET", "/me/api-keys"),
-  createMyApiKey: (name: string) => request<NewApiKey>("POST", "/me/api-keys", { name }),
-  revokeMyApiKey: (keyId: string) => request<void>("DELETE", `/me/api-keys/${e(keyId)}`),
+  myConnections: () => request<ApiKey[]>("GET", "/me/connections"),
+  disconnect: (keyId: string) => request<void>("DELETE", `/me/connections/${e(keyId)}`),
   connectInfo: (req: AuthorizeRequest) => request<ConnectInfo>("POST", "/oauth/connect-info", req),
   authorizeApp: (req: AuthorizeRequest, approve: boolean) => request<AuthorizeResult>("POST", "/oauth/authorize", { ...req, approve }),
   apiKeys: (theaterId: string) => request<ApiKey[]>("GET", `/theaters/${e(theaterId)}/api-keys`),

@@ -248,7 +248,7 @@ class DynamoStore:
     @staticmethod
     def _api_key_key(key: ApiKey) -> keys.Key:
         if key.kind != "company":
-            return keys.personal_api_key(key.created_by, key.key_id)
+            return keys.connection_key(key.created_by, key.key_id)
         return keys.api_key(str(key.theater_id), key.key_id)
 
     def put_api_key(self, key: ApiKeyRecord) -> None:
@@ -273,12 +273,12 @@ class DynamoStore:
         items = self._query_all(f"THEATER#{theater_id}", keys.APIKEY_PREFIX)
         return [ApiKeyRecord.model_validate(i) for i in items]
 
-    def list_personal_api_keys(self, user_id: str) -> list[ApiKeyRecord]:
+    def list_connections(self, user_id: str) -> list[ApiKeyRecord]:
         items = self._query_all(f"USER#{user_id}", keys.APIKEY_PREFIX)
         return [ApiKeyRecord.model_validate(i) for i in items]
 
-    def get_personal_api_key(self, user_id: str, key_id: str) -> ApiKeyRecord | None:
-        item = self._get(keys.personal_api_key(user_id, key_id))
+    def get_connection(self, user_id: str, key_id: str) -> ApiKeyRecord | None:
+        item = self._get(keys.connection_key(user_id, key_id))
         return ApiKeyRecord.model_validate(item) if item else None
 
     def get_api_key_by_secret(self, secret_hash: str) -> ApiKeyRecord | None:
@@ -286,7 +286,7 @@ class DynamoStore:
         if not pointer:
             return None
         if "userId" in pointer:
-            key = keys.personal_api_key(str(pointer["userId"]), str(pointer["keyId"]))
+            key = keys.connection_key(str(pointer["userId"]), str(pointer["keyId"]))
         else:
             key = keys.api_key(str(pointer["theaterId"]), str(pointer["keyId"]))
         item = self._get(key)

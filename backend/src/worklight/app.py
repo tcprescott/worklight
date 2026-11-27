@@ -121,7 +121,7 @@ def create_app(ctx: Ctx) -> FastAPI:
         apikeys,
     ):
         app.include_router(module.router(ctx, current_user))
-    app.include_router(apikeys.personal_router(ctx, current_user))
+    app.include_router(apikeys.connections_router(ctx, current_user))
     app.include_router(oauth.router(ctx, current_user))
     # Apps such as Claude sign people in here (OAuth discovery, registration, tokens).
     app.include_router(oauth.public_router(ctx))

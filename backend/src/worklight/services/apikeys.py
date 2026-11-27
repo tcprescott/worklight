@@ -1,9 +1,8 @@
 """API keys for the public REST (/api/v1), GraphQL (/api/graphql) and MCP (/mcp) APIs.
 
 A company key belongs to one company and acts as the admin who created it, limited to that company's shows.
-A personal key belongs to one person (anyone, cast included), only reads, and sees what they see in the app:
-their own calls, conflicts and line notes in the shows they're in. Read keys can only read. The secret is
-shown once; only its SHA-256 is stored."""
+Read keys can only read. The secret is shown once; only its SHA-256 is stored. People connect apps such as
+Claude by signing in instead (see worklight.services.oauth); those connections are listed and removed here."""
 
 from dataclasses import dataclass
 from typing import Annotated
@@ -14,7 +13,6 @@ from worklight.models import ApiKey, ApiKeyRecord, ApiKeyScope, Model, Show, Use
 from worklight.services.base import (
     Ctx,
     Forbidden,
-    Invalid,
     NotFound,
     ServiceError,
     Unauthorized,
@@ -25,8 +23,6 @@ from worklight.services.base import (
 SECRET_PREFIX = "wl_"
 # Requests per key per minute.
 RATE_LIMIT = 120
-# Personal keys per person: one per assistant or device is plenty.
-MAX_PERSONAL_KEYS = 5
 
 
 class TooManyRequests(ServiceError):
@@ -82,38 +78,16 @@ def revoke_key(ctx: Ctx, user: User, theater_id: str, key_id: str) -> None:
     ctx.store.delete_api_key(record)
 
 
-class CreatePersonalKeyBody(Model):
-    name: Annotated[str, text(80)]
-
-
-def list_personal_keys(ctx: Ctx, user: User) -> list[ApiKey]:
-    found = ctx.store.list_personal_api_keys(user.user_id)
+def list_connections(ctx: Ctx, user: User) -> list[ApiKey]:
+    """Apps signed in as this person."""
+    found = ctx.store.list_connections(user.user_id)
     return [ApiKey.model_validate(k.model_dump(exclude={"secret_hash"})) for k in found]
 
 
-def create_personal_key(ctx: Ctx, user: User, body: CreatePersonalKeyBody) -> NewApiKey:
-    personal = [k for k in ctx.store.list_personal_api_keys(user.user_id) if k.kind == "personal"]
-    if len(personal) >= MAX_PERSONAL_KEYS:
-        raise Invalid(f"You can have at most {MAX_PERSONAL_KEYS} personal keys. Revoke one you don't use.")
-    secret = SECRET_PREFIX + new_token()
-    record = ApiKeyRecord(
-        key_id=new_id(),
-        kind="personal",
-        name=body.name,
-        scope="read",
-        prefix=secret[:10],
-        created_by=user.user_id,
-        created_at=now_iso(),
-        secret_hash=sha256(secret),
-    )
-    ctx.store.put_api_key(record)
-    return NewApiKey(key=ApiKey.model_validate(record.model_dump(exclude={"secret_hash"})), secret=secret)
-
-
-def revoke_personal_key(ctx: Ctx, user: User, key_id: str) -> None:
-    record = next((k for k in ctx.store.list_personal_api_keys(user.user_id) if k.key_id == key_id), None)
+def disconnect(ctx: Ctx, user: User, key_id: str) -> None:
+    record = ctx.store.get_connection(user.user_id, key_id)
     if not record:
-        raise NotFound("API key not found")
+        raise NotFound("That app isn't connected")
     ctx.store.delete_api_key(record)
 
 
@@ -131,17 +105,15 @@ class KeyPrincipal:
 
     @property
     def personal(self) -> bool:
-        """Acts as one person across their own shows (a personal key or a signed-in app)."""
+        """Acts as one person across their own shows (an app they signed in to)."""
         return self.key.kind != "company"
 
     def require_write(self) -> None:
-        if self.key.kind == "personal":
-            raise Forbidden("Personal keys can only read. Make changes in the Worklight app.")
         if not self.can_write:
             raise Forbidden("This API key can only read. Make a read and write key to change things.")
 
     def show(self, ctx: Ctx, show_id: str) -> Show:
-        """The show, if the key reaches it: in the key's company, or (personal keys) one its owner is in."""
+        """The show, if reachable: in the key's company, or (a signed-in app) one its person is in."""
         show = ctx.store.get_show(show_id)
         if self.personal:
             if not show or show_access(ctx, show_id, self.user).role is None:
